@@ -1,1 +1,5 @@
 # KITrental
+
+*SEEEEE PORCA MADONNAAA*
+
+-VITALI è UN FROCIO-
