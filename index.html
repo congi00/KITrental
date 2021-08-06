@@ -12,28 +12,34 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-dark bg-dark py-4">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark py-4">
         <span class="navbar-brand mb-0 ml-1 h1">
           <i class="fa fa-cutlery" aria-hidden="true" style="color:#fff"></i>
           KITrental
         </span>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">PRODUCTS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">ABOUT US</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">LOG IN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link font-weight-bold" href="#">SIGN UP</a>
+          </li>
+        </ul>
     </nav>
 
     <div class="jumbotron">
       <h1>Rent kitchen essentials</h1>
       <p>Italian Utilities in terms of functional requirements and milestones to be respected.</p>
-
-      <div class="container h-100">
-        <div class="d-flex justify-content-center h-100">
-          <div class="searchbar">
-            <input class="search_input" type="text" name="" placeholder="Search...">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-          </div>
-        </div>
+      <div class="form-group has-search">
+          <span class="fa fa-search form-control-feedback"></span>
+          <input type="text" class="form-control" placeholder="Search">
       </div>
-    </div>
     <img src="kitchenHP.jpg" alt="cucina" id="imgHP">
   </body>
 </html>
