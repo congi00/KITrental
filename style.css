@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&display=swap');
+
+
+
 html{
   scroll-behavior: smooth;
 }
+
+
 
 .jumbotron{
     text-align: center;
@@ -42,7 +48,7 @@ html{
 
 .navbar-nav{
   position: relative;
-  left: 50%;
+  left: 40%;
 }
 
 .nav-item{
@@ -60,22 +66,37 @@ html{
 }
 
 #recentProducts{
-  background-color: #1f2421;
+  font-family: 'Noto Sans JP', sans-serif;
+  background-image: url("features.jpg");
   width: 100%;
-  height: 60%;
+  height: 80%;
   position: absolute;
   top:100%;
+  color: #1f2421;
+  text-align: center;
+  padding-top: 20px;
 }
 
 a[href="#recentProducts"]{
   color: #fff;
 }
 
-.col-sm{
+.col-md{
   text-align: center;
   border: 1px solid #ccc;
   height: 400px;
   margin-right: 80px;
   margin-top: 20px;
   background-color: #fff;
+}
+
+.featuresIMG{
+  position: relative;
+  top: 20px;
+  width: 100px;
+}
+
+.featT{
+  position: relative;
+  top: 40px;
 }
