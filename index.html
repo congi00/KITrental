@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="./script.js"></script>
+    <!--Animation on scroll library-->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   </head>
 
   <body>
@@ -43,50 +46,20 @@
       </div>
       <img src="kitchenHP.jpg" alt="cucina" id="imgHP">
       <div id="scrollDown">
-        <span class="fa fa-sort-down animated bounce infinite"></span>
+        <a href="#recentProducts"><span class="fa fa-sort-down animated bounce infinite"></span></a>
       </div>
     </div>
-    <div class="container" id="recentProducts">
-      <div class="top-content">
-    <div class="container-fluid">
-        <div id="carousel-example" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner row w-100 mx-auto" role="listbox">
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 active">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img1">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img2">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img3">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img4">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img5">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img6">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP.jpg" class="img-fluid mx-auto d-block" alt="img7">
-                </div>
-                <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3">
-                    <img src="kitchenHP5.jpg" class="img-fluid mx-auto d-block" alt="img8">
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carousel-example" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel-example" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+    <div id="recentProducts">
+      <div class="container" >
+        <div class="row">
+          <div class="col-sm" data-aos="fade-up" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="100">
+          </div>
+          <div class="col-sm" data-aos="fade-up" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="500">
+          </div>
+          <div class="col-sm" data-aos="fade-up" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="900">
+          </div>
         </div>
-    </div>
-</div>
+      </div>
     </div>
   </body>
 </html>
