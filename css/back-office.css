@@ -1,0 +1,86 @@
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+[id$='-section'] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: transform .4s; /* for scaling smoothly */
+}
+
+[id$='-section'] a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+
+[id$='-section'] a h1 {
+    font-size: 4rem;
+}
+
+[id$='-section']:hover {
+    transform: scale(1.03, 1);
+}
+
+#clients-section {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/kitchenHP.jpg");
+}
+
+#inventory-section {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/warehouse.jpg");
+}
+
+#rental-section {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/docs.jpg");
+}
+
+table {
+    text-align: center;
+}
+
+/* Tables Styling 
+
+table {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead th {
+		background-color: #55608f;
+}
+
+tbody tr:hover {
+	background-color: rgba(255,255,255,0.3);
+}
+tbody td {
+    position: relative;
+}
+tbody td:hover:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -9999px;
+    bottom: -9999px;
+    background-color: rgba(255,255,255,0.2);
+    z-index: -1;
+}
+*/
