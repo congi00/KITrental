@@ -4,7 +4,10 @@
     require("db-config.php");
 
     // Delete ONE record, HARD CODED on id field
-    $deleteResult = $collection->deleteOne(['_id' => new MongoDB\BSON\ObjectID($_POST['userId'])]);
+    $deleteResult = $collection->updateOne(
+        ['_id' => new MongoDB\BSON\ObjectID($_POST['userId'])],
+        ['$set' => $_POST['toEditData']]
+    );
     
     echo 1;
     exit;

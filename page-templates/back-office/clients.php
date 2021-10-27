@@ -2,11 +2,14 @@
     $sectionTitle = "Clients";
     include("back-office-header.php");
 
-    // Connection to the DB and query to retrieve clients
+    // Connection to the DB
+    $dbName = "KITrental";
+    $colName = "clients";
     include("../modules/db-config.php");
 
-    $query = "SELECT * FROM clients";
-    $result = mysqli_query($con, $query);
+    // Query to retrieve all the clients
+    $query = [];
+    $result = $collection->find($query);
 
     // Display retrieved data
     ?>
@@ -15,26 +18,22 @@
 			<tr class="table-light">
 				<th>Username</th>
 				<th>Address</th>
-				<th>Rental</th>
-				<th>Edit</th>
+				<th>Archive</th>
 				<th>Delete</th>
 			</tr>
 		</thead>
 		<tbody>
     <?php
     
-    while ($row = mysqli_fetch_array($result)) { ?>
+    foreach ($result as $client) { ?>
         <!-- Displaying Data Read From Database -->
         <tr class="table-light">
-            <td><?php echo $row['username']; ?></td>
-            <td><?php echo $row['address']; ?></td>
-            <td><i class="bi bi-box-arrow-up-right" style="color: brown;"></i></td>
-            <td><i class="bi bi-pencil-square" style="color: grey;"></i></td>
-            <td><i class="bi bi-x-circle" style="color: red;" data-user="<?=$row['username']?>"></i></td>
+            <td><?php echo $client['username']; ?></td>
+            <td><?php echo $client['address']; ?></td>
+            <td><a href="single-client.php?userId=<?=$client['_id']?>"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-id="<?=$client['_id']?>"></i></td>
         </tr>
     <?php }
-    mysqli_close($con);
-
 ?>
 		</tbody>
 	</table>
