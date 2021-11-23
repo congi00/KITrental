@@ -31,7 +31,7 @@
             <td><?php echo $client['username']; ?></td>
             <td><?php echo $client['address']; ?></td>
             <td><a href="single-client.php?userId=<?=$client['_id']?>"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-id="<?=$client['_id']?>"></i></td>
+            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="clients" data-id="<?=$client['_id']?>"></i></td>
         </tr>
     <?php }
 ?>

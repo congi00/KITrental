@@ -1,52 +1,94 @@
 // Vars
 var boolUtil = true; // TEMP SOLUTION, UGLY NAME TO RETHINK
+var previousValue = "";
+var typingTimer;
 
 $(function() {
     // Set the height of the image sections to the remaining space left by the navbar 
     $("[id$='-section']").css("height", $(window).height() - parseInt($("nav").css("height")) + "px");
     
-    // Event Listeners for delete and edit client data buttons
+    // Event Listeners for delete and update client data buttons
     $(".bi-x-circle").on("click", deleteRecord);
-    $("#editData").on("click", editRecordInfo);
+    $("#updateData").on("click", updateRecordInfo);
+    $("#createRecord").on("click", createRecord);
+    $("#searchObjects").on("keyup", typingLogic);
+    $("#searchClients").on("keyup", typingLogic);
+
+    // Library Components
+    dateRangePicker();
 });
 
-function editRecordInfo() {
+function createRecord() {
+  var el = this;
+  var fields = $($(el).closest("form")).find("input");
+  var createRecordCollection = $(el).data("collection");
+
+  // JavaScript object to pass as data to update in the POST request
+  var toCreateObject = {};
+  fields.each(function() {
+    toCreateObject[$(this).data('db-field')] = $(this).val();
+  });
+
+  // AJAX Request
+  $.ajax({
+    url: "../modules/db-create.php",
+    type: "POST",
+    data: {colName: createRecordCollection, toCreateData: toCreateObject},
+    success: function (response) {
+      if (response == 1) {
+        alert("New rental was added");
+        location.reload();
+      } else {
+        alert("There was an error.");
+      }
+    },
+  });
+}
+
+function updateRecordInfo() {
   var el = this;
 
-  if (boolUtil) {
-    $(el).siblings("input").attr("readonly", false);
-    // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
-    $(el).html("Save Edited Data");
-    boolUtil = false;
+  var updateRecordCollection = $(el).data("collection");
 
-  } else {
-    // HARD CODED FIELDS, REMEMBER TO MAKE IT DYNAMIC (MAYBE)
-    var fields = $(el).siblings("input");
-    var editUser = $(el).data("id");
-    
-    // JavaScript object to pass as data to edit in the POST request
-    var toEditObject = { 
-      'username' : fields[0].value,
-      'email' : fields[1].value,
-      'address' : fields[2].value
+  var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
+  if (updateRecordCollection === 'rental' && new Date(startDate) > new Date()) {
+    if (boolUtil) {
+      $(el).siblings("input").attr("readonly", false);
+      // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
+      $(el).html("Save Updated Data");
+      boolUtil = false;
+  
+    } else {
+      // Get input elements and ID of the record to update
+      var fields = $($(this).closest("form")).find("input");
+      var updateRecord = $(el).data("id");
+      
+      // JavaScript object to pass as data to update in the POST request
+      var toUpdateObject = {};
+      fields.each(function() {
+        toUpdateObject[$(this).data('db-field')] = $(this).val();
+      });
+  
+      // AJAX Request
+      $.ajax({
+        url: "../modules/db-update.php",
+        type: "POST",
+        data: {colName: updateRecordCollection, recordId: updateRecord, toUpdateData: toUpdateObject },
+        success: function (response) {
+          if (response == 1) {
+            // Put everything back to read-only
+  
+            $(el).html("Update Data");
+            $(el).siblings("input").attr("readonly", true);
+            boolUtil = true;
+          } else {
+            alert("There was an error.");
+          }
+        },
+      });
     }
-
-    // AJAX Request
-    $.ajax({
-      url: "../modules/db-edit.php",
-      type: "POST",
-      data: {colName: 'clients', userId: editUser, toEditData: toEditObject },
-      success: function (response) {
-        if (response == 1) {
-          // Put everything back to read-only
-          $(el).html("Edit Data");
-          $(el).siblings("input").attr("readonly", true);
-          boolUtil = true;
-        } else {
-          alert("There was an error.");
-        }
-      },
-    });
+  } else  {
+    alert("You can't modify past/active rental.");
   }
 }
 
@@ -54,28 +96,105 @@ function deleteRecord() {
   var el = this;
 
   // Delete user ID
-  var deleteUser = $(el).data("id");
+  var deleteRecordCollection = $(el).data("collection");
+  var deleteRecord = $(el).data("id");
 
-  var confirmalert = confirm("Are you sure?");
-  if (confirmalert == true) {
-    // AJAX Request
+  // Delete operation validation (client only if got no rentals, rental only active or future)
+  var toDelete = true;
+  if (deleteRecordCollection === 'rental') {
+    var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
+    if (new Date(startDate) > new Date()) {
+      toDelete = false;
+      var errMsg = "You can't delete past/active rental.";
+    }
+  }
+  if (deleteRecordCollection === 'clients') {
     $.ajax({
-      url: "../modules/db-remove.php",
-      type: "POST",
-      data: {colName: 'clients', userId : deleteUser },
+      async: false,
+      url: "../modules/db-read.php",
+      type: "GET",
+      data: {colName: 'rental', searchTerm : deleteRecord, singleResult: false, fieldName: 'client_id'},
       success: function (response) {
-        if (response == 1) {
-          // Remove row from HTML Table
-          $(el).closest("tr").css("--bs-table-bg", "red");
-          $(el)
-            .closest("tr")
-            .fadeOut(800, function () {
-              $(this).remove();
-            });
-        } else {
-          alert("Invalid ID.");
+        if (response.length) {
+          toDelete = false;
+          var errMsg = "You can't delete clients with active/booked rental.";
         }
       },
     });
   }
+
+
+  var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
+  if (toDelete) {
+    var confirmalert = confirm("Are you sure?");
+    if (confirmalert == true) {
+      // AJAX Request
+      $.ajax({
+        url: "../modules/db-delete.php",
+        type: "POST",
+        data: {colName: deleteRecordCollection, userId : deleteRecord},
+        success: function (response) {
+          if (response == 1) {
+            // Remove row from HTML Table
+            $(el).closest("tr").css("--bs-table-bg", "red");
+            $(el)
+              .closest("tr")
+              .fadeOut(800, function () {
+                $(this).remove();
+              });
+          } else {
+            alert("Invalid ID.");
+          }
+        },
+      });
+    }
+  } else  {
+    alert(errMsg);
+  }
+}
+
+function typingLogic() {
+  // if we are not clicking any non-modifying keys (e.g. arrows)
+  if ($(this).val() != previousValue) {
+      clearTimeout(typingTimer); // resets the timer
+      // if we are writing
+      if ($(this).val()) {
+        typingTimer = setTimeout(getResults, 750, $(this).val(), $(this).data('collection'), false, $(this).data('field-search'), $(this).attr("list")); // start the timeout
+      // if we are erasing the field
+      } else {
+          // empty the results div
+          $("#" + $(this).attr("list")).html("");
+      }
+      previousValue = $(this).val();
+  }
+}
+
+function getResults(val, collection, single, field, dataList) {
+  $.ajax({
+    url: "../modules/db-read.php",
+    type: "GET",
+    data: {colName: collection, searchTerm : val, singleResult: single, fieldName: field},
+    success: function (response) {
+      // Conversion from String to JSON object
+      var obj = jQuery.parseJSON(response);
+      $("#" + dataList).html("");
+      $.each(obj, function() {
+        $("#" + dataList).append("<option value='" + this[field] + " id=" + this["_id"]["$oid"] + "'>"); // Matching title Object from the inventory, displayed with title and ID
+      })
+    },
+  });
+}
+
+function dateRangePicker() {
+  $(function() {
+    $('input[id="dateRange"]').daterangepicker({
+      timePicker : true,
+      opens: 'left',
+      locale: {
+        format: 'M/DD hh:mm A'
+      }
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+  });
 }

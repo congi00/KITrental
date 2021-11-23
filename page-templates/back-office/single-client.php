@@ -30,23 +30,26 @@
         <div class="col-md-8 p-5">
             <form action="">
                 <label for="clientUsername" class="form-label">Client's Username</label>
-                <input type="text" class="form-control mb-3" id="clientUsername" value="<?=$client['username']?>" readonly>
+                <input type="text" data-db-field="username" class="form-control mb-3" id="clientUsername" value="<?=$client['username']?>" readonly>
                 
                 <label for="clientEmailAddress" class="form-label">Client's Email Address</label>
-                <input type="email" class="form-control mb-3" id="clientEmailAddress" value="<?=$client['email']?>" readonly>
+                <input type="email" data-db-field="email" class="form-control mb-3" id="clientEmailAddress" value="<?=$client['email']?>" readonly>
 
                 <label for="clientAddress" class="form-label">Client's Address</label>
-                <input type="text" class="form-control mb-4" id="clientAddress" value="<?=$client['address']?>" readonly>
+                <input type="text" data-db-field="address" class="form-control mb-4" id="clientAddress" value="<?=$client['address']?>" readonly>
 
-                <button id="editData" type="button" class="btn btn-primary" data-id="<?=$client['_id']?>">Edit Data</button>
+                <button id="updateData" type="button" class="btn btn-primary" data-collection="clients" data-id="<?=$client['_id']?>">Edit Data</button>
             </form>
         </div>
 	</div>
     <div class="row">
-        <ul class="list-group">
+        <ul class="list-group rental-list-group">
             <?php 
                 foreach ($rental as $singleRental) { ?>
-                    <li class="list-group-item"><?=$singleRental['name']?></li>
+                    <li class="list-group-item rental-list-item">
+                        <?=$singleRental['name']?>
+                        <a href="single-rental.php?rentalId=<?=$singleRental['_id']?>"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
+                    </li>
                 <?php }
             ?>
         </ul>

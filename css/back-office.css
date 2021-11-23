@@ -35,6 +35,10 @@ body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/warehouse.jpg");
 }
 
+/*
+*   RENTAL SECTION CSS
+*/
+
 #rental-section {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/docs.jpg");
 }
@@ -43,44 +47,20 @@ table {
     text-align: center;
 }
 
-/* Tables Styling 
-
-table {
-	width: 800px;
-	border-collapse: collapse;
-	overflow: hidden;
-	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+.rental-list-item {
+    width: 40%; 
 }
 
-th,
-td {
-	padding: 15px;
-	background-color: rgba(255,255,255,0.2);
-	color: #fff;
+.rental-list-group {
+    margin-left: 3em; 
 }
 
-th {
-	text-align: left;
+.btn-add-rental {
+    position: fixed;
+    color: white;
+    right: 1rem;
+    bottom: 1rem;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
 }
-
-thead th {
-		background-color: #55608f;
-}
-
-tbody tr:hover {
-	background-color: rgba(255,255,255,0.3);
-}
-tbody td {
-    position: relative;
-}
-tbody td:hover:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -9999px;
-    bottom: -9999px;
-    background-color: rgba(255,255,255,0.2);
-    z-index: -1;
-}
-*/

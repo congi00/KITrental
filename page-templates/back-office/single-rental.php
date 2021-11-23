@@ -1,5 +1,5 @@
 <?php 
-    $sectionTitle = "Single Client";
+    $sectionTitle = "Single Rental";
     include("back-office-header.php");
 
     // Connection to the DB
@@ -30,21 +30,24 @@
     // Display retrieved data
     ?>
     <div class="row">
-        <div class="col-md-4 p-5">
-            <img class="img-fluid img-thumbnail" src="<?=$client['imageUrl'];?>" alt="Client profile photo">
+        <div class="col-md-6 p-5">
+            <!-- Display Rented Object -->
+            <h2><?=$rentedObject['title'];?></h2>
+
+            <!-- Display Associated Client -->
+            <h2><?=$associatedClient['username'];?></h2>
         </div>
-        <div class="col-md-8 p-5">
+
+        <!-- Display Rental Data -->
+        <div class="col-md-6 p-5">
             <form action="">
-                <label for="clientUsername" class="form-label">Client's Username</label>
-                <input type="text" class="form-control mb-3" id="clientUsername" value="<?=$client['username']?>" readonly>
+                <label for="rentalStartDate" class="form-label">Starting Date</label>
+                <input type="datetime-local" data-db-field="starting_date" class="form-control mb-3" id="rentalStartDate" value="<?php echo date("Y-m-d\TH:i:s", date_timestamp_get($singleRental['starting_date']->toDateTime())); ?>" readonly>
                 
-                <label for="clientEmailAddress" class="form-label">Client's Email Address</label>
-                <input type="email" class="form-control mb-3" id="clientEmailAddress" value="<?=$client['email']?>" readonly>
+                <label for="rentalEndDate" class="form-label">Ending Date</label>
+                <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="<?php echo date("Y-m-d\TH:i:s", date_timestamp_get($singleRental['end_date']->toDateTime())); ?>" readonly>
 
-                <label for="clientAddress" class="form-label">Client's Address</label>
-                <input type="text" class="form-control mb-4" id="clientAddress" value="<?=$client['address']?>" readonly>
-
-                <button id="editData" type="button" class="btn btn-primary" data-id="<?=$client['_id']?>">Edit Data</button>
+                <?php echo !isset($_GET['past']) ? '<button id="updateData" type="button" class="btn btn-primary" data-collection="rental" data-id="<?=$singleRental[\'_id\']?>">Edit Data</button>' : ''; ?>
             </form>
         </div>
 	</div>
@@ -52,9 +55,9 @@
     <div class="row">
         <ul class="list-group">
             <?php 
-                foreach ($rental as $singleRental) { ?>
+                /*foreach ($rental as $singleRental) { ?>
                     <li class="list-group-item"><?=$singleRental['name']?></li>
-                <?php }
+                <?php }*/
             ?>
         </ul>
     </div>
