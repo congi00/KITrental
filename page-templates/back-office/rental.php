@@ -61,7 +61,7 @@
 
 // Query to retrieve all the clients
 $query = ['end_date' => ['$lt' => new MongoDB\BSON\UTCDateTime(new DateTime())]];
-$result = $collection->find($query);
+$result = $collection->find($query, array('sort' => ['end_date' => -1]));
 
 // Display retrieved data
 ?>

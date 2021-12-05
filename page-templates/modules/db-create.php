@@ -11,14 +11,19 @@
         }
         // Turns an ID string in the BSON Object
         if (str_contains($field_key, 'id')) {
+            $documentId = $field_val;
             $parName = "id=";
-            $index = strpos($field_val, $parName) + strlen($parName);
-            $documentId = substr($field_val, $index);
+            $index = strpos($field_val, $parName);
+            if ($index !== false) {
+                $index += strlen($parName);
+                $documentId = substr($field_val, $index);
+            }
+
             $_POST['toCreateData'][$field_key] = new MongoDB\BSON\ObjectID($documentId);
         }
     }
 
-    $collection->insertOne(
+    $insertOneResult = $collection->insertOne(
         $_POST['toCreateData']
     );
 
@@ -29,8 +34,9 @@
         $collection->insertOne(
             [
                 "type" => "rent_create",
-                "linkedTo_id" => $_POST['toCreateData']['object_id'],
-                "employee_id" => null
+                "linkedTo_id" => $insertOneResult->getInsertedId(),
+                "employee_id" => null,
+                "notes" => null
             ]
         );
     } 

@@ -11,11 +11,24 @@
     }
 
     // Delete ONE record, HARD CODED on id field
-    $deleteResult = $collection->updateOne(
+    $updateResult = $collection->updateOne(
         ['_id' => new MongoDB\BSON\ObjectID($_POST['recordId'])],
         ['$set' => $_POST['toUpdateData']]
     );
-    
-    
+
+    // Additional create query for the update operation (operations collection linked to the rental)
+    if ($colName == "rental") {
+        $colName = "operations";
+        $collection = $db->$colName;
+        $collection->insertOne(
+            [
+                "type" => "rent_update",
+                "linkedTo_id" => new MongoDB\BSON\ObjectID($_POST['recordId']),
+                "employee_id" => null,
+                "notes" => null
+            ]
+        );
+    } 
+      
     echo 1;
     exit;

@@ -20,7 +20,7 @@ $(function() {
 
 function createRecord() {
   var el = this;
-  var fields = $($(el).closest("form")).find("input");
+  var fields = $($(el).closest("form")).find("input, select, textarea");
   var createRecordCollection = $(el).data("collection");
 
   // JavaScript object to pass as data to update in the POST request
@@ -28,6 +28,9 @@ function createRecord() {
   fields.each(function() {
     toCreateObject[$(this).data('db-field')] = $(this).val();
   });
+  if (createRecordCollection === 'operations') {
+    toCreateObject['linkedTo_id'] = $(this).data('rental');
+  }
 
   // AJAX Request
   $.ajax({
@@ -51,7 +54,7 @@ function updateRecordInfo() {
   var updateRecordCollection = $(el).data("collection");
 
   var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
-  if (updateRecordCollection === 'rental' && new Date(startDate) > new Date()) {
+  if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() )) {
     if (boolUtil) {
       $(el).siblings("input").attr("readonly", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
@@ -75,12 +78,14 @@ function updateRecordInfo() {
         type: "POST",
         data: {colName: updateRecordCollection, recordId: updateRecord, toUpdateData: toUpdateObject },
         success: function (response) {
+          console.log(response)
           if (response == 1) {
             // Put everything back to read-only
   
-            $(el).html("Update Data");
-            $(el).siblings("input").attr("readonly", true);
+            //$(el).html("Update Data");
+            //$(el).siblings("input").attr("readonly", true);
             boolUtil = true;
+            location.reload(); // !!!!! TO CHECK ACCESSIBILITY !!!!!!
           } else {
             alert("There was an error.");
           }
@@ -100,12 +105,13 @@ function deleteRecord() {
   var deleteRecord = $(el).data("id");
 
   // Delete operation validation (client only if got no rentals, rental only active or future)
+  var errMsg = "";
   var toDelete = true;
   if (deleteRecordCollection === 'rental') {
     var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
     if (new Date(startDate) > new Date()) {
       toDelete = false;
-      var errMsg = "You can't delete past/active rental.";
+      errMsg = "You can't delete past/active rental.";
     }
   }
   if (deleteRecordCollection === 'clients') {
@@ -115,9 +121,9 @@ function deleteRecord() {
       type: "GET",
       data: {colName: 'rental', searchTerm : deleteRecord, singleResult: false, fieldName: 'client_id'},
       success: function (response) {
-        if (response.length) {
+        if (jQuery.parseJSON(response).length) {
           toDelete = false;
-          var errMsg = "You can't delete clients with active/booked rental.";
+          errMsg = "You can't delete clients with active/booked rental.";
         }
       },
     });
