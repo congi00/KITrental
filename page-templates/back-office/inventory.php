@@ -33,7 +33,7 @@
             <td><?php echo $inventory['name']; ?></td>
             <td><?php echo $inventory['avaiability']; ?></td>
             <td><?php echo $inventory['state']; ?></td>
-            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="$inventory" data-id="<?=$inventory['_id']?>"></i></td>
+            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="inventory" data-id="<?=$inventory['_id']?>"></i></td>
             <td><a href="single-inventory.php?prdId=<?=$inventory['_id']?>"><i class="bi bi-clipboard-plus" style="color: brown; cursor: pointer;"></i></a></td>
         </tr>
     <?php }
