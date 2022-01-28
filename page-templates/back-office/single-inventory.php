@@ -24,10 +24,10 @@
         <div class="col-md-8 p-5">
             <form action="">
                 <label for="productName" class="form-label">Product Name</label>
-                <input type="text" data-db-field="username" class="form-control mb-3" id="productName" value="<?php echo isset($singleInventory['name']) ? $singleInventory['name'] : ''; ?>" readonly>
+                <input type="text" data-db-field="name" class="form-control mb-3" id="productName" value="<?php echo isset($singleInventory['name']) ? $singleInventory['name'] : ''; ?>" readonly>
 
                 <label for="productAvaiability" class="form-label">Avaiability</label><br>
-                <select id="productAvaiable" name="avaiability" data-db-field="avaiability">
+                <select id="productAvaiable" name="avaiability" data-db-field="avaiability" >
                   <option value="<?php echo $actualAvaiability;?>"><?php echo $actualAvaiability;?></option>
                   <option value="<?php echo $nextAvaiability;?>"><?php echo $nextAvaiability;?></option>
                 </select>
@@ -35,7 +35,7 @@
 
 
                 <label for="productState" class="form-label">State</label>
-                <input type="text" data-db-field="address" class="form-control mb-4" id="productState" value="<?php echo isset($singleInventory['state']) ? $singleInventory['state'] : ''; ?>" readonly>
+                <input type="text" data-db-field="state" class="form-control mb-4" id="productState" value="<?php echo isset($singleInventory['state']) ? $singleInventory['state'] : ''; ?>" readonly>
                 <button id="updateData" type="button" class="btn btn-primary" data-collection="inventory" data-id="<?=$singleInventory['_id']?>">Update Data</button>
             </form>
         </div>
