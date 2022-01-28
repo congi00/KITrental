@@ -27,7 +27,7 @@
                 <input type="text" data-db-field="name" class="form-control mb-3" id="productName" value="<?php echo isset($singleInventory['name']) ? $singleInventory['name'] : ''; ?>" readonly>
 
                 <label for="productAvaiability" class="form-label">Avaiability</label><br>
-                <select id="productAvaiable" name="avaiability" data-db-field="avaiability" >
+                <select id="productAvaiable" name="avaiability" data-db-field="avaiability" disabled>
                   <option value="<?php echo $actualAvaiability;?>"><?php echo $actualAvaiability;?></option>
                   <option value="<?php echo $nextAvaiability;?>"><?php echo $nextAvaiability;?></option>
                 </select>

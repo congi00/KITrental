@@ -57,6 +57,7 @@ function updateRecordInfo() {
   if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() ) || updateRecordCollection === 'inventory' ) {
     if (boolUtil) {
       $(el).siblings("input").attr("readonly", false);
+      $(el).siblings("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
       boolUtil = false;
