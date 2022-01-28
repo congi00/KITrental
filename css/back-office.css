@@ -3,6 +3,19 @@ body {
     overflow: hidden;
 }
 
+/******HEADER SECTION******/
+nav{
+  background-color: red;
+}
+
+.navbar>container-fluid>img{
+  width: 30px;
+  height: 30px;
+}
+/*************************/
+
+
+
 [id$='-section'] {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),;
     height: 100%;
@@ -48,11 +61,11 @@ table {
 }
 
 .rental-list-item {
-    width: 40%; 
+    width: 40%;
 }
 
 .rental-list-group {
-    margin-left: 3em; 
+    margin-left: 3em;
 }
 
 .btn-add-rental {
