@@ -6,8 +6,6 @@ html{
   scroll-behavior: smooth;
 }
 
-
-
 .jumbotron{
     text-align: center;
 }
@@ -99,4 +97,16 @@ a[href="#recentProducts"]{
 .featT{
   position: relative;
   top: 40px;
+}
+
+
+
+
+#loginContainer{
+  position: fixed;
+  width: 30vw;
+  height: 10vh;
+  z-index: 1;
+  background: red;
+  display: none;
 }
