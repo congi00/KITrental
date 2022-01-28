@@ -1,6 +1,6 @@
 <?php
   // https://stackoverflow.com/questions/44136256/how-can-i-use-php-to-set-my-navbar-hrefs-to-absolute-paths
-  $base_url = "http://localhost/KITrental/"; // REMEMBER TO EDIT WITH LIVE SITE
+  $base_url = "http://localhost:8000/"; // REMEMBER TO EDIT WITH LIVE SITE
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,21 +19,24 @@
     <body>
         <!-- Boostrap Navbar -->
         <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
+            <div class="container-fluid ">
               <img src="../../img/logos/KITrental-logos_white.png"></img>
-              <a class="navbar-brand" href="<?=$base_url?>back-office.php">Home</a>
+              <!--<a class="navbar-brand text-white" href="<?=$base_url?>back-office.php">Home</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-              </button>
+              </button>-->
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="<?=$base_url?>page-templates/back-office/clients.php">Clients</a>
+                  <li class="nav-item ">
+                    <a class="nav-link active text-white" aria-current="page" href="clients.php">Clients</a>
+                  </li>
+                  <li class="nav-item ">
+                    <a class="nav-link active text-white" aria-current="page" href="inventory.php">inventory</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="<?=$base_url?>page-templates/back-office/rental.php">Rental</a>
+                    <a class="nav-link text-white" href="<?=$base_url?>page-templates/back-office/rental.php">Rental</a>
                   </li>
-                  <li class="nav-item dropdown">
+                  <!--<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Dropdown
                     </a>
@@ -43,10 +46,10 @@
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
-                  </li>
-                  <li class="nav-item">
+                  </li>-->
+                  <!--<li class="nav-item">
                     <a class="nav-link disabled">Disabled</a>
-                  </li>
+                  </li>-->
                 </ul>
 
                 <!-- Search Form-->
