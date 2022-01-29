@@ -28,10 +28,10 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item ">
-                    <a class="nav-link active text-white" aria-current="page" href="clients.php">Clients</a>
+                    <a class="nav-link active text-white" aria-current="page" href="<?=$base_url?>page-templates/back-office/clients.php">Clients</a>
                   </li>
                   <li class="nav-item ">
-                    <a class="nav-link active text-white" aria-current="page" href="inventory.php">inventory</a>
+                    <a class="nav-link active text-white" aria-current="page" href="<?=$base_url?>page-templates/back-office/inventory.php">inventory</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link text-white" href="<?=$base_url?>page-templates/back-office/rental.php">Rental</a>
