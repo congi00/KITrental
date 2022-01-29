@@ -1,6 +1,5 @@
 <?php
     $sectionTitle = "Clients";
-    include("authentication.php");
     include("back-office-header.php");
 
     // Connection to the DB
