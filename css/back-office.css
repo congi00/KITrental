@@ -41,6 +41,8 @@ nav{
 
 #productTbl{height: 12vh;}
 /*************************/
+
+
 /*******Backend login********/
 #backendLogin{
   background: url(../img/kitchenHP.jpg) no-repeat;
@@ -98,7 +100,6 @@ nav{
     position: relative;
     left: 25%;
   }
-
 
 /****************************/
 
@@ -162,4 +163,89 @@ table {
     height: 50px;
     width: 50px;
     border-radius: 50%;
+}
+
+
+
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #backendLogin{
+    background: url(../img/kitchenHP.jpg) no-repeat;
+    background-size: 100vh;
+  }
+
+  /*#titleCF h2, #titleCS h2{
+    position: relative;
+    text-shadow: 2px 2px 5px #4c4547;
+  }
+
+  #titleCF{
+    width: 40vw;
+    background-color: #4c4547aa;
+    position: relative;
+    left:12vw;
+    top:35vh;
+  }
+
+  #titleCS{
+    width: 30vw;
+    background-color: #4c4547aa;
+    position: relative;
+    left:12vw;
+    top:35vh;
+  }
+
+  #formEmployees{
+      background-color: #fffc;
+      width: 30vw;
+      height: 70vh;
+      position: relative;
+      top: 15vh;
+      left: 8vw;
+  }
+
+  #formEmployees img{
+    width: 30vw;
+    position: relative;
+    top: 3vh;
+  }
+
+  #formEmployees input[type="email"],input[type="password"]{
+    width: 80%;
+    position: relative;
+    left: 10%;
+  }
+
+  .form-outline label{
+    margin-left: 3rem;
+  }
+
+    #formEmployees button{
+      width: 50%;
+      position: relative;
+      left: 25%;
+    }*/
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
 }

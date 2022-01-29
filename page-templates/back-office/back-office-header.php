@@ -6,8 +6,8 @@
   // $base_url = "http://localhost/KITrental/"; //FRAVI
 
 
-  if(!isset($_SESSION['loggedIn']))
-    echo "<script>window.location.href='../../back-office.php';</script>"
+  if(!isset($_SESSION['loggedIn']) )
+    echo "<script>if(window.location.href.indexOf('back-office.php') <= -1 )window.location.href='../../back-office.php';</script>"
 ?>
 <!DOCTYPE html>
 <html>
