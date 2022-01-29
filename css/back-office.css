@@ -172,62 +172,34 @@ table {
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   #backendLogin{
-    background: url(../img/kitchenHP.jpg) no-repeat;
-    background-size: 100vh;
-  }
-
-  /*#titleCF h2, #titleCS h2{
-    position: relative;
-    text-shadow: 2px 2px 5px #4c4547;
+    background-size: 180vh;
+    background-position: -100vw 0;
   }
 
   #titleCF{
-    width: 40vw;
-    background-color: #4c4547aa;
-    position: relative;
-    left:12vw;
-    top:35vh;
+    width: 80vw;
+    left:10vw;
+    top:5vh;
   }
 
   #titleCS{
-    width: 30vw;
-    background-color: #4c4547aa;
-    position: relative;
-    left:12vw;
-    top:35vh;
+    width: 50vw;
+    left:25vw;
+    top:5vh;
   }
 
   #formEmployees{
-      background-color: #fffc;
-      width: 30vw;
-      height: 70vh;
-      position: relative;
-      top: 15vh;
-      left: 8vw;
+      width: 90vw;
+      top: 5vh;
+      left: 2vw;
   }
 
   #formEmployees img{
-    width: 30vw;
-    position: relative;
-    top: 3vh;
+    width: 80vw;
   }
-
-  #formEmployees input[type="email"],input[type="password"]{
-    width: 80%;
-    position: relative;
-    left: 10%;
+  [id$='-section'] {
+      height: 33.33%;
   }
-
-  .form-outline label{
-    margin-left: 3rem;
-  }
-
-    #formEmployees button{
-      width: 50%;
-      position: relative;
-      left: 25%;
-    }*/
-
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
@@ -237,12 +209,75 @@ table {
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  #backendLogin{
+    background-size: 100vw 100vh;
+    background-position: 0 0;
+  }
 
+  #titleCF{
+    width: 80vw;
+    left:10vw;
+    top:5vh;
+  }
+
+  #titleCS{
+    width: 50vw;
+    left:25vw;
+    top:5vh;
+  }
+
+  #formEmployees{
+      width: 90vw;
+      top: 5vh;
+      left: 2vw;
+  }
+
+  #formEmployees img{
+    width: 80vw;
+  }
+  [id$='-section'] {
+      height: 33.33%;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
+  #backendLogin{
+    width: auto;
+    background-size: 100vw 100vh;
+    background-position: 0 0;
+  }
 
+  #titleCF{
+    width: 40vw;
+    left:5vw;
+    top:30vh;
+  }
+
+  #titleCS{
+    width: 30vw;
+    left:5vw;
+    top:30vh;
+  }
+
+  #formEmployees{
+      width: 35vw;
+      top: 15vh;
+      left: 2vw;
+  }
+
+  #formEmployees img{
+    width: 30vw;
+  }
+
+  #formEmployees h3{
+    padding-bottom:0 !important;
+    margin-top: 0 !important;
+  }
+
+  [id$='-section'] {
+      background-size: 300%;
+  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
