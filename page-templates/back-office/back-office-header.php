@@ -1,7 +1,13 @@
 <?php
+  session_start();
   // https://stackoverflow.com/questions/44136256/how-can-i-use-php-to-set-my-navbar-hrefs-to-absolute-paths
-  $base_url = "http://localhost/KITrental/"; // REMEMBER TO EDIT WITH LIVE SITE
-  // $base_url_CONGIU = "http://localhost:8000/;
+  //$base_url = "http://localhost/KITrental/"; // REMEMBER TO EDIT WITH LIVE SITE
+   $base_url = "http://localhost:8000/"; //CONGIU
+  // $base_url = "http://localhost/KITrental/"; //FRAVI
+
+
+  if(!isset($_SESSION['loggedIn']))
+    echo "<script>window.location.href='../../back-office.php';</script>"
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,13 +36,16 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item ">
-                    <a class="nav-link active text-white" aria-current="page" href="<?=$base_url?>page-templates/back-office/clients.php">Clients</a>
+                    <a class="nav-link active text-white text-uppercase" aria-current="page" href="<?=$base_url?>back-office.php">Home</a>
                   </li>
                   <li class="nav-item ">
-                    <a class="nav-link active text-white" aria-current="page" href="<?=$base_url?>page-templates/back-office/inventory.php">inventory</a>
+                    <a class="nav-link active text-white text-uppercase" aria-current="page" href="<?=$base_url?>page-templates/back-office/clients.php">Clients</a>
+                  </li>
+                  <li class="nav-item ">
+                    <a class="nav-link active text-white text-uppercase" aria-current="page" href="<?=$base_url?>page-templates/back-office/inventory.php">inventory</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-white" href="<?=$base_url?>page-templates/back-office/rental.php">Rental</a>
+                    <a class="nav-link text-white text-uppercase" href="<?=$base_url?>page-templates/back-office/rental.php">Rental</a>
                   </li>
                   <!--<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -55,10 +64,10 @@
                 </ul>
 
                 <!-- Search Form-->
-                <form class="d-flex">
+                <!--<form class="d-flex">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                </form>-->
               </div>
             </div>
         </nav>

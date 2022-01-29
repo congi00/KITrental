@@ -213,6 +213,10 @@ function dateRangePicker() {
   });
 }
 
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
 
 $(document).ready(function(){
   if(window.location.href.indexOf("back-office.php") > -1){
@@ -225,5 +229,35 @@ $(document).ready(function(){
         $("a h1",this).css("fontSize","4rem");
       });
     });
+
+    $("#formEmployees .btn").click(function(e) {
+      var form = $("#formEmployees");
+      var actionUrl = form.attr('action');
+
+      if(!isEmail($("input[type='email']").val())){
+        $("#formEmployees h3").text("Log in - Insert valid email !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else if($("input[type='password']").val() == ""){
+        $("#formEmployees h3").text("Log in - Insert password !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else{
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+              if(data==false){
+                $("#formEmployees h3").text("Log in - Wrong data inserted !");
+                $("#formEmployees h3").addClass("text-danger");
+              }else
+                location.reload();// show response from the php script.
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              alert(xhr.status);
+              alert(thrownError);
+            }
+        });
+      }
+    });
   }
-})
+});

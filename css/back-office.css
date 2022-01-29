@@ -14,6 +14,26 @@ nav{
   height: 8vh;
   position: relative;
 }
+
+.navbar ul{
+  position: absolute;
+  right: 0;
+}
+
+.navbar ul li{
+  padding-right: 3vw;
+}
+
+.navbar ul li a{
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+  opacity: 0.8;
+}
+
+.navbar ul li a:hover{
+  opacity: 1;
+}
 /*************************/
 
 /******Inventory Page******/
@@ -21,7 +41,66 @@ nav{
 
 #productTbl{height: 12vh;}
 /*************************/
+/*******Backend login********/
+#backendLogin{
+  background: url(../img/kitchenHP.jpg) no-repeat;
+  background-size: 100vw 100vh;
+}
 
+#titleCF h2, #titleCS h2{
+  position: relative;
+  text-shadow: 2px 2px 5px #4c4547;
+}
+
+#titleCF{
+  width: 40vw;
+  background-color: #4c4547aa;
+  position: relative;
+  left:12vw;
+  top:35vh;
+}
+
+#titleCS{
+  width: 30vw;
+  background-color: #4c4547aa;
+  position: relative;
+  left:12vw;
+  top:35vh;
+}
+
+#formEmployees{
+    background-color: #fffc;
+    width: 30vw;
+    height: 70vh;
+    position: relative;
+    top: 15vh;
+    left: 8vw;
+}
+
+#formEmployees img{
+  width: 30vw;
+  position: relative;
+  top: 3vh;
+}
+
+#formEmployees input[type="email"],input[type="password"]{
+  width: 80%;
+  position: relative;
+  left: 10%;
+}
+
+.form-outline label{
+  margin-left: 3rem;
+}
+
+  #formEmployees button{
+    width: 50%;
+    position: relative;
+    left: 25%;
+  }
+
+
+/****************************/
 
 
 [id$='-section'] {
@@ -42,6 +121,7 @@ nav{
 [id$='-section'] a h1 {
     font-size: 4rem;
     transition: font-size 0.5s;
+    text-shadow: 1px 1px 5px #ccc;
 }
 
 
@@ -54,7 +134,7 @@ nav{
 }
 
 #rental-section {
-    background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/docs.jpg");
+    background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/handshake.jpg");
 }
 
 
