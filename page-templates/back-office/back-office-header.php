@@ -1,6 +1,7 @@
 <?php
   // https://stackoverflow.com/questions/44136256/how-can-i-use-php-to-set-my-navbar-hrefs-to-absolute-paths
-  $base_url = "http://localhost:8000/"; // REMEMBER TO EDIT WITH LIVE SITE
+  $base_url = "http://localhost/KITrental/"; // REMEMBER TO EDIT WITH LIVE SITE
+  // $base_url_CONGIU = "http://localhost:8000/;
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,10 +14,11 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <link rel="stylesheet" href="../../css/back-office.css">
+        <link rel="stylesheet" href="<?=$base_url?>css/back-office.css">
         <title>KITRental - <?php echo $sectionTitle; ?></title>
     </head>
     <body>
+    <?php if ($sectionTitle != "Back-Office") : ?>
         <!-- Boostrap Navbar -->
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid ">
@@ -60,3 +62,4 @@
               </div>
             </div>
         </nav>
+    <?php endif; ?>
