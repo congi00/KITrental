@@ -4,9 +4,11 @@ var previousValue = "";
 var typingTimer;
 
 $(function() {
-    // Set the height of the image sections to the remaining space left by the navbar 
+    // Set the height of the image sections to the remaining space left by the navbar
+    if(window.location.href.indexOf("back-office.php") > -1)
+      $(".navbar #navbarSupportedContent").addClass("d-none");
     $("[id$='-section']").css("height", $(window).height() - parseInt($("nav").css("height")) + "px");
-    
+
     // Event Listeners for delete and update client data buttons
     $(".bi-x-circle").on("click", deleteRecord);
     $("#updateData").on("click", updateRecordInfo);
@@ -54,24 +56,29 @@ function updateRecordInfo() {
   var updateRecordCollection = $(el).data("collection");
 
   var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
-  if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() )) {
+  if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() ) || updateRecordCollection === 'inventory' ) {
     if (boolUtil) {
       $(el).siblings("input").attr("readonly", false);
+      $(el).siblings("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
       boolUtil = false;
-  
+
     } else {
       // Get input elements and ID of the record to update
       var fields = $($(this).closest("form")).find("input");
+      var selections = $($(this).closest("form")).find("select");
       var updateRecord = $(el).data("id");
-      
+
       // JavaScript object to pass as data to update in the POST request
       var toUpdateObject = {};
       fields.each(function() {
         toUpdateObject[$(this).data('db-field')] = $(this).val();
       });
-  
+      selections.each(function() {
+        toUpdateObject[$(this).data('db-field')] = $(this).val();
+      });
+
       // AJAX Request
       $.ajax({
         url: "../modules/db-update.php",
@@ -80,8 +87,9 @@ function updateRecordInfo() {
         success: function (response) {
           console.log(response)
           if (response == 1) {
+
             // Put everything back to read-only
-  
+
             //$(el).html("Update Data");
             //$(el).siblings("input").attr("readonly", true);
             boolUtil = true;
@@ -204,3 +212,18 @@ function dateRangePicker() {
     });
   });
 }
+
+
+$(document).ready(function(){
+  if(window.location.href.indexOf("back-office.php") > -1){
+    $( ".sectionsBack" ).each(function(){
+      $(this).hover(function(){
+        $(this).css("background-size","300%");
+        $("a h1",this).css("fontSize","4.5rem");
+      },function(){
+        $(this).css("background-size","250%");
+        $("a h1",this).css("fontSize","4rem");
+      });
+    });
+  }
+})

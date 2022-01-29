@@ -3,56 +3,75 @@ body {
     overflow: hidden;
 }
 
+/******HEADER SECTION******/
+nav{
+  background-color: #06514c;
+  height: 10vh;
+}
+
+.navbar>.container-fluid>img{
+  width: 15vw;
+  height: 8vh;
+  position: relative;
+}
+/*************************/
+
+/******Inventory Page******/
+
+
+#productTbl{height: 12vh;}
+/*************************/
+
+
+
 [id$='-section'] {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)),;
     height: 100%;
     background-repeat: no-repeat;
-    background-size: cover;
-    transition: transform .4s; /* for scaling smoothly */
+    background-size: 250%;
+    transition: all 1.5s;
 }
 
 [id$='-section'] a {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #198754;
     text-decoration: none;
 }
 
 [id$='-section'] a h1 {
     font-size: 4rem;
+    transition: font-size 0.5s;
 }
 
-[id$='-section']:hover {
-    transform: scale(1.03, 1);
-}
 
 #clients-section {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/kitchenHP.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/6-CTM-Technic.jpg");
 }
 
 #inventory-section {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/warehouse.jpg");
+    background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/best-kitchen-tools.jpg");
 }
-
-/*
-*   RENTAL SECTION CSS
-*/
 
 #rental-section {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url("../img/docs.jpg");
+    background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/docs.jpg");
 }
+
+
+
+
+
 
 table {
     text-align: center;
 }
 
 .rental-list-item {
-    width: 40%; 
+    width: 40%;
 }
 
 .rental-list-group {
-    margin-left: 3em; 
+    margin-left: 3em;
 }
 
 .btn-add-rental {
