@@ -54,6 +54,7 @@
     <div class="row">
         <p>
             <?php 
+                // Display notes associated with the client, if present
                 foreach ($clientNotes as $note) { ?>
                     <p>
                         <?php echo isset($note['notes']) ? $note['notes'] : '';?>
@@ -65,6 +66,7 @@
     <div class="row">
         <ul class="list-group rental-list-group">
             <?php 
+                // Display rental associated with the client, if present
                 foreach ($rental as $singleRental) { ?>
                     <li class="list-group-item rental-list-item">
                         <?php echo isset($singleRental['name']) ? $singleRental['name'] : '';?>
