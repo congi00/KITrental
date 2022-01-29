@@ -1,10 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
 
 
 html{
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
+
+
+/************NAVBAR STYLE************/
+.navbar{
+  width: 100vw;
+  height: 13vh;
+  position: fixed;
+  z-index: 1;
+  box-shadow: 0px 5px 20px;
+}
+
+#logoNav img{
+  width: 20vw;
+  height: 10vh;
+  position: fixed;
+  top:1vh;
+  left: 0;
+}
+/************************************/
+/**********Landing page**************/
+#landingFirstP{
+  width: 100vw;
+  height: 87vh;
+  position: absolute;
+  top: 13vh;
+  left: 0;
+  background-image: url(../img/Kitchen_Tools_HERO.jpg);
+  background-position: 35% 0;
+}
+
+#landingFirstP h1{
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+/************************************/
+
+
 
 .jumbotron{
     text-align: center;

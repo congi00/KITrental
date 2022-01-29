@@ -5,6 +5,8 @@ var typingTimer;
 
 $(function() {
     // Set the height of the image sections to the remaining space left by the navbar
+    if(window.location.href.indexOf("back-office.php") > -1)
+      $(".navbar #navbarSupportedContent").addClass("d-none");
     $("[id$='-section']").css("height", $(window).height() - parseInt($("nav").css("height")) + "px");
 
     // Event Listeners for delete and update client data buttons
@@ -210,3 +212,18 @@ function dateRangePicker() {
     });
   });
 }
+
+
+$(document).ready(function(){
+  if(window.location.href.indexOf("back-office.php") > -1){
+    $( ".sectionsBack" ).each(function(){
+      $(this).hover(function(){
+        $(this).css("background-size","300%");
+        $("a h1",this).css("fontSize","4.5rem");
+      },function(){
+        $(this).css("background-size","250%");
+        $("a h1",this).css("fontSize","4rem");
+      });
+    });
+  }
+})
