@@ -32,16 +32,16 @@
     <?php
 
     foreach ($result as $inventory) { ?>
-      <div class="col-md-4 col-sm-6">
+      <div class="col-md-2 col-sm-6 mt-4">
             <div class="card border-0 mb-grid-gutter">
-              <img src="../../img/products/<?php echo $inventory['image'];?>">
+              <img src="../../img/products/<?php echo $inventory['image'];?>" width="100%">
                 <div class="card-body border mt-n1 py-4 text-center">
                     <h2 class="h5 mb-1"><?php echo $inventory['name']; ?></h2>
-                    <span class="d-block mb-3 font-size-xs text-muted">Avaiability: <?php echo $inventory['avaiability'];?><br>
-                      <span class="font-weight-semibold">State: <?php echo $inventory['state']; ?>
-                      </span></span><a class="btn btn-pill btn-outline-primary btn-sm" href="shop-style1-ls.html">
-                      <i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="inventory" data-id="<?=$inventory['_id']?>"></i>
-                    </a>
+                    <span class="d-block mb-3 font-size-xs text-muted"><b>Avaiability:</b><br> <?php echo $inventory['avaiability'];?><br>
+                      <span class="font-weight-semibold"><b>State:</b><br> <?php echo $inventory['state']; ?>
+                      </span></span>
+                      <a href="single-inventory.php?prdId=<?=$inventory['_id']?>"><i class="bi bi-clipboard-plus" style="color: green; cursor: pointer;"></i></a>
+                      <i class="bi bi-x-circle " style="margin-left: 15px; color: red; cursor: pointer;" data-collection="inventory" data-id="<?=$inventory['_id']?>"></i>
                 </div>
             </div>
         </div>
