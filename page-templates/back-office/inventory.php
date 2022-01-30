@@ -15,20 +15,7 @@
 
     <div class="container pb-5 mb-sm-1">
         <div class="row">
-
-<!--
-    <table class="table table-light table-hover">
-		<thead>
-			<tr class="table-light">
-				<th>Image</th>
-				<th>Name</th>
-				<th>Avaiability</th>
-				<th>State</th>
-        <th>Delete</th>
-        <th>Info</th>
-			</tr>
-		</thead>
-		<tbody>-->
+    <!-- Displaying Data Read From Database -->
     <?php
 
     foreach ($result as $inventory) { ?>
@@ -45,24 +32,9 @@
                 </div>
             </div>
         </div>
-
-
-
-        <!-- Displaying Data Read From Database -->
-
-        <!--<tr id="productTbl" class="table-light">
-            <td style="background:url(../../img/products/<?php echo $inventory['image'];?>);background-size:100% 100%;"></td>
-            <td><?php echo $inventory['name']; ?></td>
-            <td><?php echo $inventory['avaiability']; ?></td>
-            <td><?php echo $inventory['state']; ?></td>
-            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="inventory" data-id="<?=$inventory['_id']?>"></i></td>
-            <td><a href="single-inventory.php?prdId=<?=$inventory['_id']?>"><i class="bi bi-clipboard-plus" style="color: brown; cursor: pointer;"></i></a></td>
-        </tr>-->
     <?php }
     ?>
   </div>
 </div>
-		<!--</tbody>
-	</table>-->
 
 <?php include("back-office-footer.php"); ?>
