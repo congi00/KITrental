@@ -14,12 +14,15 @@
     ?>
 
     <div class="container pb-5 mb-sm-1">
-        <div class="row">
+      <i class="bi bi-search" style="position:relative;left:29vw;top:5vh;"></i>
+      <input id="livesearch" type="text" size="30" onkeyup="showResult(this.value.toLowerCase())" placeholder="Search products">
+      <div id="productsInventory" class="row">
+
     <!-- Displaying Data Read From Database -->
     <?php
 
     foreach ($result as $inventory) { ?>
-      <div class="col-md-2 col-sm-6 mt-4">
+      <div class="col-md-2 col-sm-6 mt-4 prods">
             <div class="card border-0 mb-grid-gutter">
               <img src="../../img/products/<?php echo $inventory['image'];?>" width="100%">
                 <div class="card-body border mt-n1 py-4 text-center">

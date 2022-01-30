@@ -218,6 +218,22 @@ function isEmail(email) {
   return regex.test(email);
 }
 
+function showResult(str) {
+  if (str.length==0)
+    $(".prods").each(function(){
+      $(this).show();
+    });
+  else
+    $(".prods").each(function(){
+      if($(".card h2",this).text().toLowerCase().search(str)!=-1)
+        $(this).show();
+      else
+        $(this).hide();
+    });
+}
+
+
+
 $(document).ready(function(){
   if(window.location.href.indexOf("back-office.php") > -1){
     $( ".sectionsBack" ).each(function(){
