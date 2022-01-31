@@ -35,7 +35,7 @@
                 <div id="titleCS">
                   <h2 class="text-white display-3 text-center ">Back Office</h2>
                 </div>
-
+                <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>
               </div>
               <div class="col-12 col-lg-5">
                 <form id="formEmployees" action="page-templates/back-office/authentication.php">

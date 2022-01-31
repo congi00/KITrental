@@ -84,6 +84,14 @@ nav{
   top:35vh;
 }
 
+#noLogIn{
+  position: relative;
+  top: 32vh;
+  left: 5vw;
+  width: 30vw;
+  border-radius: 0;
+}
+
 #formEmployees{
     background-color: #fffc;
     width: 30vw;
