@@ -1,4 +1,4 @@
-<?php 
+<?php
     $sectionTitle = "Inventory";
     include("back-office-header.php");
 
@@ -12,29 +12,32 @@
 
     // Display retrieved data
     ?>
-    <table class="table table-light table-hover">
-		<thead>
-			<tr class="table-light">
-				<th>Username</th>
-				<th>Address</th>
-				<th>Archive</th>
-				<th>Delete</th>
-			</tr>
-		</thead>
-		<tbody>
+
+    <div class="container pb-5 mb-sm-1">
+      <i class="bi bi-search" style="position:relative;left:29vw;top:5vh;"></i>
+      <input id="livesearch" type="text" size="30" onkeyup="showResult(this.value.toLowerCase())" placeholder="Search products">
+      <div id="productsInventory" class="row">
+
+    <!-- Displaying Data Read From Database -->
     <?php
-    
-    foreach ($result as $client) { ?>
-        <!-- Displaying Data Read From Database -->
-        <tr class="table-light">
-            <td><?php echo $client['username']; ?></td>
-            <td><?php echo $client['address']; ?></td>
-            <td><a href="single-client.php?usr=<?=$client['username']?>"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-user="<?=$client['username']?>"></i></td>
-        </tr>
+
+    foreach ($result as $inventory) { ?>
+      <div class="col-md-2 col-sm-6 mt-4 prods">
+            <div class="card border-0 mb-grid-gutter">
+              <img src="../../img/products/<?php echo $inventory['image'];?>" width="100%">
+                <div class="card-body border mt-n1 py-4 text-center">
+                    <h2 class="h5 mb-1"><?php echo $inventory['name']; ?></h2>
+                    <span class="d-block mb-3 font-size-xs text-muted"><b>Avaiability:</b><br> <?php echo $inventory['avaiability'];?><br>
+                      <span class="font-weight-semibold"><b>State:</b><br> <?php echo $inventory['state']; ?>
+                      </span></span>
+                      <a href="single-inventory.php?prdId=<?=$inventory['_id']?>"><i class="bi bi-clipboard-plus" style="color: green; cursor: pointer;"></i></a>
+                      <i class="bi bi-x-circle " style="margin-left: 15px; color: red; cursor: pointer;" data-collection="inventory" data-id="<?=$inventory['_id']?>"></i>
+                </div>
+            </div>
+        </div>
     <?php }
-?>
-		</tbody>
-	</table>
+    ?>
+  </div>
+</div>
 
 <?php include("back-office-footer.php"); ?>

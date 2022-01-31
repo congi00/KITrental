@@ -1,4 +1,4 @@
-<?php 
+<?php
     $sectionTitle = "Clients";
     include("back-office-header.php");
 
@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
     <?php
-    
+
     foreach ($result as $client) { ?>
         <!-- Displaying Data Read From Database -->
         <tr class="table-light">

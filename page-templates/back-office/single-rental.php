@@ -32,7 +32,7 @@
     <div class="row">
         <div class="col-md-6 p-5">
             <!-- Display Rented Object -->
-            <h2><?=$rentedObject['title'];?></h2>
+            <h2><?=$rentedObject['name'];?></h2>
 
             <!-- Display Associated Client -->
             <h2><?=$associatedClient['username'];?></h2>
@@ -46,8 +46,10 @@
                 
                 <label for="rentalEndDate" class="form-label">Ending Date</label>
                 <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="<?php echo date("Y-m-d\TH:i:s", date_timestamp_get($singleRental['end_date']->toDateTime())); ?>" readonly>
-                <?php if (!isset($_GET['past'])): ?>
-                    <button id="updateData" type="button" class="btn btn-primary" data-collection="rental" data-id="<?=$singleRental['_id']?>">Update Data</button>
+                
+                <!-- If the end date is in the future, add a button to modify and update the rental data -->
+                <?php if (date_timestamp_get($singleRental['end_date']->toDateTime()) > strtotime(date("Y-m-d\TH:i:s")) ): ?>
+                    <button id="updateData" type="button" class="btn btn-primary" data-collection="rental" data-id="<?=$singleRental['_id']?>">Update Data</button>                    
                 <?php endif; ?>
             </form>
         </div>
@@ -86,12 +88,35 @@
                         <div class="container-fluid">
                             <div class="mb-3">
                                 <label for="operationType" class="form-label">Type of Operation</label>
-                                <select required class="form-select" id="operationType" data-db-field="type">
+                                <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
                                     <!-- <option value="rent_create">Create Rent</option>
                                     <option value="rent_update">Update Rent</option> -->
                                     <option value="rent_confirm">Rent Confirmation</option>
                                     <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
                                 </select>
+                            </div>
+
+                            <!-- Possible fields to edit in case of a rental confirmation operation -->
+                            <div class="mb-3" id="rentConfirm">
+                                <label for="operationNotes" class="form-label">Notes</label>
+                                    <label for="searchObjects" class="form-label">Object Rented</label>
+                                    <input required class="form-control" list="objectsList" id="searchObjects" value="<?=$rentedObject['name'];?> id=<?=$rentedObject['_id'];?>" data-collection="inventory" data-field-search="name" data-db-field="object_id" placeholder="Type to search...">
+                                    <datalist id="objectsList"></datalist>
+                            </div>
+
+                            <!-- Possible fields to edit in case of a rental closing operation -->
+                            <div class="mb-3" id="rentClose" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="productAvaiability" class="form-label">Avaiability</label>
+                                    <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
+                                        <option value="available">Available</option>
+                                        <option value="unavailable">Unavailable</option>
+                                    </select> 
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productState" class="form-label">State</label>
+                                    <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="<?=$rentedObject['state'];?>">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="operationNotes" class="form-label">Notes</label>

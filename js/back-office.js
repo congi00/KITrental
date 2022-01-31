@@ -4,9 +4,11 @@ var previousValue = "";
 var typingTimer;
 
 $(function() {
-    // Set the height of the image sections to the remaining space left by the navbar 
+    // Set the height of the image sections to the remaining space left by the navbar
+    if(window.location.href.indexOf("back-office.php") > -1)
+      $(".navbar #navbarSupportedContent").addClass("d-none");
     $("[id$='-section']").css("height", $(window).height() - parseInt($("nav").css("height")) + "px");
-    
+
     // Event Listeners for delete and update client data buttons
     $(".bi-x-circle").on("click", deleteRecord);
     $("#updateData").on("click", updateRecordInfo);
@@ -28,11 +30,40 @@ function createRecord() {
   fields.each(function() {
     toCreateObject[$(this).data('db-field')] = $(this).val();
   });
+
   if (createRecordCollection === 'operations') {
     toCreateObject['linkedTo_id'] = $(this).data('rental');
+
+    if (toCreateObject['type'] === 'rent_confirm') {
+      // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
+    } else if (toCreateObject['type'] === 'rent_close') {
+
+      /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
+      var objectID = toCreateObject['object_id'].substring(toCreateObject['object_id'].indexOf("id=") + 3);
+      var toUpdateObject = {};
+      toUpdateObject['avaiability'] = toCreateObject['avaiability'];
+      toUpdateObject['state'] = toCreateObject['state'];
+      delete toCreateObject.avaiability;
+      delete toCreateObject.state;
+      delete toCreateObject.object_id;
+
+       // Update AJAX Request
+       $.ajax({
+        url: "../modules/db-update.php",
+        type: "POST",
+        data: {colName: 'inventory', recordId: objectID, toUpdateData: toUpdateObject },
+        success: function (response) {
+          console.log(response)
+          if (response == 1) {
+          } else {
+            alert("There was an error.");
+          }
+        },
+      });     
+    }
   }
 
-  // AJAX Request
+  // Create AJAX Request
   $.ajax({
     url: "../modules/db-create.php",
     type: "POST",
@@ -54,25 +85,30 @@ function updateRecordInfo() {
   var updateRecordCollection = $(el).data("collection");
 
   var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
-  if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() )) {
+  if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() ) || updateRecordCollection === 'inventory' ) {
     if (boolUtil) {
       $(el).siblings("input").attr("readonly", false);
+      $(el).siblings("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
       boolUtil = false;
-  
+
     } else {
       // Get input elements and ID of the record to update
       var fields = $($(this).closest("form")).find("input");
+      var selections = $($(this).closest("form")).find("select");
       var updateRecord = $(el).data("id");
-      
+
       // JavaScript object to pass as data to update in the POST request
       var toUpdateObject = {};
       fields.each(function() {
         toUpdateObject[$(this).data('db-field')] = $(this).val();
       });
-  
-      // AJAX Request
+      selections.each(function() {
+        toUpdateObject[$(this).data('db-field')] = $(this).val();
+      });
+
+      // Update AJAX Request
       $.ajax({
         url: "../modules/db-update.php",
         type: "POST",
@@ -80,8 +116,9 @@ function updateRecordInfo() {
         success: function (response) {
           console.log(response)
           if (response == 1) {
+
             // Put everything back to read-only
-  
+
             //$(el).html("Update Data");
             //$(el).siblings("input").attr("readonly", true);
             boolUtil = true;
@@ -191,6 +228,16 @@ function getResults(val, collection, single, field, dataList) {
   });
 }
 
+function displayEdits(sel) {
+  if (sel.value == "rent_confirm") {
+    $("#rentClose").hide();
+    $("#rentConfirm").show();
+  } else if(sel.value == "rent_close") {
+    $("#rentConfirm").hide();
+    $("#rentClose").show();
+  }
+}
+
 function dateRangePicker() {
   $(function() {
     $('input[id="dateRange"]').daterangepicker({
@@ -204,3 +251,68 @@ function dateRangePicker() {
     });
   });
 }
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
+
+function showResult(str) {
+  if (str.length==0)
+    $(".prods").each(function(){
+      $(this).show();
+    });
+  else
+    $(".prods").each(function(){
+      if($(".card h2",this).text().toLowerCase().search(str)!=-1)
+        $(this).show();
+      else
+        $(this).hide();
+    });
+}
+
+
+
+$(document).ready(function(){
+  if(window.location.href.indexOf("back-office.php") > -1){
+    $( ".sectionsBack" ).each(function(){
+      $(this).hover(function(){
+        $(this).css("background-size","300%");
+        $("a h1",this).css("fontSize","4.5rem");
+      },function(){
+        $(this).css("background-size","250%");
+        $("a h1",this).css("fontSize","4rem");
+      });
+    });
+
+    $("#formEmployees .btn").click(function(e) {
+      var form = $("#formEmployees");
+      var actionUrl = form.attr('action');
+
+      if(!isEmail($("input[type='email']").val())){
+        $("#formEmployees h3").text("Log in - Insert valid email !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else if($("input[type='password']").val() == ""){
+        $("#formEmployees h3").text("Log in - Insert password !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else{
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+              if(data==false){
+                $("#formEmployees h3").text("Log in - Wrong data inserted !");
+                $("#formEmployees h3").addClass("text-danger");
+              }else
+                location.reload();// show response from the php script.
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              alert(xhr.status);
+              alert(thrownError);
+            }
+        });
+      }
+    });
+  }
+});

@@ -1,0 +1,6 @@
+LANDING page
+HOMEPAGE logged in client
+Login/signup page
+Products page
+Cart
+Contact page
