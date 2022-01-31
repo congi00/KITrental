@@ -40,7 +40,7 @@
               <div class="col-12 col-lg-5">
                 <form id="formEmployees" action="page-templates/back-office/authentication.php">
                   <div class="text-center">
-                    <img src="/img/logos/KITrental-logos_black.png" alt="logo">
+                    <img src="<?=$base_url?>img/logos/KITrental-logos_black.png" alt="logo">
                   </div>
                   <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>
 

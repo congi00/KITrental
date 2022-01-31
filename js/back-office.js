@@ -30,11 +30,40 @@ function createRecord() {
   fields.each(function() {
     toCreateObject[$(this).data('db-field')] = $(this).val();
   });
+
   if (createRecordCollection === 'operations') {
     toCreateObject['linkedTo_id'] = $(this).data('rental');
+
+    if (toCreateObject['type'] === 'rent_confirm') {
+      // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
+    } else if (toCreateObject['type'] === 'rent_close') {
+
+      /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
+      var objectID = toCreateObject['object_id'].substring(toCreateObject['object_id'].indexOf("id=") + 3);
+      var toUpdateObject = {};
+      toUpdateObject['avaiability'] = toCreateObject['avaiability'];
+      toUpdateObject['state'] = toCreateObject['state'];
+      delete toCreateObject.avaiability;
+      delete toCreateObject.state;
+      delete toCreateObject.object_id;
+
+       // Update AJAX Request
+       $.ajax({
+        url: "../modules/db-update.php",
+        type: "POST",
+        data: {colName: 'inventory', recordId: objectID, toUpdateData: toUpdateObject },
+        success: function (response) {
+          console.log(response)
+          if (response == 1) {
+          } else {
+            alert("There was an error.");
+          }
+        },
+      });     
+    }
   }
 
-  // AJAX Request
+  // Create AJAX Request
   $.ajax({
     url: "../modules/db-create.php",
     type: "POST",
@@ -79,7 +108,7 @@ function updateRecordInfo() {
         toUpdateObject[$(this).data('db-field')] = $(this).val();
       });
 
-      // AJAX Request
+      // Update AJAX Request
       $.ajax({
         url: "../modules/db-update.php",
         type: "POST",
@@ -197,6 +226,16 @@ function getResults(val, collection, single, field, dataList) {
       })
     },
   });
+}
+
+function displayEdits(sel) {
+  if (sel.value == "rent_confirm") {
+    $("#rentClose").hide();
+    $("#rentConfirm").show();
+  } else if(sel.value == "rent_close") {
+    $("#rentConfirm").hide();
+    $("#rentClose").show();
+  }
 }
 
 function dateRangePicker() {
