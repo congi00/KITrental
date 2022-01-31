@@ -23,23 +23,30 @@
         }
     }
 
+    // Link to the employee who created the operation
+    if ($colName == "operations") {
+        session_start();
+        $_POST['toCreateData']["employee_id"] = $_SESSION["loggedIn"];
+    }
+
     $insertOneResult = $collection->insertOne(
         $_POST['toCreateData']
     );
 
     // Additional create query for the create operation (operations collection linked to the rental)
     if ($colName == "rental") {
+        session_start();
         $colName = "operations";
         $collection = $db->$colName;
         $collection->insertOne(
             [
                 "type" => "rent_create",
                 "linkedTo_id" => $insertOneResult->getInsertedId(),
-                "employee_id" => null,
+                "employee_id" => $_SESSION["loggedIn"],
                 "notes" => null
             ]
         );
     } 
-    
+
     echo 1;
     exit;

@@ -109,7 +109,7 @@ foreach ($result as $singleRental) { ?>
                         <div class="container-fluid">
                             <div class="mb-3">
                                 <label for="searchObjects" class="form-label">Object Rented</label>
-                                <input required class="form-control" list="objectsList" id="searchObjects" data-collection="inventory" data-field-search="title" data-db-field="object_id" placeholder="Type to search...">
+                                <input required class="form-control" list="objectsList" id="searchObjects" data-collection="inventory" data-field-search="name" data-db-field="object_id" placeholder="Type to search...">
                                 <datalist id="objectsList"></datalist>
                             </div>
                             <div class="mb-3">
