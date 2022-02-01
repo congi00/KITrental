@@ -14,7 +14,7 @@ const product = new Schema({
   },
   avaiability:{
     type: String,
-    enum: ["avaiable","unavaiable"],
+    enum: ["available","unavaiable"],
     required: true,
   },
   state:{
