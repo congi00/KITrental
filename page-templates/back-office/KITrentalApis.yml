@@ -1,0 +1,244 @@
+swagger: "2.0"
+info:
+  description: "KITrentali API's"
+  version: "1.0.0"
+  title: "KITrentalApi"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "ex.techweb.unibo.it"
+schemes:
+- "https"
+- "http"
+paths:
+  /products/:
+    get:
+      tags:
+        - "Products"
+      summary: "Get all the products"
+      operationId: "getProducts"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            xml:
+              name: "tag"
+              wrapped: true
+            items:
+              $ref: "#/definitions/Products"
+        400:
+          description: "Error accessing server data"
+  /products/{id}:
+    get:
+      tags:
+        - "Products"
+      summary: "Get selected product from inventory"
+      operationId: "getProductsById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of product to visualize"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            xml:
+              name: "tag"
+              wrapped: true
+            items:
+              $ref: "#/definitions/Products"
+        400:
+          description: "Invalid product ID"
+        404:
+          description: "Product not found"
+    post:
+      tags:
+        - "Products"
+      summary: "Edit selected product from inventory"
+      operationId: "editProductsById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of product to edit"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid product ID"
+        404:
+          description: "Product not found"
+    delete:
+      tags:
+        - "Products"
+      summary: "Delete selected product from inventory"
+      operationId: "deleteProductsById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of product to delete"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid product ID"
+        404:
+          description: "Product not found"
+  /employees/:
+    get:
+      tags:
+        - "Employees"
+      summary: "Get all the employees"
+      operationId: "getEmployees"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            xml:
+              name: "tag"
+              wrapped: true
+            items:
+              $ref: "#/definitions/Employee"
+        400:
+          description: "Error accessing server data"
+    post:
+      tags:
+        - "Employees"
+      summary: "Add new employee"
+      operationId: "setEmployee"
+      parameters:
+        - name: "EmployeeO"
+          in: "body"
+          required: true
+          schema:
+            items:
+              $ref: "#/definitions/Employee"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid data inserted"
+  /employees/{id}:
+    get:
+      tags:
+        - "Employees"
+      summary: "Get selected employee"
+      operationId: "getEmployeesById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of employee to visualize"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            xml:
+              name: "tag"
+              wrapped: true
+            items:
+              $ref: "#/definitions/Employee"
+        400:
+          description: "Invalid employee ID"
+        404:
+          description: "Employee not found"
+    post:
+      tags:
+        - "Employees"
+      summary: "Edit selected product from inventory"
+      operationId: "editEmployeesById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of product to edit"
+          required: true
+          type: "string"
+        - name: "EmployeeO"
+          in: "body"
+          description: "Id of product to edit"
+          required: true
+          schema:
+            items:
+              $ref: "#/definitions/Employee"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid employee ID"
+        404:
+          description: "Employee not found"
+    delete:
+      tags:
+        - "Employees"
+      summary: "Delete selected product from inventory"
+      operationId: "deleteEmployeesById"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "Id of product to delete"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid employee ID"
+        404:
+          description: "Employee not found"
+definitions:
+  Products:
+    type: "object"
+    required:
+      - "id"
+      - "name"
+      - "image"
+      - "avaiability"
+      - "state"
+      - "price"
+    properties:
+      id:
+        type: "string"
+        example: "61f40cbb8bbc40d7957ac5f2"
+      name:
+        type: "string"
+        example: "Blender"
+      state:
+        type: "string"
+        example: "new"
+  Employee:
+    type: "object"
+    required:
+      - "id"
+      - "name"
+      - "surname"
+      - "username"
+      - "password"
+      - "role"
+    properties:
+      id:
+        type: "string"
+        example: "61f40cbb8bbc40d7957ac5f2"
+      name:
+        type: "string"
+        example: "Luca"
+      surname:
+        type: "string"
+        example: "Astori"
+      username:
+        type: "string"
+        example: "lucaRossi2"
+      role:
+        type: "string"
+        enum:
+          - "Manager"
+          - "Officer"
