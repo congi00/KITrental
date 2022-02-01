@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Clients = require("./clients_model.js");
-const Employees = require("./employees_model.js");
+const Products = require("./product_model.js");
 const Schema = mongoose.Schema;
 
 
@@ -10,7 +10,20 @@ const rental = new Schema({
     type: Schema.Types.ObjectId,
     ref: Clients,
     required : true,
-  }
+  },
+  productId:{
+    type: Schema.Types.ObjectId,
+    ref: Products,
+    required : true,
+  },
+  starting_date:{
+    type: Date,
+    required: true,
+  },
+  ending_date:{
+    type: Date,
+    required: true,
+  },
 });
 
 module.export = mongoose.model("RentalModel",rental);
