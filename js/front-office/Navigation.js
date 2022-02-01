@@ -1,23 +1,40 @@
-const Link = ReactRouterDOM.Link;
-const Route = ReactRouterDOM.Route;
-
-const App = () => (
-  <ReactRouterDOM.HashRouter>
-    <ul>
-      <li><Link to="/">Home</Link></li>
-      <li><Link to="/login">Login</Link></li>
-      <li><Link to="/register">Register</Link></li>
-    </ul>
-
-    <Route path="/" exact component={Home} />
-    <Route path="/login" component={Login} />
-    <Route path="/register" component={Register} />
-  </ReactRouterDOM.HashRouter>
-)
-
-const Home = () => <h4>Home</h4>
-const Login = () => <h1>Login</h1>
-const Register = () => <h1>Register</h1>
-
+function Navigation() {
+    return (
+      <div className="navigation">
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <div className="container">
+            <NavLink className="navbar-brand" to="/">
+              React Multi-Page Website
+            </NavLink>
+            <div>
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/">
+                    Home
+                    <span className="sr-only">(current)</span>
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/about">
+                    About
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/contact">
+                    Contact
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/blog">
+                    Blog
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    );
+  }
 
 export default Navigation;
