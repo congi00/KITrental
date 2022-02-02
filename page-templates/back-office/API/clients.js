@@ -10,7 +10,7 @@ var bcrypt = require('bcrypt');
 
 // Get all the clients
 router.get('/', function (req, res) {
-    Client.find()
+  Client.find()
   .exec()
   .then(clients => res.status(200).json({ clients }))
   .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));

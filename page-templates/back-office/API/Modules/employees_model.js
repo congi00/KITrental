@@ -35,4 +35,4 @@ const employees = new Schema({
   },
 });
 
-module.exports = mongoose.model("EmployeesModel",employees);
+module.exports = mongoose.model("EmployeesModel", employees, "employees");

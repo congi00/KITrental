@@ -28,4 +28,4 @@ const product = new Schema({
   }
 });
 
-module.exports = mongoose.model("ProductModel",product);
+module.exports = mongoose.model("ProductModel", product, "inventory");
