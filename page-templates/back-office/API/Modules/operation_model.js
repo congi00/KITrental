@@ -23,4 +23,4 @@ const operation = new Schema({
   },
 });
 
-module.export = mongoose.model("OperationModel",operation);
+module.exports = mongoose.model("OperationModel",operation);
