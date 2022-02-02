@@ -69,10 +69,10 @@ router.post('/', async function (req, res) {
 router.get('/:id', function (req, res) {
   Employees.findOne({ _id: req.params.id})
   .exec()
-  .then(employees =>
+  .then(employees => {
     if(employees) res.status(200).json({ employees })
     else res.status(404).json({message: "User not found"})
-  )
+  })
   .catch(err =>
     res.status(400).json({message: "Error accessing server data", error: err})
   );
@@ -83,10 +83,10 @@ router.get('/:id', function (req, res) {
 router.delete('/:id', function (req, res) {
   Employees.findOneAndDelete({ _id: req.params.id})
   .exec()
-  .then(result =>
+  .then(result => {
     if(result) res.status(200).json({ message: "Successful operation", result : result })
     else res.status(404).json({message: "User not found"})
-  )
+  })
   .catch(err =>
     res.status(400).json({message: "Error accessing server data", error: err})
   );
@@ -102,10 +102,10 @@ router.patch('/:id', async function (req, res) {
     { overwrite: true }
   )
   .exec()
-  .then(result =>
+  .then(result => {
     if(result) res.status(200).json({ message: "Successful operation", result : result })
     else res.status(404).json({message: "User not found"})
-  )
+  })
   .catch(err =>
     res.status(400).json({message: "Error accessing server data", error: err})
   );
