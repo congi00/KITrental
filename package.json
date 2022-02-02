@@ -19,7 +19,7 @@
   "homepage": "https://github.com/congi00/KITrental#readme",
   "dependencies": {
     "express": "^4.17.2",
-    "mongoose": "^6.1.9",
+    "mongoose": "^6.1.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
@@ -30,6 +30,7 @@
     "@babel/preset-react": "^7.16.0",
     "babel-loader": "^8.2.3",
     "eslint": "^8.8.0",
+    "nodemon": "^2.0.15",
     "react-hot-loader": "^4.13.0",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
