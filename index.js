@@ -1,30 +1,39 @@
-const express = require('express')
-const mongoose = require('mongoose');
+global.rootDir = __dirname ;
+const mongoose = require("mongoose");
+const express = require("express");
+const routeClients = require("./page-templates/back-office/API/clients");
+const routeEmployees = require("./page-templates/back-office/API/employees");
+const routeInventory = require("./page-templates/back-office/API/inventory");
+const routeOperations = require("./page-templates/back-office/API/operations");
+const routeRental = require("./page-templates/back-office/API/rental");
+
 const app = express();
-const port = 3000;
-
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// });
-
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}!`)
-// });
-
-//Set up default mongoose connection
-const mongoDB = 'mongodb://127.0.0.1:27017/KITrental';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-
-//Get the default connection
+const mongodb = "mongodb://localhost:27017/KITrental";
+const port = 8000;
 const db = mongoose.connection;
 
+app.use(express.json());
+
+app.use("/API/clients",routeClients);
+app.use("/API/employees",routeEmployees);
+app.use("/API/inventory",routeInventory);
+app.use("/API/operations",routeOperations);
+app.use("/API/rental",routeRental);
+
+
+
+
+mongoose.connect(mongodb, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', function () {
+    console.log('Connected to Mongo!');
+})
 
 app.get('/', (req, res) => {
-  res.send('Hello World!aa')
-});
+    res.sendFile(global.rootDir + "/index.html");
+})
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`)
+app.listen(port, ()=>{
+    console.log('listening on port '+port);
 });
