@@ -1,3 +1,4 @@
+global.rootDir = __dirname ;
 const mongoose = require("mongoose");
 const express = require("express");
 const routeClients = require("./API/clients");
@@ -11,15 +12,15 @@ const mongodb = "mongodb://localhost:27017/KITrental"
 const port = 8000;
 const db = mongoose.connection;
 
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(mongodb, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function () {
     console.log('Connected to Mongo!');
 })
 
-app.get('/employees', (req, res) => {
-    res.sendFile("./index.html");
+app.get('/', (req, res) => {
+    res.sendFile(global.rootDir + "/index.html");
 })
 
 app.listen(port, ()=>{

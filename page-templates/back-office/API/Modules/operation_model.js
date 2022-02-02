@@ -13,12 +13,12 @@ const operation = new Schema({
   },
   employeeId:{
     type: Schema.Types.ObjectId,
-    ref: Employees,
+    ref: "Employees",
     required: true,
   },
   rentalId:{
     type: Schema.Types.ObjectId,
-    ref: Rental,
+    ref: "Rental",
     required: true,
   },
 });

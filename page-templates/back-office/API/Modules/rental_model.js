@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Clients = require("./clients_model.js");
+const Clients = require("./client_model.js");
 const Products = require("./product_model.js");
 const Schema = mongoose.Schema;
 
@@ -8,12 +8,12 @@ const rental = new Schema({
   _id: Schema.Types.ObjectId,
   userId:{
     type: Schema.Types.ObjectId,
-    ref: Clients,
+    ref: "Clients",
     required : true,
   },
   productId:{
     type: Schema.Types.ObjectId,
-    ref: Products,
+    ref: "Products",
     required : true,
   },
   starting_date:{
