@@ -152,20 +152,20 @@ paths:
           description: "Invalid employee ID"
         404:
           description: "Employee not found"
-    post:
+    patch:
       tags:
         - "Employees"
-      summary: "Edit selected product from inventory"
+      summary: "Edit selected employee from inventory"
       operationId: "editEmployeesById"
       parameters:
         - name: "id"
           in: "path"
-          description: "Id of product to edit"
+          description: "Id of employee to edit"
           required: true
           type: "string"
         - name: "EmployeeO"
           in: "body"
-          description: "Id of product to edit"
+          description: "Obj of employee to edit"
           required: true
           schema:
             items:
@@ -180,12 +180,12 @@ paths:
     delete:
       tags:
         - "Employees"
-      summary: "Delete selected product from inventory"
+      summary: "Delete selected employee from inventory"
       operationId: "deleteEmployeesById"
       parameters:
         - name: "id"
           in: "path"
-          description: "Id of product to delete"
+          description: "Id of employee to delete"
           required: true
           type: "string"
       responses:
