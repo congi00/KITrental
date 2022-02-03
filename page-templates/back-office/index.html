@@ -19,6 +19,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item ">
+<<<<<<< HEAD
                 <a class="nav-link active text-white text-uppercase" aria-current="page" href="#">Home</a>
               </li>
               <li class="nav-item ">
@@ -26,9 +27,18 @@
               </li>
               <li class="nav-item ">
                 <a class="nav-link active text-white text-uppercase" aria-current="page" href="#products" onclick="showProducts(); return false;">inventory</a>
+=======
+                <a class="nav-link active text-white text-uppercase" aria-current="page" onclick="showHome(); return false;">Home</a> <!-- CHECK ACCESSIBILITY (NO HREF, maybe screen readers cause issues cause it's a link without destination) -->
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link active text-white text-uppercase" aria-current="page" onclick="showClients(); return false;">Clients</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link active text-white text-uppercase" aria-current="page" onclick="showProducts(); return false;">inventory</a>
+>>>>>>> 19fc3bb44437baf1e2245d09a1dada60a8012af0
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white text-uppercase" href="#" onclick="showRental(); return false;">Rental</a>
+                <a class="nav-link text-white text-uppercase" onclick="showRental(); return false;">Rental</a>
               </li>
             </ul>
           </div>
