@@ -1,6 +1,3 @@
-/*const express = require('express');
-var router = express.Router();
-var bcrypt = require('bcrypt');*/
 
 // Vars
 var boolUtil = true; // TEMP SOLUTION, UGLY NAME TO RETHINK
@@ -68,7 +65,7 @@ function showClients() {
       tbl.appendChild(tbdy);
       content.appendChild(tbl);
     },
-  }); 
+  });
 }
 
 function singleClient(id) {
@@ -88,7 +85,7 @@ function singleClient(id) {
               <form action="">
                   <label for="clientUsername" class="form-label">Client's Username</label>
                   <input type="text" data-db-field="username" class="form-control mb-3" id="clientUsername" value="${client.username ? client.username : ''}" readonly>
-                  
+
                   <label for="clientEmailAddress" class="form-label">Client's Email Address</label>
                   <input type="email" data-db-field="email" class="form-control mb-3" id="clientEmailAddress" value="${client.email ? client.email : ''}" readonly>
 
@@ -121,12 +118,12 @@ function singleClient(id) {
                 <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
               </li>`);
             });
-            content.appendChild(divRow).appendChild(list); 
+            content.appendChild(divRow).appendChild(list);
           }
         },
       });
     },
-  }); 
+  });
 }
 
 function createRecord() {
@@ -419,14 +416,14 @@ $(document).ready(function(){
                 <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
-                <form id="formEmployees" action="http://localhost:8000/API/employees">\
+                <form id="formEmployees" action="http://localhost:8000/API/login">\
                   <div class="text-center">\
                     <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
                   </div>\
                   <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>\
                   <div class="form-outline mb-3">\
-                    <label class="form-label" for="emplId">Email address</label>\
-                    <input type="email" name="emplId" id="emplUsername" class="form-control form-control-md" required>\
+                    <label class="form-label" for="emplUsername">Email address</label>\
+                    <input type="email" name="emplUsername" id="emplUsername" class="form-control form-control-md" required>\
                   </div>\
                   <div class="form-outline mb-4">\
                     <label class="form-label" for="emplPw">Password</label>\
@@ -467,20 +464,21 @@ $(document).ready(function(){
         $("#formEmployees h3").addClass("text-danger");
       }else{
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: actionUrl,
+            data: form.serialize(),
             success: function(data){
-              authentication(data.employees,form.serializeArray());
-              if(data==false){
+              console.log(data);
+              /*if(data==false){
                 $("#formEmployees h3").text("Log in - Wrong data inserted !");
                 $("#formEmployees h3").addClass("text-danger");
               }else
-                alert("SI");
+                alert("SI");*/
                 //location.reload();// show response from the php script.
             },
             error: function (xhr, ajaxOptions, thrownError) {
-              alert(xhr.status);
-              alert(thrownError);
+              console.log(xhr);
+              console.log(thrownError);
             }
         });
       }

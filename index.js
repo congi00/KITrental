@@ -6,6 +6,8 @@ const routeEmployees = require("./page-templates/back-office/API/employees");
 const routeInventory = require("./page-templates/back-office/API/inventory");
 const routeOperations = require("./page-templates/back-office/API/operations");
 const routeRental = require("./page-templates/back-office/API/rental");
+const routeLogin = require("./page-templates/back-office/API/login");
+const bodyParser = require("body-parser");
 
 const app = express();
 const mongodb = "mongodb://localhost:27017/KITrental";
@@ -19,12 +21,16 @@ app.use("/API/employees",routeEmployees);
 app.use("/API/inventory",routeInventory);
 app.use("/API/operations",routeOperations);
 app.use("/API/rental",routeRental);
+app.use("/API/login",routeLogin);
 
 app.use("/js",express.static(global.rootDir + "/js"));
 app.use("/css",express.static(global.rootDir + "/css"));
 app.use("/img",express.static(global.rootDir + "/img"));
 
-
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json())
 
 
 
