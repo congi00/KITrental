@@ -95,7 +95,7 @@ function showHome() {
               </div>\
           </div>\
         </div>');
-        $("body").append('<button onclick="showClients()" class="btn btn-info btn-lg btn-block btn-dark" type="button">Clients</button>')
+        $("body").append('<button onclick="showClients(); $(\'nav\').show();" class="btn btn-info btn-lg btn-block btn-dark" type="button">Clients</button>')
     }
 
 
