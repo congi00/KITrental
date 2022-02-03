@@ -6,21 +6,21 @@ const Schema = mongoose.Schema;
 
 const rental = new Schema({
   _id: Schema.Types.ObjectId,
-  userId:{
+  client_id:{
     type: Schema.Types.ObjectId,
     ref: "Clients",
     required : true,
   },
-  productId:{
+  product_id:{
     type: Schema.Types.ObjectId,
     ref: "Products",
     required : true,
   },
-  starting_date:{
+  start_date:{
     type: Date,
     required: true,
   },
-  ending_date:{
+  end_date:{
     type: Date,
     required: true,
   },

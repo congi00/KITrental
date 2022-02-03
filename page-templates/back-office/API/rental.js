@@ -9,7 +9,17 @@ var router = express.Router();
 
 // Get every rental
 router.get('/', function (req, res) {
-    Rental.find()
+  const reqQuery = req.query
+  const query = {}
+  // let multiquery= {}
+  // if(queryPassed.state)
+  //     multiquery = {'$in' : queryPassed.state.split(',')}
+  // if (queryPassed.state) query.state = multiquery
+  // if (queryPassed.date_start) query.date_start = queryPassed.date_start
+  // if (queryPassed.date_end) query.date_end = queryPassed.date_end
+  if (reqQuery.client_id) query.client_id = reqQuery.client_id
+
+  Rental.find(query)
     .exec()
     .then(rental => res.status(200).json({ rental }))
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
@@ -19,9 +29,10 @@ router.get('/', function (req, res) {
 router.post('/', async function (req, res) {
   const rental = new Rental({
       _id: new mongoose.Types.ObjectId(),
-      type: req.body.type,
-      employeeId: req.body.employeeId,
-      rentalId: req.body.rentalId,
+      client_id: req.body.client_id,
+      product_id: req.body.product_id,
+      starting_date: req.body.starting_date,
+      ending_date: req.body.ending_date,
     });
     rental
       .save()

@@ -18,47 +18,107 @@ $(function() {
     $("#searchClients").on("keyup", typingLogic);
 
     // Functions
-    appendHead();
-    showClients();
+    //showClients();
 
     // Library Components
     dateRangePicker();
 });
 
+// function appendNav() {
+//   $(document.body).append(`
+
+//     `)
+// }
+
 function showClients() {
+  //appendNav();
   $.ajax({
     url: "API/clients/",
     type: "GET",
-    success: function (response) {
-      console.log(response)
-      if (response == 1) {
-        var clients = jQuery.parseJSON(response)
-        var body = $("#content");
-        body.html("");
-        var tbl = document.createElement('table');
-        tbl.className = "table table-light table-hover";
-        var thd = document.createElement('thead');
-        thd.append(`<tr class="table-light">
-                      <th>Username</th>
-                      <th>Address</th>
-                      <th>Archive</th>
-                      <th>Delete</th>
-                    </tr>`)
-        var tbdy = document.createElement('tbody');
-        $.each(obj, function() {
-          tbdy.append(`<tr class="table-light">
-                        <td>${obj.username}</td>
-                        <td>${obj.address}</td>
-                        <td><a href="#" onclick="someFunction(${obj._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-                        <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="clients" data-id="${obj._id}"></i></td>
-                    </tr>`);
-        })
-        tbl.appendChild(tbdy);
-        tbl.appendChild(thd);
-        body.appendChild(tbl)
-      } else {
-        alert("There was an error.");
-      }
+    success: res => {
+      var content = document.getElementById("content");
+      content.innerHTML = "";
+      var tbl = document.createElement('table');
+      tbl.className = "table table-light table-hover";
+      var thd = document.createElement('thead');
+      $(thd).append(`
+        <tr class="table-light">
+          <th>Username</th>
+          <th>Address</th>
+          <th>Archive</th>
+          <th>Delete</th>
+        </tr>`)
+      var tbdy = document.createElement('tbody');
+      $.each(res.clients, (i, client) => {
+        $(tbdy).append(`
+          <tr class="table-light">
+            <td>${client.username}</td>
+            <td>${client.address}</td>
+            <td><a href="#" onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="clients" data-id="${client._id}"></i></td>
+          </tr>`);
+      })
+      tbl.appendChild(thd);
+      tbl.appendChild(tbdy);
+      content.appendChild(tbl);
+    },
+  }); 
+}
+
+function singleClient(id) {
+  $.ajax({
+    url: "API/clients/" + id,
+    type: "GET",
+    success: res => {
+      var client = res.client;
+      var content = document.getElementById("content");
+      content.innerHTML = "";
+      $(content).append(`
+        <div class="row">
+          <div class="col-md-4 p-5">
+              <img class="img-fluid img-thumbnail" src="${client.avatar ? client.avatar : 'img/profile-placeholder.png'}" alt="Client profile photo">
+          </div>
+          <div class="col-md-8 p-5">
+              <form action="">
+                  <label for="clientUsername" class="form-label">Client's Username</label>
+                  <input type="text" data-db-field="username" class="form-control mb-3" id="clientUsername" value="${client.username ? client.username : ''}" readonly>
+                  
+                  <label for="clientEmailAddress" class="form-label">Client's Email Address</label>
+                  <input type="email" data-db-field="email" class="form-control mb-3" id="clientEmailAddress" value="${client.email ? client.email : ''}" readonly>
+
+                  <label for="clientAddress" class="form-label">Client's Address</label>
+                  <input type="text" data-db-field="address" class="form-control mb-4" id="clientAddress" value="${client.address ? client.address : ''}" readonly>
+
+                  <label for="clientNotes" class="form-label">Client's Notes</label>
+                  <textarea type="text" data-db-field="notes" class="form-control mb-4" id="clientNotes" value="${client.notes ? client.notes : ''}" readonly>
+
+                  <button id="updateData" type="button" class="btn btn-primary" data-collection="clients" data-id="${client._id}">Update Data</button>
+              </form>
+          </div>
+        </div>`)
+
+      var q = {'client_id' : id}
+      $.ajax({
+        url: "API/rental/",
+        type: "GET",
+        data: {query: q},
+        success: res => {
+          if (res.rental.length) {
+            var divRow = document.createElement('div');
+            divRow.className = "row";
+            var list = document.createElement('ul');
+            list.className = "list-group rental-list-group";
+            $.each(res.rental, (i, rental) => {
+            $(list).append(`
+              <li class="list-group-item rental-list-item">
+                ${rental.start_date ? rental.start_date : ''}
+                <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
+              </li>`);
+            });
+            content.appendChild(divRow).appendChild(list); 
+          }
+        },
+      });
     },
   }); 
 }
@@ -319,7 +379,7 @@ function showResult(str) {
 $(document).ready(function(){
   if(window.location.href.indexOf("backoffice") > -1){
     if(loggedIn){
-      $("body").append('\
+      $("#content").append('\
         <div class="container-fluid h-100">\
             <div class="row h-100">\
                 <div id="clients-section" class="col-12 col-lg-4 bg-primary sectionsBack">\
@@ -374,6 +434,7 @@ $(document).ready(function(){
               </div>\
           </div>\
         </div>');
+        $("body").append('<button onclick="showClients()" class="btn btn-info btn-lg btn-block btn-dark" type="button">Clients</button>')
     }
 
 
