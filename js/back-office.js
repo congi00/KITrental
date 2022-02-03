@@ -1,10 +1,16 @@
+/*const express = require('express');
+var router = express.Router();
+var bcrypt = require('bcrypt');*/
+
 // Vars
 var boolUtil = true; // TEMP SOLUTION, UGLY NAME TO RETHINK
 var previousValue = "";
 var typingTimer;
-var loggedIn = false;
+let loggedin;
+//var bcrypt = dcodeIO.bcrypt;
 
 $(function() {
+    (sessionStorage.getItem("usr_id")== null)?loggedIn=false:loggedIn=true;
     // Set the height of the image sections to the remaining space left by the navbar
     if(window.location.href.indexOf("back-office.html") > -1)
       $(".navbar #navbarSupportedContent").addClass("d-none");
@@ -311,7 +317,7 @@ $(document).ready(function(){
                 <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
-                <form id="formEmployees" action="page-templates/back-office/authentication.php">\
+                <form id="formEmployees" action="http://localhost:8000/API/employees">\
                   <div class="text-center">\
                     <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
                   </div>\
@@ -358,15 +364,16 @@ $(document).ready(function(){
         $("#formEmployees h3").addClass("text-danger");
       }else{
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: actionUrl,
-            data: form.serialize(), // serializes the form's elements.
             success: function(data){
+              authentication(data.employees,form.serializeArray());
               if(data==false){
                 $("#formEmployees h3").text("Log in - Wrong data inserted !");
                 $("#formEmployees h3").addClass("text-danger");
               }else
-                location.reload();// show response from the php script.
+                alert("SI");
+                //location.reload();// show response from the php script.
             },
             error: function (xhr, ajaxOptions, thrownError) {
               alert(xhr.status);
@@ -377,3 +384,14 @@ $(document).ready(function(){
     });
   }
 });
+
+function authentication(employees,formData){
+  for(var i = 0; i < employees.length; i++)
+    if(employees[i].username == formData[0].value && employees[i].password == bcrypt.hashSync(formData[0].value, 14)){
+      console.log(employees[i].password == bcrypt.hashSync(formData[0].value, 14));
+      //return true;
+    }else{
+      console.log(employees[i].password == bcrypt.hashSync(formData[0].value, 14));
+    }
+  //return false;
+}
