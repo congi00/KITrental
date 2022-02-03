@@ -18,6 +18,7 @@ $(function() {
     $("#searchClients").on("keyup", typingLogic);
 
     // Functions
+    showHome();
     //showClients();
 
     // Library Components
@@ -30,14 +31,123 @@ $(function() {
 //     `)
 // }
 
+function showHome() {
+  if(window.location.href.indexOf("backoffice") > -1){
+    $('nav').hide();
+    document.getElementById("content").innerHTML = "";
+
+    if(loggedIn){
+      $("#content").append('\
+        <div class="container-fluid h-100">\
+            <div class="row h-100">\
+                <div id="clients-section" class="col-12 col-lg-4 bg-primary sectionsBack">\
+                    <a href="page-templates\back-office\clients.php" class="w-100 h-100">\
+                        <h1 class="text-white text-uppercase">Clients</h1>\
+                    </a>\
+                </div>\
+                <div id="inventory-section" class="col-12 col-lg-4 bg-secondary sectionsBack">\
+                    <a href="page-templates\back-office\inventory.php" class="w-100 h-100">\
+                        <h1 class="text-white text-uppercase">Inventory</h1>\
+                    </a>\
+                </div>\
+                <div id="rental-section" class="col-12 col-lg-4 bg-success sectionsBack">\
+                    <a href="page-templates\back-office\rental.php" class="w-100 h-100">\
+                        <h1 class="text-white text-uppercase">Rental</h1>\
+                    </a>\
+                </div>\
+            </div>\
+        </div>');
+    }else{
+      $("#content").append('\
+      <div class="container-fluid h-100">\
+          <div class="row h-100" id="backendLogin">\
+              <div class="col-12 col-lg-7">\
+                <div id="titleCF">\
+                  <h2 class="text-white display-3 text-center ">Welcome in the</h2>\
+                </div>\
+                <div id="titleCS">\
+                  <h2 class="text-white display-3 text-center ">Back Office</h2>\
+                </div>\
+                <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>\
+              </div>\
+              <div class="col-12 col-lg-5">\
+                <form id="formEmployees" action="page-templates/back-office/authentication.php">\
+                  <div class="text-center">\
+                    <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
+                  </div>\
+                  <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>\
+                  <div class="form-outline mb-3">\
+                    <label class="form-label" for="emplId">Email address</label>\
+                    <input type="email" name="emplId" id="emplUsername" class="form-control form-control-md" required>\
+                  </div>\
+                  <div class="form-outline mb-4">\
+                    <label class="form-label" for="emplPw">Password</label>\
+                    <input type="password" name="emplPw" id="emplPassword" class="form-control form-control-md" required>\
+                  </div>\
+                  <div class="pt-1 mb-4">\
+                    <button class="btn btn-info btn-lg btn-block btn-dark" type="button">Login</button>\
+                  </div>\
+                  <p class="small mb-5 pb-lg-2 text-center"><a class="text-muted" href="#!">Forgot password?</a></p>\
+                </form>\
+              </div>\
+          </div>\
+        </div>');
+        $("body").append('<button onclick="showClients(); $(\'nav\').show();" class="btn btn-info btn-lg btn-block btn-dark" type="button">Clients</button>')
+    }
+
+
+
+    $( ".sectionsBack" ).each(function(){
+      $(this).hover(function(){
+        $(this).css("background-size","300%");
+        $("a h1",this).css("fontSize","4.5rem");
+      },function(){
+        $(this).css("background-size","250%");
+        $("a h1",this).css("fontSize","4rem");
+      });
+    });
+
+    $("#formEmployees .btn").click(function(e) {
+      var form = $("#formEmployees");
+      var actionUrl = form.attr('action');
+
+      if(!isEmail($("input[type='email']").val())){
+        $("#formEmployees h3").text("Log in - Insert valid email !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else if($("input[type='password']").val() == ""){
+        $("#formEmployees h3").text("Log in - Insert password !");
+        $("#formEmployees h3").addClass("text-danger");
+      }else{
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+              if(data==false){
+                $("#formEmployees h3").text("Log in - Wrong data inserted !");
+                $("#formEmployees h3").addClass("text-danger");
+              }else
+                location.reload();// show response from the php script.
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              alert(xhr.status);
+              alert(thrownError);
+            }
+        });
+      }
+    });
+  }
+}
+ 
 function showClients() {
-  //appendNav();
   $.ajax({
     url: "API/clients/",
     type: "GET",
     success: res => {
       var content = document.getElementById("content");
       content.innerHTML = "";
+      var container = document.createElement('div');
+      container.className = "container table-wrapper pt-5";
       var tbl = document.createElement('table');
       tbl.className = "table table-light table-hover";
       var thd = document.createElement('thead');
@@ -54,13 +164,13 @@ function showClients() {
           <tr class="table-light">
             <td>${client.username}</td>
             <td>${client.address}</td>
-            <td><a href="#" onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><a onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
             <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="clients" data-id="${client._id}"></i></td>
           </tr>`);
       })
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
-      content.appendChild(tbl);
+      content.appendChild(container).appendChild(tbl);
     },
   }); 
 }
@@ -90,9 +200,9 @@ function singleClient(id) {
                   <input type="text" data-db-field="address" class="form-control mb-4" id="clientAddress" value="${client.address ? client.address : ''}" readonly>
 
                   <label for="clientNotes" class="form-label">Client's Notes</label>
-                  <textarea type="text" data-db-field="notes" class="form-control mb-4" id="clientNotes" value="${client.notes ? client.notes : ''}" readonly>
+                  <textarea type="text" data-db-field="notes" class="form-control mb-4" id="clientNotes" value="${client.notes ? client.notes : ''}" readonly></textarea>
 
-                  <button id="updateData" type="button" class="btn btn-primary" data-collection="clients" data-id="${client._id}">Update Data</button>
+                  <button id="updateData" onclick="updateRecordInfo(this)" type="button" class="btn btn-primary" data-collection="clients" data-id="${client._id}">Update Data</button>
               </form>
           </div>
         </div>`)
@@ -105,17 +215,28 @@ function singleClient(id) {
         success: res => {
           if (res.rental.length) {
             var divRow = document.createElement('div');
-            divRow.className = "row";
-            var list = document.createElement('ul');
-            list.className = "list-group rental-list-group";
+            divRow.className = "row rental-cards-group px-5";
             $.each(res.rental, (i, rental) => {
-            $(list).append(`
-              <li class="list-group-item rental-list-item">
-                ${rental.start_date ? rental.start_date : ''}
-                <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
-              </li>`);
+            $(divRow).append(`
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">${rental.start_date ? rental.start_date : ''}</li>
+                  <li class="list-group-item">${rental.end_date ? rental.end_date : ''}</li>
+                  <li class="list-group-item">A third item</li>
+                </ul>
+                <div class="card-body">
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
+                </div>
+              </div>`);
             });
-            content.appendChild(divRow).appendChild(list); 
+            
+            content.appendChild(divRow); 
           }
         },
       });
@@ -182,15 +303,13 @@ function createRecord() {
   });
 }
 
-function updateRecordInfo() {
-  var el = this;
-
+function updateRecordInfo(el) {
   var updateRecordCollection = $(el).data("collection");
 
   var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
   if (updateRecordCollection === 'clients' || ( updateRecordCollection === 'rental' && new Date(startDate) > new Date() ) || updateRecordCollection === 'inventory' ) {
     if (boolUtil) {
-      $(el).siblings("input").attr("readonly", false);
+      $(el).siblings("input, textarea").attr("readonly", false);
       $(el).siblings("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
@@ -373,110 +492,3 @@ function showResult(str) {
         $(this).hide();
     });
 }
-
-
-
-$(document).ready(function(){
-  if(window.location.href.indexOf("backoffice") > -1){
-    if(loggedIn){
-      $("#content").append('\
-        <div class="container-fluid h-100">\
-            <div class="row h-100">\
-                <div id="clients-section" class="col-12 col-lg-4 bg-primary sectionsBack">\
-                    <a href="page-templates\back-office\clients.php" class="w-100 h-100">\
-                        <h1 class="text-white text-uppercase">Clients</h1>\
-                    </a>\
-                </div>\
-                <div id="inventory-section" class="col-12 col-lg-4 bg-secondary sectionsBack">\
-                    <a href="page-templates\back-office\inventory.php" class="w-100 h-100">\
-                        <h1 class="text-white text-uppercase">Inventory</h1>\
-                    </a>\
-                </div>\
-                <div id="rental-section" class="col-12 col-lg-4 bg-success sectionsBack">\
-                    <a href="page-templates\back-office\rental.php" class="w-100 h-100">\
-                        <h1 class="text-white text-uppercase">Rental</h1>\
-                    </a>\
-                </div>\
-            </div>\
-        </div>');
-    }else{
-      $("body").append('\
-      <div class="container-fluid h-100">\
-          <div class="row h-100" id="backendLogin">\
-              <div class="col-12 col-lg-7">\
-                <div id="titleCF">\
-                  <h2 class="text-white display-3 text-center ">Welcome in the</h2>\
-                </div>\
-                <div id="titleCS">\
-                  <h2 class="text-white display-3 text-center ">Back Office</h2>\
-                </div>\
-                <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>\
-              </div>\
-              <div class="col-12 col-lg-5">\
-                <form id="formEmployees" action="page-templates/back-office/authentication.php">\
-                  <div class="text-center">\
-                    <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
-                  </div>\
-                  <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>\
-                  <div class="form-outline mb-3">\
-                    <label class="form-label" for="emplId">Email address</label>\
-                    <input type="email" name="emplId" id="emplUsername" class="form-control form-control-md" required>\
-                  </div>\
-                  <div class="form-outline mb-4">\
-                    <label class="form-label" for="emplPw">Password</label>\
-                    <input type="password" name="emplPw" id="emplPassword" class="form-control form-control-md" required>\
-                  </div>\
-                  <div class="pt-1 mb-4">\
-                    <button class="btn btn-info btn-lg btn-block btn-dark" type="button">Login</button>\
-                  </div>\
-                  <p class="small mb-5 pb-lg-2 text-center"><a class="text-muted" href="#!">Forgot password?</a></p>\
-                </form>\
-              </div>\
-          </div>\
-        </div>');
-        $("body").append('<button onclick="showClients()" class="btn btn-info btn-lg btn-block btn-dark" type="button">Clients</button>')
-    }
-
-
-
-    $( ".sectionsBack" ).each(function(){
-      $(this).hover(function(){
-        $(this).css("background-size","300%");
-        $("a h1",this).css("fontSize","4.5rem");
-      },function(){
-        $(this).css("background-size","250%");
-        $("a h1",this).css("fontSize","4rem");
-      });
-    });
-
-    $("#formEmployees .btn").click(function(e) {
-      var form = $("#formEmployees");
-      var actionUrl = form.attr('action');
-
-      if(!isEmail($("input[type='email']").val())){
-        $("#formEmployees h3").text("Log in - Insert valid email !");
-        $("#formEmployees h3").addClass("text-danger");
-      }else if($("input[type='password']").val() == ""){
-        $("#formEmployees h3").text("Log in - Insert password !");
-        $("#formEmployees h3").addClass("text-danger");
-      }else{
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: form.serialize(), // serializes the form's elements.
-            success: function(data){
-              if(data==false){
-                $("#formEmployees h3").text("Log in - Wrong data inserted !");
-                $("#formEmployees h3").addClass("text-danger");
-              }else
-                location.reload();// show response from the php script.
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-              alert(xhr.status);
-              alert(thrownError);
-            }
-        });
-      }
-    });
-  }
-});
