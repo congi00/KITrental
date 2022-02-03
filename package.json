@@ -4,7 +4,8 @@
   "description": "*SEEEEE PORCA MADONNAAA*",
   "main": "index.js",
   "scripts": {
-    "build": "babel js/front-office/ -d lib"
+    "build": "babel js/front-office/ -d lib",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
