@@ -16,9 +16,51 @@ $(function() {
     $("#searchObjects").on("keyup", typingLogic);
     $("#searchClients").on("keyup", typingLogic);
 
+    // Functions
+    appendHead();
+    showClients();
+
     // Library Components
     dateRangePicker();
 });
+
+function showClients() {
+  $.ajax({
+    url: "API/clients/",
+    type: "GET",
+    success: function (response) {
+      console.log(response)
+      if (response == 1) {
+        var clients = jQuery.parseJSON(response)
+        var body = $("#content");
+        body.html("");
+        var tbl = document.createElement('table');
+        tbl.className = "table table-light table-hover";
+        var thd = document.createElement('thead');
+        thd.append(`<tr class="table-light">
+                      <th>Username</th>
+                      <th>Address</th>
+                      <th>Archive</th>
+                      <th>Delete</th>
+                    </tr>`)
+        var tbdy = document.createElement('tbody');
+        $.each(obj, function() {
+          tbdy.append(`<tr class="table-light">
+                        <td>${obj.username}</td>
+                        <td>${obj.address}</td>
+                        <td><a href="#" onclick="someFunction(${obj._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+                        <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="clients" data-id="${obj._id}"></i></td>
+                    </tr>`);
+        })
+        tbl.appendChild(tbdy);
+        tbl.appendChild(thd);
+        body.appendChild(tbl)
+      } else {
+        alert("There was an error.");
+      }
+    },
+  }); 
+}
 
 function createRecord() {
   var el = this;
