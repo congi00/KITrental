@@ -20,6 +20,12 @@ app.use("/API/inventory",routeInventory);
 app.use("/API/operations",routeOperations);
 app.use("/API/rental",routeRental);
 
+app.use("/js",express.static(global.rootDir + "/js"));
+app.use("/css",express.static(global.rootDir + "/css"));
+app.use("/img",express.static(global.rootDir + "/img"));
+
+
+
 
 
 
@@ -31,7 +37,15 @@ db.once('open', function () {
 })
 
 app.get('/', (req, res) => {
-    res.sendFile(global.rootDir + "/index.html");
+    res.sendFile(global.rootDir + "/page-templates/front-office/index.html");
+})
+
+app.get('/backoffice', (req, res) => {
+    res.sendFile(global.rootDir + "/page-templates/back-office/index.html");
+})
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(global.rootDir + "/page-templates/dashboard/index.html");
 })
 
 app.listen(port, ()=>{
