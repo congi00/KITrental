@@ -153,7 +153,7 @@ function authentication(employees,formData){
     }
   //return false;
 }
- 
+
 function showClients() {
   $.ajax({
     url: "API/clients/",
@@ -249,13 +249,8 @@ function singleClient(id) {
                   <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
                 </div>
               </div>`);
-            });
-<<<<<<< HEAD
-            content.appendChild(divRow).appendChild(list);
-=======
-            
-            content.appendChild(divRow); 
->>>>>>> 19fc3bb44437baf1e2245d09a1dada60a8012af0
+            });            
+            content.appendChild(divRow);
           }
         },
       });
