@@ -5,11 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Navbar from "./navbar";
 import Landing from "./landing";
+import FooterHome from "./FooterHome";
 
 ReactDOM.render(
   <React.StrictMode>
     <Navbar />
     <Landing />
+    <FooterHome />
   </React.StrictMode>,
   document.getElementById('root')
 );
