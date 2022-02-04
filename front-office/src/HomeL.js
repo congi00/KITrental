@@ -6,7 +6,7 @@ import HomeSection from "./HomeSection";
 import AboutSection from "./AboutSection";
 
 
-function Landing(){
+function HomeL(){
   return (
     <div className="Landing-home">
       <HomeSection/>
@@ -15,4 +15,4 @@ function Landing(){
   );
 }
 
-export default Landing;
+export default HomeL;

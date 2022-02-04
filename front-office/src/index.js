@@ -1,18 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Navbar from "./navbar";
-import Landing from "./landing";
-import FooterHome from "./FooterHome";
+import Landing from "./routes/Landing";
+import JoinUs from "./routes/JoinUs";
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Navbar />
-    <Landing />
-    <FooterHome />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Landing />}/>
+      <Route path="/joinus" element={<JoinUs />} />
+    </Routes>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

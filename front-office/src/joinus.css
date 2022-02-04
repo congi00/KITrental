@@ -1,0 +1,23 @@
+.TitleNav{
+  display: none;
+}
+
+.logoNav{
+  left:27.5vw;
+}
+
+.userIcon{
+  left: 35vw;
+  top: 4vh;
+}
+
+.cartIcon{
+  top: 4vh;
+}
+
+.hamburgerIcon{
+  display: inline-block;
+  position: relative;
+  right: 55vw;
+  top:4vh;
+}

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Supermercado+One&display=swap');
+
 .Nav-container{
   width: 100vw;
   height: 13vh;
@@ -16,4 +18,32 @@
 .MenuIcon{
   width: 30vw;
   height: 30vh;
+}
+
+.nav-item{
+  list-style: none;
+}
+
+.TitleNav{
+  text-decoration: none;
+  font-family: 'Supermercado One', cursive;
+  font-size: 2rem;
+  position: relative;
+  left: 13vw;
+  top:8vh;
+}
+
+.userIcon{
+  position: relative;
+  left: 10vw;
+  top: 2vh;
+}
+
+.cartIcon{
+  position: relative;
+  top: 2vh;
+}
+
+.hamburgerIcon{
+  display: none;
 }
