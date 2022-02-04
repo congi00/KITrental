@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Navbar from "./navbar";
+import Landing from "./landing";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Navbar />
+    <Landing />
   </React.StrictMode>,
   document.getElementById('root')
 );
