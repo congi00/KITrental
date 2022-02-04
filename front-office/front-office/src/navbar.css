@@ -1,6 +1,15 @@
 .Nav-container{
   width: 100vw;
-  background-color: transparent;
+  height: 13vh;
+  background: #fff;
+  box-shadow: 0px 5px 5px;
+}
+
+.logoNav{
+  width: 45vw;
+  position: fixed;
+  left:0;
+  top:-1vh;
 }
 
 .MenuIcon{

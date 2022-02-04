@@ -1,5 +1,7 @@
 import React,{useState} from 'react'
+import './navbar.css'
 import navIcon from "./menuicon.svg"
+import logo from "./img/KITrental-logos_transparent.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     Navbar,
@@ -17,14 +19,16 @@ function NavB(){
   return (
     <div className="Nav-container">
         <Navbar light expand="lg">
-            <NavbarToggler onClick={() => { setIsOpen(!isOpen) }} />
-            <Collapse isOpen={isOpen} navbar>
-                <Nav className="mr-auto" navbar>
-                  <NavItem>
-                    <img width="10%" src={navIcon} alt="Menu icon"/>
-                  </NavItem>
-                </Nav>
-            </Collapse>
+          <NavbarBrand>
+            <img className="logoNav" src={logo} />
+          </NavbarBrand>
+          <Collapse isOpen={isOpen} navbar>
+              <Nav className="mr-auto" navbar>
+                <NavItem>
+                  <img width="10%" src={navIcon} alt="Menu icon"/>
+                </NavItem>
+              </Nav>
+          </Collapse>
         </Navbar>
     </div >
   );
