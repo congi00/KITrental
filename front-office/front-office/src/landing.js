@@ -5,7 +5,10 @@ import Background from './img/landingBg.jpg';
 var homeStyle = {
   width: "100vw",
   height: "100vh",
-  backgroundImage: `url(${Background})`,
+  position: "absolute",
+  top: "0",
+  zIndex: "-1",
+  backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2),rgba(0, 0, 0, 0.1)),url(${Background})",
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat'
