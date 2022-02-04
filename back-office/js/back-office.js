@@ -121,7 +121,6 @@ function showHome() {
         $.ajax({
             type: "POST",
             url: actionUrl,
-            contentType: 'application/json',
             data: JSON.stringify(formdata),
             dataType: "json",
             contentType: "application/json",
