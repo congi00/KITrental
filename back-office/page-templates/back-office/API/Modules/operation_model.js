@@ -11,12 +11,12 @@ const operation = new Schema({
     enum: ["rent_create","rent_update","rent_close"],
     required: true,
   },
-  employeeId:{
+  employee_id:{
     type: Schema.Types.ObjectId,
     ref: "Employees",
     required: true,
   },
-  rentalId:{
+  rental_id:{
     type: Schema.Types.ObjectId,
     ref: "Rental",
     required: true,

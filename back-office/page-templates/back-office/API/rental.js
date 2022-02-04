@@ -27,12 +27,13 @@ router.get('/', function (req, res) {
 
 //Add a new rental
 router.post('/', async function (req, res) {
+  console.log(req.body)
   const rental = new Rental({
       _id: new mongoose.Types.ObjectId(),
       client_id: req.body.client_id,
       product_id: req.body.product_id,
-      starting_date: req.body.starting_date,
-      ending_date: req.body.ending_date,
+      start_date: req.body.start_date,
+      end_date: req.body.end_date,
     });
     rental
       .save()

@@ -9,7 +9,10 @@ var router = express.Router();
 
 // Get all the operations
 router.get('/', function (req, res) {
-    Operation.find()
+  const reqQuery = req.query
+  const query = {}
+  if (reqQuery.rental_id) query.rental_id = reqQuery.rental_id
+  Operation.find()
     .exec()
     .then(operations => res.status(200).json({ operations }))
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
