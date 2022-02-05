@@ -16,11 +16,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { faHamburger } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 
 
 function NavB(){
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isActive, setActive] = React.useState("false");
+
+  const handleToggle = () => {
+    setActive(!isActive);
+  };
   return (
     <div className="Nav-container">
         <Navbar light expand="lg">
@@ -36,13 +41,35 @@ function NavB(){
               </Link>
             </NavItem>
             <NavItem>
-              <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x"/>
+              <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle}/>
             </NavItem>
-            <NavItem>
+            <NavItem >
               <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
             </NavItem>
           </Nav>
+          <Nav className={isActive ? "displayNone menuToggle" : "displayBlock menuToggle"} >
+          <NavItem >
+            <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle}/>
+          </NavItem>
+          <NavItem >
+            <h3>Home</h3>
+          </NavItem>
+          <NavItem>
+            <h3>Professional utilities</h3>
+          </NavItem>
+          <NavItem>
+            <h3>Household products</h3>
+          </NavItem>
+          <NavItem>
+            <h3>Sign Up</h3>
+          </NavItem>
+          <NavItem>
+            <h3>Log In</h3>
+          </NavItem>
+          </Nav>
         </Navbar>
+        <div className={isActive ? "displayNone menuToggle menuToggleTwo" : "displayBlock menuToggle menuToggleTwo"}/>
+        <div className={isActive ? "displayNone menuToggle menuToggleTwo" : "displayBlock menuToggle menuToggleThree"}/>
     </div >
   );
 }
