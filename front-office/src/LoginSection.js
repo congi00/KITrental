@@ -10,7 +10,7 @@ function JoinSection(){
     <div className="formPageL">
       <img className="joinImg" src={LinkBack} style={{top:"8vh"}}/>
       <div className="divRotL"/>
-      <div className="divRotL" style={{bottom:"131vh",backgroundColor:"#081715"}}/>
+      <div className="divRotL" style={{bottom:"134vh",backgroundColor:"#081715",width:"5vw"}}/>
       <div className="formContainerL"/>
       <FormLogin/>
     </div>
