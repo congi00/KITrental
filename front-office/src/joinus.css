@@ -1,23 +1,54 @@
-.TitleNav{
-  display: none;
-}
-
-.logoNav{
-  left:27.5vw;
-}
-
-.userIcon{
-  left: 35vw;
-  top: 4vh;
-}
-
-.cartIcon{
-  top: 4vh;
-}
-
-.hamburgerIcon{
-  display: inline-block;
+.joinImg{
+  width: 100vw;
   position: relative;
-  right: 55vw;
-  top:4vh;
+  top:5vh;
+  z-index: 0;
+}
+
+.formPage{
+  overflow: hidden;
+  background-color: #222;
+  height: 100vh;
+}
+
+.divRot{
+  width: 20vw;
+  height: 100vh;
+  position: relative;
+  left: 10vw;
+  bottom:48vh;
+  background-color: #fff;
+  transform: rotate(-80deg);
+  z-index: 1;
+}
+
+.formContainer{
+  width: 80vw;
+  height: 55vh;
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(5px);
+  position: absolute;
+  top:40vh;
+  left:10vw;
+  border-radius: 10px;
+
+}
+
+.formFields{
+  width: 80vw;
+  height: 55vh;
+  position: absolute;
+  top:40vh;
+  left:10vw;
+}
+
+.titleForm{
+  font-size: 3rem;
+  font-family: 'Abril Fatface', cursive;
+  color: #222;
+  position: relative;
+  bottom: 4vh;
+  left: 15vw;
+  transform: rotate(9deg);
+  z-index: 2;
 }

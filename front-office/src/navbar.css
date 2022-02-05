@@ -6,12 +6,13 @@
   background: #fff;
   box-shadow: 0px 5px 5px;
   position: fixed;
+  z-index: 2;
 }
 
 .logoNav{
   width: 45vw;
   position: fixed;
-  left:-4vw;
+  left:27.5vw;
   top:-2vh;
 }
 
@@ -20,30 +21,21 @@
   height: 30vh;
 }
 
-.nav-item{
-  list-style: none;
-}
-
-.TitleNav{
-  text-decoration: none;
-  font-family: 'Supermercado One', cursive;
-  font-size: 2rem;
-  position: relative;
-  left: 13vw;
-  top:8vh;
-}
 
 .userIcon{
   position: relative;
-  left: 10vw;
-  top: 2vh;
+  left: 5vw;
+  top: 4vh;
 }
 
 .cartIcon{
   position: relative;
-  top: 2vh;
+  top: 4vh;
 }
 
 .hamburgerIcon{
-  display: none;
+  display: inline-block;
+  position: relative;
+  right: 70vw;
+  top:4vh;
 }

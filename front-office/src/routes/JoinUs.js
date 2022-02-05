@@ -4,12 +4,15 @@ import { Button } from 'reactstrap';
 import { Link } from "react-router-dom";
 import '../joinus.css';
 import Navbar from "../navbar";
-
+import JoinSection from "../joinSection"
 
 
 function JoinUs(){
   return(
-    <Navbar/>
+    <div className="joinUsPage">
+      <Navbar/>
+      <JoinSection/>
+    </div>
   );
 }
 
