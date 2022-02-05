@@ -1,12 +1,12 @@
 global.rootDir = __dirname ;
 const mongoose = require("mongoose");
 const express = require("express");
-const routeClients = require("./page-templates/back-office/API/clients");
-const routeEmployees = require("./page-templates/back-office/API/employees");
-const routeInventory = require("./page-templates/back-office/API/inventory");
-const routeOperations = require("./page-templates/back-office/API/operations");
-const routeRental = require("./page-templates/back-office/API/rental");
-const routeLogin = require("./page-templates/back-office/API/login");
+const routeClients = require("./back-office/page-templates/back-office/API/clients");
+const routeEmployees = require("./back-office/page-templates/back-office/API/employees");
+const routeInventory = require("./back-office/page-templates/back-office/API/inventory");
+const routeOperations = require("./back-office/page-templates/back-office/API/operations");
+const routeRental = require("./back-office/page-templates/back-office/API/rental");
+const routeLogin = require("./back-office/page-templates/back-office/API/login");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -23,9 +23,9 @@ app.use("/API/operations",routeOperations);
 app.use("/API/rental",routeRental);
 app.use("/API/login",routeLogin);
 
-app.use("/js",express.static(global.rootDir + "/js"));
-app.use("/css",express.static(global.rootDir + "/css"));
-app.use("/img",express.static(global.rootDir + "/img"));
+app.use("/js",express.static(global.rootDir + "/back-office/js"));
+app.use("/css",express.static(global.rootDir + "/back-office/css"));
+app.use("/img",express.static(global.rootDir + "/back-office/img"));
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -43,15 +43,15 @@ db.once('open', function () {
 })
 
 app.get('/', (req, res) => {
-    res.sendFile(global.rootDir + "/page-templates/front-office/index.html");
+    res.sendFile(global.rootDir + "/front-office/public/index.html");
 })
 
 app.get('/backoffice', (req, res) => {
-    res.sendFile(global.rootDir + "/page-templates/back-office/index.html");
+    res.sendFile(global.rootDir + "/back-office/page-templates/back-office/index.html");
 })
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(global.rootDir + "/page-templates/dashboard/index.html");
+    res.sendFile(global.rootDir + "/dashboard/admin-dashboard.html");
 })
 
 app.listen(port, ()=>{
