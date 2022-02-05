@@ -300,7 +300,7 @@ function showRental() {
           <th>End Date</th>
           <th>Archive</th>
           <th>Client</th>
-        </tr>`)  
+        </tr>`)
       var tbdy = document.createElement('tbody');
       var past_tbdy = document.createElement('tbody');
       var curr_date = new Date();
@@ -323,7 +323,7 @@ function showRental() {
               <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
             </tr>`);
         }
-        
+
       })
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
@@ -347,7 +347,7 @@ function showRental() {
         <div class="mb-3">
             <label for="rentalStartDate" class="form-label">Rental Starting Date</label>
             <input required type="datetime-local" data-db-field="starting_date" class="form-control mb-3" id="rentalStartDate">
-            
+
             <label for="rentalEndDate" class="form-label">Rental Ending Date</label>
             <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate">
         </div>`
@@ -383,10 +383,10 @@ function singleRental(id) {
               <form action="">
                   <label for="rentalStartDate" class="form-label">Starting Date</label>
                   <input type="datetime-local" data-db-field="starting_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toUTCString()}" readonly>
-                  
+
                   <label for="rentalEndDate" class="form-label">Ending Date</label>
                   <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toUTCString()}" readonly>
-                  
+
                   <!-- If the end date is in the future, add a button to modify and update the rental data -->
                   ${(new Date() < new Date(rental.end_date)) ? '<button id="updateData" type="button" class="btn btn-primary" data-collection="rental" data-id="${rental._id}">Update Data</button>' : ''}
               </form>
@@ -456,7 +456,7 @@ function singleRental(id) {
               <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
                   <option value="available">Available</option>
                   <option value="unavailable">Unavailable</option>
-              </select> 
+              </select>
           </div>
           <div class="mb-3">
               <label for="productState" class="form-label">State</label>
@@ -469,6 +469,124 @@ function singleRental(id) {
             </textarea>
         </div>`
       $(content).append(createModal('operations', id, body))
+    },
+  });
+}
+
+// Retrieve and display all the products
+function showInventory() {
+  $.ajax({
+    url: "API/inventory/",
+    type: "GET",
+    success: res => {
+      var content = document.getElementById("content");
+      content.innerHTML = "";
+      var container = document.createElement('div');
+      container.className = "container table-wrapper pt-5";
+      var tbl = document.createElement('table');
+      tbl.className = "table table-light table-hover";
+      var thd = document.createElement('thead');
+      $(thd).append(`
+        <tr class="table-light">
+          <th>Name</th>
+          <th>Image</th>
+          <th>Avaiability</th>
+          <th>State</th>
+          <th>Price</th>
+          <th>Archive</th>
+          <th>Delete</th>
+        </tr>`)
+      var tbdy = document.createElement('tbody');
+      $.each(res.products, (i, product) => {
+        $(tbdy).append(`
+          <tr class="table-light">
+            <td>${product.name}</td>
+            <td><img src="../img/products/${product.image}" width="30vw"></td>
+            <td>${product.avaiability}</td>
+            <td>${product.state}</td>
+            <td>${product.price}</td>
+            <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><i onclick="deleteRecord('products', '${product._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+          </tr>`);
+      })
+      tbl.appendChild(thd);
+      tbl.appendChild(tbdy);
+      content.appendChild(container).appendChild(tbl);
+    },
+  });
+}
+
+// Retrieve and display one single product
+function singleInventory(id) {
+  var stateEnum = {
+         new: "new",
+         perfect: "perfect",
+         good: "good",
+         broken: "broken"
+  };
+  $.ajax({
+    url: "API/inventory/" + id,
+    type: "GET",
+    success: res => {
+      var product = res.products;
+      var content = document.getElementById("content");
+      content.innerHTML = "";
+      $(content).append(`
+        <div class="row">
+          <div class="col-md-4 p-5">
+              <img class="img-fluid img-thumbnail" src="../img/products/${product.image ? product.image : 'img/profile-placeholder.png'}" alt="Product profile photo">
+          </div>
+          <div class="col-md-8 p-5">
+              <form action="">
+                  <label for="productName" class="form-label">Product's name</label>
+                  <input type="text" data-db-field="name" class="form-control mb-3" id="productName" value="${product.name ? product.name : ''}" readonly>
+
+                  <label for="productAvaiability" class="form-label">Product's avaiability</label><br>
+                  <select id="productAvaiability" name="avaiability" data-db-field="avaiability" disabled>
+                    <option value="${product.avaiability ? product.avaiability : ''}">${product.avaiability ? product.avaiability : ''}</option>
+                    <option value="${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}">${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}</option>
+                  </select><br>
+
+                  <label for="productPrice" class="form-label">Price</label>
+                  <input type="number" data-db-field="price" class="form-control mb-3" id="productPrice" value="${product.price ? product.price : ''}" readonly>
+
+                  <button id="updateData" onclick="updateRecordInfo('inventory', '${product._id}', this)" type="button" class="btn btn-primary">Update Data</button>
+              </form>
+          </div>
+        </div>`)
+
+      var q = {'product_id' : id}
+      $.ajax({
+        url: "API/rental/",
+        type: "GET",
+        data: {query: q},
+        success: res => {
+          if (res.rental.length) {
+            var divRow = document.createElement('div');
+            divRow.className = "row rental-cards-group px-5";
+            $.each(res.rental, (i, rental) => {
+            $(divRow).append(`
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">${rental.start_date ? rental.start_date : ''}</li>
+                  <li class="list-group-item">${rental.end_date ? rental.end_date : ''}</li>
+                  <li class="list-group-item">A third item</li>
+                </ul>
+                <div class="card-body">
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
+                </div>
+              </div>`);
+            });
+            content.appendChild(divRow);
+          }
+        },
+      });
     },
   });
 }
