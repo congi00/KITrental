@@ -1,0 +1,58 @@
+.divRotL{
+  width: 20vw;
+  height: 100vh;
+  position: relative;
+  left: 10vw;
+  bottom:40vh;
+  background-color: #fff;
+  transform: rotate(80deg);
+  z-index: 1;
+}
+
+.formPageL{
+  background-color: #081715;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.titleFormL{
+  font-size: 3rem;
+  font-family: 'Abril Fatface', cursive;
+  color: #222;
+  position: relative;
+  bottom: 9vh;
+  left: 15vw;
+  transform: rotate(-9deg);
+  z-index: 2;
+}
+
+.firstSectionL{
+  position: relative;
+  top:8vh;
+  text-align: right;
+  width: 100%;
+}
+
+.firstSectionL label{
+  margin-right: 9vw;
+}
+.formContainerL{
+  width: 80vw;
+  height: 50vh;
+  background-color: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(5px);
+  position: absolute;
+  top:45vh;
+  left:10vw;
+  border-radius: 10px;
+}
+
+.btnFormL{
+  width: 40vw;
+  height: 6vh;
+  background-color: #161616;
+  border-color: #161616;
+  position: relative;
+  left: 20vw;
+  margin-top: 10vh;
+}

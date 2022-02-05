@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Landing from "./routes/Landing";
 import JoinUs from "./routes/JoinUs";
+import Login from "./routes/Login";
 
 
 ReactDOM.render(
@@ -13,6 +14,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Landing />}/>
       <Route path="/joinus" element={<JoinUs />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
