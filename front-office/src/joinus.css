@@ -1,3 +1,4 @@
+
 .joinImg{
   width: 100vw;
   position: relative;
@@ -38,7 +39,7 @@
   width: 80vw;
   height: 55vh;
   position: absolute;
-  top:40vh;
+  top:42vh;
   left:10vw;
 }
 
@@ -47,8 +48,31 @@
   font-family: 'Abril Fatface', cursive;
   color: #222;
   position: relative;
-  bottom: 4vh;
+  bottom: 6vh;
   left: 15vw;
   transform: rotate(9deg);
   z-index: 2;
+}
+
+.form-control{
+  width: 90%;
+  position: relative;
+  left: 5%;
+}
+
+.form-label{
+  color: #fff;
+  position: relative;
+  left: 5%;
+  font-family: 'Jost', sans-serif;
+}
+
+.btnForm{
+  width: 40vw;
+  height: 6vh;
+  background-color: #161616;
+  border-color: #161616;
+  position: relative;
+  left: 20vw;
+  margin-top: 3vh;
 }

@@ -4,33 +4,35 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 import './joinus.css';
 
+
+
 function FormSignUp(){
+
   return(
     <div className="formSection">
       <div className="formFields">
         <Form>
         <Form.Text>
-          <div class="titleForm">
+          <div className="titleForm">
             SIGN UP
           </div>
         </Form.Text>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
+        <div className="firstSection">
+          <Form.Group className="mb-3" controlId="formBasicText">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Name" />
           </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
+          <Form.Group className="mb-3" controlId="formBasicText">
+            <Form.Label>Surname</Form.Label>
+            <Form.Control type="text" placeholder="Surname" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
+            <Form.Group className="mb-3" controlId="formBasicText">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Username" />
+            </Form.Group>
+          </div>
+          <Button  className="btnForm">
+            Go on
           </Button>
         </Form>
       </div>

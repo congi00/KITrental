@@ -31,7 +31,9 @@ function NavB(){
           </NavbarBrand>
           <Nav>
             <NavItem>
-              <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
+              <Link to="/login">
+                <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
+              </Link>
             </NavItem>
             <NavItem>
               <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x"/>
