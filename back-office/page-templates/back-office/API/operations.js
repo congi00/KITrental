@@ -25,6 +25,7 @@ router.post('/', async function (req, res) {
       type: req.body.type,
       employeeId: req.body.employeeId,
       rentalId: req.body.rentalId,
+      notes: req.body.notes,
     });
     operation
       .save()
