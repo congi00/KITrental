@@ -506,7 +506,7 @@ function showInventory() {
             <td>${product.state}</td>
             <td>${product.price}</td>
             <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            <td><i onclick="deleteRecord('products', '${product._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            <td><i onclick="deleteRecord('inventory', '${product._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
           </tr>`);
       })
       tbl.appendChild(thd);
@@ -531,6 +531,7 @@ function singleInventory(id) {
       var product = res.products;
       var content = document.getElementById("content");
       content.innerHTML = "";
+      alert(product.image);
       $(content).append(`
         <div class="row">
           <div class="col-md-4 p-5">
@@ -555,7 +556,7 @@ function singleInventory(id) {
           </div>
         </div>`)
 
-      var q = {'product_id' : id}
+      /*var q = {'product_id' : id}
       $.ajax({
         url: "API/rental/",
         type: "GET",
@@ -586,7 +587,7 @@ function singleInventory(id) {
             content.appendChild(divRow);
           }
         },
-      });
+      });*/
     },
   });
 }
@@ -718,6 +719,7 @@ function updateRecordInfo(col, id, el) {
         data: JSON.stringify(toUpdateObject),
         success: function (response) {
           if (response) {
+            console.log(response);
             // Put everything back to read-only
             $(el).html("Update Data");
             $(el).siblings("input, textarea").attr("readonly", true);
@@ -769,9 +771,10 @@ function deleteRecord(col, id, el) {
       // AJAX Request
       $.ajax({
         url: "API/" + col + "/" + id,
-        type: "POST",
+        type: "DELETE",
         success: function (response) {
-          if (response == 1) {
+          console.log(response);
+          if (response == 1 || response.result != NULL) {
             // Remove row from HTML Table
             $(el).closest("tr").css("--bs-table-bg", "red");
             $(el)
@@ -779,7 +782,7 @@ function deleteRecord(col, id, el) {
               .fadeOut(800, function () {
                 $(this).remove();
               });
-          } else {
+          }else{
             alert("Invalid ID.");
           }
         },

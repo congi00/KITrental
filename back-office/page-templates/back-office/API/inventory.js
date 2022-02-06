@@ -75,8 +75,7 @@ router.delete('/:id', async function (req, res) {
 router.patch('/:id', async function (req, res) {
   await Products.findOneAndUpdate(
     { _id: req.params.id},
-    req.body,
-    { overwrite: true }
+    req.body
   )
   .exec()
   .then(result =>
