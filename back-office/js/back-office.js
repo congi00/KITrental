@@ -378,14 +378,44 @@ function singleRental(id) {
       var rental = res.rental;
       var content = document.getElementById("content");
       content.innerHTML = "";
+      var rented_product = {};
+      $.ajax({
+        async: false,
+        url: "API/inventory/" + rental.product_id,
+        type: "GET",
+        success: res => rented_product = res.products
+      });
+
+      var renting_client = {};
+      $.ajax({
+        async: false,
+        url: "API/clients/" + rental.client_id,
+        type: "GET",
+        success: res => renting_client = res.client
+      });
+
       $(content).append(`
         <div class="row">
           <div class="col-md-6 p-5">
               <!-- Display Rented Object -->
-              <h2>Product: ${rental.product_id ? rental.product_id : ''}</h2>
+              <div class="row mb-4">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img class="img-fluid img-thumbnail" src="/img/products/${rented_product.image ? rented_product.image : ''}" alt="Rented Product photo">
+                </div>
+                <div class="col-md-8 d-flex align-items-center">
+                  <h2>Product: ${rented_product.name ? rented_product.name : ''}</h2>
+                </div>
+              </div>
 
               <!-- Display Associated Client -->
-              <h2>Client: ${rental.client_id ? rental.client_id : ''}</h2>
+              <div class="row">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : ''}" alt="Rented Product photo">
+                </div>
+                <div class="col-md-8 d-flex align-items-center">
+                  <h2>Username: ${renting_client.username ? renting_client.username : ''}</h2>
+                </div>
+              </div>
           </div>
 
           <!-- Display Rental Data -->
@@ -411,22 +441,17 @@ function singleRental(id) {
         success: res => {
           if (res.operations.length) {
             var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5";
+            divRow.className = "row rental-cards-group px-5 pb-5";
             $.each(res.operations, (i, op) => {
             $(divRow).append(`
               <div class="card" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h5 class="card-title">${op.type ? op.type : ''}</h5>
                   <p class="card-text">${op.notes ? op.notes : ''}</p>
                 </div>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
                 </ul>
-                <div class="card-body">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
-                </div>
               </div>`);
             });
             content.appendChild(divRow);
@@ -436,7 +461,8 @@ function singleRental(id) {
 
       var rented_product = {};
       $.ajax({
-        url: "API/inventory" + rental.product_id,
+        async: false,
+        url: "API/inventory/" + rental.product_id,
         type: "GET",
         success: res => rented_product = res.products
       });
