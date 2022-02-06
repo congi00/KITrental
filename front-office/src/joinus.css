@@ -51,7 +51,7 @@
   bottom: 6vh;
   left: 15vw;
   transform: rotate(9deg);
-  z-index: 2;
+  z-index: 1;
 }
 
 .form-control{

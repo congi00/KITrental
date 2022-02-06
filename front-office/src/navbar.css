@@ -42,3 +42,66 @@
   top:4vh;
   color: #222;
 }
+
+
+.transform {
+  -webkit-transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -o-transition: all 2s ease;
+  -ms-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.transform-active {
+  background-color: #45CEE0;
+  height: 200px;
+  width: 200px;
+}
+
+.menuToggle{
+  position: absolute;
+  top:-30vh;
+  background-color: #fffe;
+  text-align: left;
+  border-radius: 100%;
+  z-index: 3;
+  transition:all 0.5s;
+}
+.menuToggleTwo{
+  top:-20vh;
+  background-color: #dddc;
+  z-index: 2;
+  transition:all 0.7s;
+}
+.menuToggleThree{
+  top:-10vh;
+  background-color: #ccca;
+  z-index: 1;
+  transition:all 0.9s;
+}
+
+.displayNone{
+    width: 0;
+    height: 0;
+    padding-left: 0;
+    right:  130vw;
+}
+
+.displayBlock{
+  width: 120vh;
+  height: 100vh;
+  padding-left: 150vw;
+  padding-top: 35vh;
+  padding-bottom: 10vh;
+  right:  -20vw;
+}
+
+.menuToggle .nav-item{
+  width: 80vw;
+  height: 5vh;
+}
+
+.timesIcon{
+  position: relative;
+  left: 70vw;
+}
