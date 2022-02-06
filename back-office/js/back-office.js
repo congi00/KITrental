@@ -34,8 +34,8 @@ function showHome() {
 
     if(loggedIn){
       $("#content").append('\
-        <div class="container-fluid h-100">\
-            <div class="row h-100">\
+        <div class="container-fluid">\
+            <div class="row">\
                 <div id="clients-section" class="col-12 col-lg-4 bg-primary sectionsBack">\
                     <a onclick="$(\'nav\').show(); showClients(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Clients</h1>\
@@ -201,7 +201,7 @@ function singleClient(id) {
       content.innerHTML = "";
       $(content).append(`
         <div class="row">
-          <div class="col-md-4 p-5">
+          <div class="col-md-4 p-5 d-flex align-items-center">
               <img class="img-fluid img-thumbnail" src="${client.avatar ? client.avatar : 'img/profile-placeholder.png'}" alt="Client profile photo">
           </div>
           <div class="col-md-8 p-5">
@@ -231,25 +231,29 @@ function singleClient(id) {
         success: res => {
           if (res.rental.length) {
             var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5";
+            divRow.className = "row rental-cards-group px-5 pb-5";
+            var rented_product = {};
             $.each(res.rental, (i, rental) => {
-            $(divRow).append(`
-              <div class="card" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">${rental.start_date ? rental.start_date : ''}</li>
-                  <li class="list-group-item">${rental.end_date ? rental.end_date : ''}</li>
-                  <li class="list-group-item">A third item</li>
-                </ul>
-                <div class="card-body">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
-                </div>
-              </div>`);
+              $.ajax({
+                async: false,
+                url: "API/inventory/" + rental.product_id,
+                type: "GET",
+                success: res => {
+                  rented_product = res.products
+                }
+              });
+              $(divRow).append(`
+                <div class="card" style="width: 18rem; cursor:pointer;" onclick="singleRental('${rental._id}');">
+                  <img src="/img/products/${rented_product.image}" class="card-img-top" alt="Product Image">
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
+                    <li class="list-group-item">End: ${rental.end_date ? new Date(rental.end_date).toLocaleString() : ''}</li>
+                  </ul>
+                </div>`);
             });
             content.appendChild(divRow);
           }
