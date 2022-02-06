@@ -544,6 +544,7 @@ function singleInventory(id) {
       var product = res.products;
       var content = document.getElementById("content");
       content.innerHTML = "";
+      alert(product.image);
       $(content).append(`
         <div class="row">
           <div class="col-md-4 p-5">
@@ -568,7 +569,7 @@ function singleInventory(id) {
           </div>
         </div>`)
 
-      var q = {'product_id' : id}
+      /*var q = {'product_id' : id}
       $.ajax({
         url: "API/rental/",
         type: "GET",
@@ -599,7 +600,7 @@ function singleInventory(id) {
             content.appendChild(divRow);
           }
         },
-      });
+      });*/
     },
   });
 }
@@ -726,6 +727,7 @@ function updateRecordInfo(col, id, el) {
         data: JSON.stringify(toUpdateObject),
         success: function (response) {
           if (response) {
+            console.log(response);
             // Put everything back to read-only
             $(el).html("Update Data");
             $(el).siblings("input, textarea").attr("readonly", true);
@@ -787,7 +789,7 @@ function deleteRecord(col, id, el) {
               .fadeOut(800, function () {
                 $(this).remove();
               });
-          } else {
+          }else{
             alert("Invalid ID.");
           }
         },

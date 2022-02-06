@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import Landing from "./routes/Landing";
 import JoinUs from "./routes/JoinUs";
 import Login from "./routes/Login";
+import Product from "./routes/Product";
+import Inventory from "./routes/Inventory";
 
 
 ReactDOM.render(
@@ -15,6 +17,8 @@ ReactDOM.render(
       <Route path="/" element={<Landing />}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/productSingle" element={<Product />} />
+      <Route path="/catalog" element={<Inventory />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
