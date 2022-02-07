@@ -1,6 +1,7 @@
 global.rootDir = __dirname ;
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require('cors');
 const routeClients = require("./back-office/page-templates/back-office/API/clients");
 const routeEmployees = require("./back-office/page-templates/back-office/API/employees");
 const routeInventory = require("./back-office/page-templates/back-office/API/inventory");
@@ -15,6 +16,7 @@ const port = 8000;
 const db = mongoose.connection;
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/API/clients",routeClients);
 app.use("/API/employees",routeEmployees);

@@ -6,15 +6,18 @@ import FormLogin from "./FormLogin"
 import './login.css';
 
 function JoinSection(){
-  return(
-    <div className="formPageL">
-      <img className="joinImg" src={LinkBack} style={{top:"8vh"}}/>
-      <div className="divRotL"/>
-      <div className="divRotL" style={{bottom:"134vh",backgroundColor:"#081715",width:"5vw"}}/>
-      <div className="formContainerL"/>
-      <FormLogin/>
-    </div>
-  );
+  const [token, setToken] = React.useState();
+  if(!token) {
+    return(
+      <div className="formPageL">
+        <img className="joinImg" src={LinkBack} style={{top:"8vh"}}/>
+        <div className="divRotL"/>
+        <div className="divRotL" style={{bottom:"134vh",backgroundColor:"#081715",width:"5vw"}}/>
+        <div className="formContainerL"/>
+        <FormLogin setToken={setToken}/>
+      </div>
+    );
+  }
 }
 
 export default JoinSection;
