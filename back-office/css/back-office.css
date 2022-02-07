@@ -184,6 +184,7 @@ table {
 }
 
 .btn-add-rental {
+    z-index: 1;
     position: fixed;
     color: white;
     right: 1rem;

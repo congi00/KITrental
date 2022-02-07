@@ -36,17 +36,17 @@ function showHome() {
       $("#content").append('\
         <div class="container-fluid">\
             <div class="row">\
-                <div id="clients-section" class="col-12 col-lg-4 bg-primary sectionsBack">\
+                <div id="clients-section" class="col-12 col-lg-4 bg-primary">\
                     <a onclick="$(\'nav\').show(); showClients(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Clients</h1>\
                     </a>\
                 </div>\
-                <div id="inventory-section" class="col-12 col-lg-4 bg-secondary sectionsBack">\
+                <div id="inventory-section" class="col-12 col-lg-4 bg-secondary">\
                     <a onclick="$(\'nav\').show(); showInventory(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Inventory</h1>\
                     </a>\
                 </div>\
-                <div id="rental-section" class="col-12 col-lg-4 bg-success sectionsBack">\
+                <div id="rental-section" class="col-12 col-lg-4 bg-success">\
                     <a onclick="$(\'nav\').show(); showRental(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Rental</h1>\
                     </a>\
@@ -55,8 +55,8 @@ function showHome() {
         </div>');
     }else{
       $("#content").append('\
-      <div class="container-fluid h-100">\
-          <div class="row h-100" id="backendLogin">\
+      <div class="container-fluid">\
+          <div class="row" style="height:100vh;" id="backendLogin">\
               <div class="col-12 col-lg-7">\
                 <div id="titleCF">\
                   <h2 class="text-white display-3 text-center ">Welcome in the</h2>\
@@ -312,19 +312,19 @@ function showRental() {
         if (curr_date > new Date(rental.end_date)) {
           $(past_tbdy).append(`
             <tr class="table-light">
-              <td>${new Date(rental.start_date).toUTCString()}</td>
-              <td>${new Date(rental.end_date).toUTCString()}</td>
+              <td>${new Date(rental.start_date).toLocaleString()}</td>
+              <td>${new Date(rental.end_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
             </tr>`);
         } else {
           $(tbdy).append(`
             <tr class="table-light">
-              <td>${new Date(rental.start_date).toUTCString()}</td>
-              <td>${new Date(rental.end_date).toUTCString()}</td>
+              <td>${new Date(rental.start_date).toLocaleString()}</td>
+              <td>${new Date(rental.end_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
-              <td><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
+              <td><i onclick="deleteRecord('rental', '${rental._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
             </tr>`);
         }
 
@@ -340,7 +340,7 @@ function showRental() {
       var body = `
         <div class="mb-3">
           <label for="searchObjects" class="form-label">Object Rented</label>
-          <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="object_id" placeholder="Type to search...">
+          <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
           <datalist id="objectsList"></datalist>
         </div>
         <div class="mb-3">
@@ -350,15 +350,21 @@ function showRental() {
         </div>
         <div class="mb-3">
             <label for="rentalStartDate" class="form-label">Rental Starting Date</label>
-            <input required type="datetime-local" data-db-field="starting_date" class="form-control mb-3" id="rentalStartDate">
+            <input required type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate">
 
             <label for="rentalEndDate" class="form-label">Rental Ending Date</label>
             <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate">
         </div>`
-      $(content).append(createModal('rental', '', body))
+      $(content).append(createModal(body))
+
+      // Event listeners
       $(document).on("click", "#createRecord", function(){
         createRecord('rental', '', this)
-    });
+      });
+      var myModalEl = document.getElementById('staticBackdrop')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        showRental();
+      })
     },
   });
 }
@@ -372,14 +378,44 @@ function singleRental(id) {
       var rental = res.rental;
       var content = document.getElementById("content");
       content.innerHTML = "";
+      var rented_product = {};
+      $.ajax({
+        async: false,
+        url: "API/inventory/" + rental.product_id,
+        type: "GET",
+        success: res => rented_product = res.products
+      });
+
+      var renting_client = {};
+      $.ajax({
+        async: false,
+        url: "API/clients/" + rental.client_id,
+        type: "GET",
+        success: res => renting_client = res.client
+      });
+
       $(content).append(`
         <div class="row">
           <div class="col-md-6 p-5">
               <!-- Display Rented Object -->
-              <h2>Product: ${rental.product_id ? rental.product_id : ''}</h2>
+              <div class="row mb-4">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img class="img-fluid img-thumbnail" src="/img/products/${rented_product.image ? rented_product.image : ''}" alt="Rented Product photo">
+                </div>
+                <div class="col-md-8 d-flex align-items-center">
+                  <h2>Product: ${rented_product.name ? rented_product.name : ''}</h2>
+                </div>
+              </div>
 
               <!-- Display Associated Client -->
-              <h2>Client: ${rental.client_id ? rental.client_id : ''}</h2>
+              <div class="row">
+                <div class="col-md-4 d-flex align-items-center">
+                  <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : ''}" alt="Rented Product photo">
+                </div>
+                <div class="col-md-8 d-flex align-items-center">
+                  <h2>Username: ${renting_client.username ? renting_client.username : ''}</h2>
+                </div>
+              </div>
           </div>
 
           <!-- Display Rental Data -->
@@ -405,22 +441,17 @@ function singleRental(id) {
         success: res => {
           if (res.operations.length) {
             var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5";
+            divRow.className = "row rental-cards-group px-5 pb-5";
             $.each(res.operations, (i, op) => {
             $(divRow).append(`
               <div class="card" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h5 class="card-title">${op.type ? op.type : ''}</h5>
                   <p class="card-text">${op.notes ? op.notes : ''}</p>
                 </div>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
                 </ul>
-                <div class="card-body">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
-                </div>
               </div>`);
             });
             content.appendChild(divRow);
@@ -430,7 +461,8 @@ function singleRental(id) {
 
       var rented_product = {};
       $.ajax({
-        url: "API/inventory" + rental.product_id,
+        async: false,
+        url: "API/inventory/" + rental.product_id,
         type: "GET",
         success: res => rented_product = res.products
       });
@@ -449,7 +481,7 @@ function singleRental(id) {
         <!-- Possible fields to edit in case of a rental confirmation operation -->
         <div class="mb-3" id="rentConfirm">
           <label for="searchObjects" class="form-label">Object Rented</label>
-          <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="object_id" placeholder="Type to search...">
+          <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
           <datalist id="objectsList"></datalist>
         </div>
 
@@ -472,7 +504,10 @@ function singleRental(id) {
             <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
             </textarea>
         </div>`
-      $(content).append(createModal('operations', id, body))
+      $(content).append(createModal(body))
+      $(document).on("click", "#createRecord", function(){
+        createRecord('operations', id, this)
+      });
     },
   });
 }
@@ -596,7 +631,7 @@ function singleInventory(id) {
   });
 }
 
-function createModal(col, id, body) {
+function createModal(body) {
   return `
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary btn-add-rental" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-plus"></i></button>
@@ -616,7 +651,7 @@ function createModal(col, id, body) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="createRecord" class="btn btn-primary">Save Operation</button>
+                        <button type="button" id="createRecord" data-bs-dismiss="modal" class="btn btn-primary">Save Operation</button>
                     </div>
                 </form>
             </div>
@@ -635,9 +670,7 @@ function createRecord(col, id, el) {
     if (val.includes('id=')) {
       var index = val.indexOf("id=") + 3
       val = val.substring(index)
-      console.log(val)
     }
-    console.log(val)
     toCreateObject[$(this).data('db-field')] = val;
   });
 
@@ -649,17 +682,17 @@ function createRecord(col, id, el) {
     } else if (toCreateObject['type'] === 'rent_close') {
 
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
-      var objectID = toCreateObject['object_id'].substring(toCreateObject['object_id'].indexOf("id=") + 3);
+      var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
       toUpdateObject['avaiability'] = toCreateObject['avaiability'];
       toUpdateObject['state'] = toCreateObject['state'];
       delete toCreateObject.avaiability;
       delete toCreateObject.state;
-      delete toCreateObject.object_id;
+      delete toCreateObject.product_id;
 
        // Update AJAX Request
        $.ajax({
-        url: "API/inventory/" + id,
+        url: "API/inventory/" + productID,
         type: "PATCH",
         contentType: "application/json",
         dataType: "json",
@@ -684,9 +717,6 @@ function createRecord(col, id, el) {
     data: JSON.stringify(toCreateObject),
     success: function (response) {
       if (response) {
-        alert("New rental was added");
-        showRental();
-        //location.reload();
       } else {
         alert("There was an error.");
       }
@@ -761,7 +791,7 @@ function deleteRecord(col, id, el) {
       type: "GET",
       data: {query: q},
       success: function (response) {
-        if (jQuery.parseJSON(response).length) {
+        if (response) {
           toDelete = false;
           errMsg = "You can't delete clients with active/booked rental.";
         }
@@ -777,8 +807,7 @@ function deleteRecord(col, id, el) {
         url: "API/" + col + "/" + id,
         type: "DELETE",
         success: function (response) {
-          console.log(response);
-          if (response == 1 || response.result != NULL) {
+          if (response) {
             // Remove row from HTML Table
             $(el).closest("tr").css("--bs-table-bg", "red");
             $(el)

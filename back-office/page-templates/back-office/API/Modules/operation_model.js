@@ -21,6 +21,9 @@ const operation = new Schema({
     ref: "Rental",
     required: true,
   },
+  notes:{
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("OperationModel", operation, "operations");
