@@ -11,10 +11,12 @@ import Product from "./routes/Product";
 import Inventory from "./routes/Inventory";
 
 
+
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Landing />}/>
+      <Route path="/api" element={<App />}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
       <Route path="/productSingle" element={<Product />} />

@@ -31,7 +31,6 @@ function CardsSlider(){
         <SwiperSlide>Smoker</SwiperSlide>
         <SwiperSlide>Torch</SwiperSlide>
         <SwiperSlide>Tigelliera</SwiperSlide>
-        <SwiperSlide>Piatti</SwiperSlide>
       </Swiper>
       <Swiper modules={[Controller]} controller={{ control: controlledSwiper }}
         slidesPerView={"auto"}
@@ -48,7 +47,6 @@ function CardsSlider(){
         <SwiperSlide style={{backgroundImage:'url('+Smoker+')'}}></SwiperSlide>
         <SwiperSlide style={{backgroundImage:'url('+Torch+')'}}></SwiperSlide>
         <SwiperSlide style={{backgroundImage:'url('+Tigelliera+')'}}></SwiperSlide>
-        <SwiperSlide></SwiperSlide>
       </Swiper>
     </div>
   );

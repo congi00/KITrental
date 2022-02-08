@@ -1,6 +1,7 @@
 global.rootDir = __dirname ;
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require('cors');
 const routeClients = require("./back-office/page-templates/back-office/API/clients");
 const routeEmployees = require("./back-office/page-templates/back-office/API/employees");
 const routeInventory = require("./back-office/page-templates/back-office/API/inventory");
@@ -28,6 +29,10 @@ app.use("/css",express.static(global.rootDir + "/back-office/css"));
 app.use("/img",express.static(global.rootDir + "/back-office/img"));
 app.use(express.static(global.rootDir + "/front-office/build"));
 app.use(express.static(global.rootDir + "/front-office/public"));
+
+app.use(express.static(global.rootDir + "/front-office/build"));
+app.use(express.static(global.rootDir + "/front-office/public"));
+
 
 app.use(bodyParser.urlencoded({
   extended: true

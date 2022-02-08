@@ -56,3 +56,19 @@
   left: 20vw;
   margin-top: 8vh;
 }
+
+.loggedPage{
+  background-color: #222;
+  width: 100vw;
+  height: 100vh;
+}
+
+.loggedPage h1{
+  font-size:3rem;
+  color:#fff;
+  font-weight: bold;
+  font-family: 'Jost', sans-serif;
+  position: relative;
+  top: 13vh;
+  left: 5vw;
+}
