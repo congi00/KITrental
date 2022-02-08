@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel js/front-office/ -d lib",
-    "start": "nodemon index.js"
+    "start": "(cd front-office && npm run-script build)  && (nodemon ../index.js)"
   },
   "repository": {
     "type": "git",
