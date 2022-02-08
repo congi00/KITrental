@@ -5,20 +5,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 import './login.css';
 
-async function loginUser(credentials) {
- return fetch('http://localhost:8000/API/login/clients', {
-   method: 'POST',
-   headers: {'Content-Type': 'application/json'},
-   body: JSON.stringify(credentials)
- })
-   .then(data => data.json())
-}
-
 
 function FormLogin({ setToken }){
   const [username, setUserName] = React.useState();
   const [password, setPassword] = React.useState();
 
+
+  async function loginUser(credentials) {
+    return fetch('http://localhost:8000/API/login/clients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":"DELETE, POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers":"Content-Type, Authorization, X-Requested-With"
+      },
+      body: JSON.stringify(credentials)
+    })
+    .then(data => data.json())
+  }
   const handleSubmit = async e => {
     e.preventDefault();
     const token = await loginUser({
@@ -46,7 +51,7 @@ function FormLogin({ setToken }){
             <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
           </Form.Group>
           </div>
-          <Button  className="btnFormL">
+          <Button type = 'submit' className="btnFormL">
             Login
           </Button>
         </Form>

@@ -25,6 +25,7 @@ router.post('/', jsonParser, async (req, res) => {
 })
 
 router.post('/clients', jsonParser, async (req, res) => {
+  console.log(req.body);
   const username = req.body.username;
   const password = req.body.password;
 
@@ -33,7 +34,7 @@ router.post('/clients', jsonParser, async (req, res) => {
       res.status(404).json({message: "false"});
   }else{
     var pass = await bcrypt.compare(password,client.password);
-    res.status(200).json({password: pass, id:client._id});
+    res.status(200).json({ id:client._id});
   }
 })
 
