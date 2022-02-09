@@ -4,8 +4,8 @@
   "description": "*SEEEEE PORCA MADONNAAA*",
   "main": "index.js",
   "scripts": {
-    "build": "babel js/front-office/ -d lib",
-    "start": "(cd front-office && npm run-script build)  && (nodemon ../index.js)"
+    "start": "nodemon ./index.js)",
+    "build": "cd front-office && npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -38,5 +38,8 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0"
+  },
+  "engines": {
+    "node": "16.13.0"
   }
 }
