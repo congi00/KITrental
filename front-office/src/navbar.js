@@ -44,7 +44,9 @@ function NavB(){
               <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle}/>
             </NavItem>
             <NavItem >
-              <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
+              <Link to="/cart">
+                <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
+              </Link>
             </NavItem>
           </Nav>
           <Nav className={isActive ? "displayNone menuToggle" : "displayBlock menuToggle"} >

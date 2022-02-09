@@ -22,7 +22,9 @@ function FormLogin({ setToken }){
       },
       body: JSON.stringify(credentials)
     })
-    .then(data => data.json())
+    .then(
+      data => data.json()
+    )
   }
   const handleSubmit = async e => {
     e.preventDefault();

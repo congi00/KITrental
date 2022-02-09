@@ -9,6 +9,7 @@ import JoinUs from "./routes/JoinUs";
 import Login from "./routes/Login";
 import Product from "./routes/Product";
 import Inventory from "./routes/Inventory";
+import Cart from "./routes/Cart";
 
 
 
@@ -21,6 +22,7 @@ ReactDOM.render(
       <Route path="/login" element={<Login />} />
       <Route path="/productSingle" element={<Product />} />
       <Route path="/catalog" element={<Inventory />} />
+      <Route path="/cart" element={<Cart />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

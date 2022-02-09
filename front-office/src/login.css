@@ -63,12 +63,36 @@
   height: 100vh;
 }
 
-.loggedPage h1{
-  font-size:3rem;
-  color:#fff;
-  font-weight: bold;
-  font-family: 'Jost', sans-serif;
+.nameWelcome{
   position: relative;
-  top: 13vh;
-  left: 5vw;
+  top: 10vh;
+  left: 25vw;
+  width: 50vw;
+}
+
+
+.nameWelcome h1{
+  color: #fff;
+  font-family: Jost,sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cogIcon{
+  z-index: 2;
+  color:#fff;
+  position: absolute;
+  top: 2vh;
+  left: 85vw;
+}
+
+.avatarImg{
+  border-radius: 100%;
+  height: 30vw;
+  left: 35vw;
+  position: relative;
+  top: 10vh;
+  vertical-align: middle;
+  width: 30vw;
 }

@@ -1,0 +1,21 @@
+.CartPage{
+  background-color:#222;
+  width: 100vw;
+  height: 100vh;
+}
+
+.cartSection{
+  width: 100vw;
+  height: 87vh;
+  position: absolute;
+  top:13vh;
+  text-align: center;
+}
+
+.cartSection h1{
+  font-family: 'Jost', sans-serif;
+  font-weight: bold;
+  font-size: 2.5rem;
+  color:#fff;
+  margin-top: 5vh;
+}
