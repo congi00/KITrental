@@ -1,6 +1,5 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from 'reactstrap';
 import LinkBack from "./img/joinBack.jpg"
 import FormSignUp from "./FormSignUp"
 import './joinus.css';

@@ -1,6 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from 'reactstrap';
+import Button from 'react-bootstrap/Button';
 import LinkProduct from "./img/Blender.jpg"
 import './products.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
