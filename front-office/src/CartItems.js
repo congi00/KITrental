@@ -2,10 +2,9 @@ import React from 'react'
 import Image from 'react-bootstrap/Image'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './cart.css';
-import { Button } from 'reactstrap';
 import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap"
-import ImageThumb from "./img/blender.jpg"
+import ImageThumb from "./img/Blender.jpg"
 
 function CartItems(){
   return(

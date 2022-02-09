@@ -15,6 +15,14 @@
   left:27.5vw;
   top:-2vh;
 }
+@media (min-width: 992px) {
+  .logoNav{
+    width: 10rem;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
 
 .MenuIcon{
   width: 30vw;

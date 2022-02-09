@@ -3,15 +3,10 @@ import './navbar.css'
 import navIcon from "./menuicon.svg"
 import logo from "./img/KITrental-logos_transparent.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-    Navbar,
-    NavItem,
-    NavbarToggler,
-    Collapse,
-    NavLink,
-    Nav,
-    NavbarBrand
-} from 'reactstrap';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
@@ -28,47 +23,49 @@ function NavB(){
   };
   return (
     <div className="Nav-container">
-        <Navbar light expand="lg">
-          <NavbarBrand>
-            <Link to="/">
-              <img className="logoNav" src={logo} />
-            </Link>
-          </NavbarBrand>
-          <Nav>
-            <NavItem>
-              <Link to="/login">
-                <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
+        <Navbar bg="light" expand="lg">
+          <Container>
+            <Navbar.Brand>
+              <Link to="/">
+                <img className="logoNav" src={logo} />
               </Link>
-            </NavItem>
-            <NavItem>
-              <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle}/>
-            </NavItem>
-            <NavItem >
-              <Link to="/cart">
-                <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
-              </Link>
-            </NavItem>
-          </Nav>
-          <Nav className={isActive ? "displayNone menuToggle" : "displayBlock menuToggle"} >
-          <NavItem >
-            <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle}/>
-          </NavItem>
-          <NavItem >
-            <h3>Home</h3>
-          </NavItem>
-          <NavItem>
-            <h3>Professional utilities</h3>
-          </NavItem>
-          <NavItem>
-            <h3>Household products</h3>
-          </NavItem>
-          <NavItem>
-            <h3>Sign Up</h3>
-          </NavItem>
-          <NavItem>
-            <h3>Log In</h3>
-          </NavItem>
-          </Nav>
+            </Navbar.Brand>
+            <Nav justify>
+              <Nav.Item>
+                <Link to="/login">
+                  <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
+                <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle}/>
+              </Nav.Item>
+              <Nav.Item >
+                <Link to="/cart">
+                  <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
+                </Link>
+              </Nav.Item>
+            </Nav>
+            <Nav className={isActive ? "displayNone menuToggle" : "displayBlock menuToggle"} >
+              <Nav.Item >
+                <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle}/>
+              </Nav.Item>
+              <Nav.Item >
+                <h3>Home</h3>
+              </Nav.Item>
+              <Nav.Item>
+                <h3>Professional utilities</h3>
+              </Nav.Item>
+              <Nav.Item>
+                <h3>Household products</h3>
+              </Nav.Item>
+              <Nav.Item>
+                <h3>Sign Up</h3>
+              </Nav.Item>
+              <Nav.Item>
+                <h3>Log In</h3>
+              </Nav.Item>
+            </Nav> 
+          </Container>
         </Navbar>
         <div className={isActive ? "displayNone menuToggle menuToggleTwo" : "displayBlock menuToggle menuToggleTwo"}/>
         <div className={isActive ? "displayNone menuToggle menuToggleTwo" : "displayBlock menuToggle menuToggleThree"}/>

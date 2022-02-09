@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './landing.css';
-import { Button } from 'reactstrap';
+import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 
 
