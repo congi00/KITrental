@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 
 app.use(express.static(path.resolve(__dirname, './front-office/build')));
-
+//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
 
 mongoose.connect(mongodb, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
@@ -46,7 +46,7 @@ db.once('open', function () {
 })
 
 app.get('/', (req, res) => {
-    res.sendFile(global.rootDir + "/front-office/src/index.html");
+    res.sendFile(global.rootDir + "/front-office/public/index.html");
 })
 
 app.get('/backoffice', (req, res) => {

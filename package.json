@@ -1,7 +1,7 @@
 {
   "name": "KITrental",
   "version": "1.0.0",
-  "description": "*SEEEEE PORCA MADONNAAA*",
+  "description": "Rental of kitchen utilities",
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./index.js)",
