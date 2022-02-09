@@ -10,8 +10,19 @@ const routeRental = require("./back-office/page-templates/back-office/API/rental
 const routeLogin = require("./back-office/page-templates/back-office/API/login");
 const bodyParser = require("body-parser");
 
+require('dotenv').config({ path: path.resolve(__dirname, './config.env') });
+
 const app = express();
-const mongodb = "mongodb://localhost:27017/KITrental";
+
+
+const mongoCredentials = {
+	user: process.env.DB_USER,
+	pwd: process.env.DB_PASSWORD,
+	site: process.env.DB_SITE
+}
+
+const hostedMongo = `mongodb://${mongoCredentials.user}:${mongoCredentials.pwd}@${mongoCredentials.site}?writeConcern=majority`
+//const mongodb = "mongodb://localhost:27017/KITrental";
 const port = process.env.PORT || 8000;
 const db = mongoose.connection;
 
@@ -38,7 +49,7 @@ app.use(bodyParser.json())
 app.use(express.static(path.resolve(__dirname, './front-office/build')));
 
 
-mongoose.connect(mongodb, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(hostedMongo, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function () {
@@ -56,10 +67,6 @@ app.get('/backoffice', (req, res) => {
 app.get('/dashboard', (req, res) => {
     res.sendFile(global.rootDir + "/dashboard/admin-dashboard.html");
 })
-
-app.get("/apiss", (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './front-office/build', 'index.html'));
