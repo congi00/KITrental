@@ -20,6 +20,7 @@ router.get('/', function (req, res) {
   if (reqQuery.client_id) query.client_id = reqQuery.client_id
 
   Rental.find(query)
+    .sort({ start_date: 1 })
     .exec()
     .then(rental => res.status(200).json({ rental }))
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));

@@ -400,7 +400,7 @@ function singleRental(id) {
               <!-- Display Rented Object -->
               <div class="row mb-4">
                 <div class="col-md-4 d-flex align-items-center">
-                  <img class="img-fluid img-thumbnail" src="/img/products/${rented_product.image ? rented_product.image : ''}" alt="Rented Product photo">
+                  <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
                 </div>
                 <div class="col-md-8 d-flex align-items-center">
                   <h2>Product: ${rented_product.name ? rented_product.name : ''}</h2>
@@ -422,13 +422,13 @@ function singleRental(id) {
           <div class="col-md-6 p-5">
               <form action="">
                   <label for="rentalStartDate" class="form-label">Starting Date</label>
-                  <input type="datetime-local" data-db-field="starting_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toUTCString()}" readonly>
+                  <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
 
                   <label for="rentalEndDate" class="form-label">Ending Date</label>
-                  <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toUTCString()}" readonly>
+                  <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toISOString().slice(0,16)}" readonly>
 
                   <!-- If the end date is in the future, add a button to modify and update the rental data -->
-                  ${(new Date() < new Date(rental.end_date)) ? '<button id="updateData" type="button" class="btn btn-primary" data-collection="rental" data-id="${rental._id}">Update Data</button>' : ''}
+                  ${(new Date() < new Date(rental.end_date)) ? '<button id="updateData" onclick="updateRecordInfo(\'rental\', \'' + rental._id + '\', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>' : ''}
               </form>
           </div>
         </div>`)
@@ -676,6 +676,7 @@ function createRecord(col, id, el) {
 
   if (col === 'operations') {
     toCreateObject['rental_id'] = id;
+    toCreateObject['employee_id'] = sessionStorage.getItem("usr_id");
 
     if (toCreateObject['type'] === 'rent_confirm') {
       // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
@@ -725,7 +726,7 @@ function createRecord(col, id, el) {
 }
 
 function updateRecordInfo(col, id, el) {
-  var startDate = $(el).siblings("input[data-db-field='starting_date']").val();
+  var startDate = $(el).siblings("input[data-db-field='start_date']").val();
   if (col === 'clients' || ( col === 'rental' && new Date(startDate) > new Date() ) || col === 'inventory' ) {
     if (boolUtil) {
       $(el).siblings("input, textarea").attr("readonly", false);

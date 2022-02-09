@@ -27,6 +27,8 @@ app.use("/API/login",routeLogin);
 app.use("/js",express.static(global.rootDir + "/back-office/js"));
 app.use("/css",express.static(global.rootDir + "/back-office/css"));
 app.use("/img",express.static(global.rootDir + "/back-office/img"));
+app.use(express.static(global.rootDir + "/front-office/build"));
+app.use(express.static(global.rootDir + "/front-office/public"));
 
 app.use(express.static(global.rootDir + "/front-office/build"));
 app.use(express.static(global.rootDir + "/front-office/public"));
