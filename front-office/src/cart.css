@@ -21,6 +21,7 @@
 
 .cartItem{
   width: 90vw;
+  height: 15vh;
   position: relative;
   left: 5vw;
   margin-top: 5vh;
@@ -28,13 +29,72 @@
 
 .thumbCart{
   width: 20vw;
-  height: 10vh;
-  position: relative;
-  left: 0;
+  height: 13vh;
+  position: absolute;
+  left: 3vw;
+  top:1vh;
 }
 
 .thumbCart img{
   position: relative;
   width:100%;
   max-height:100%;
+}
+
+
+
+
+.itemTitle{
+  width: 35vw;
+  position: absolute;
+  left: 25vw;
+  top:3vh;
+  text-align: center;
+}
+
+.itemTitle h2{
+  font-size: 8vw;
+}
+
+.itemTitle h3{
+  color: #aaa;
+  font-size: 4vw;
+}
+
+.itemPrice{
+  position: absolute;
+  right: 5vw;
+  top: 2vh;
+}
+
+.itemPrice input{
+  width: 12vw;
+  border: 0;
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+}
+
+.totalItems{
+  font-family: 'Jost', sans-serif;
+  color: #fff;
+  margin-top: 3vh;
+  margin-left: 5vw;
+  text-align: left;
+}
+
+.totalItemsPrice{
+  font-family: 'Jost', sans-serif;
+  color: #fff;
+  margin-top: -5vh;
+  margin-right: 5vw;
+  text-align: right;
+}
+
+.formCart button{
+  position: absolute;
+  width: 90vw;
+  height: 7vh;
+  left: 5vw;
+  bottom:2vh;
 }
