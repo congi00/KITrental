@@ -9,7 +9,6 @@ import ImageThumb from "./img/Blender.jpg"
 function CartItems(){
   return(
     <div className="cartSection">
-      <h1>CART</h1>
       <Card>
         <Card.Body>
           <img thumbnail="true" src={ImageThumb} />

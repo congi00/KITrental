@@ -1,11 +1,11 @@
 {
   "name": "KITrental",
   "version": "1.0.0",
-  "description": "*SEEEEE PORCA MADONNAAA*",
+  "description": "Rental of kitchen utilities",
   "main": "index.js",
   "scripts": {
-    "build": "babel js/front-office/ -d lib",
-    "start": "(cd front-office && npm run-script build)  && (nodemon ../index.js)"
+    "start": "nodemon ./index.js)",
+    "build": "cd front-office && npm install && npm run build"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
+    "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "mongoose": "^6.1.10",
     "react": "^17.0.2",
@@ -38,5 +39,8 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0"
+  },
+  "engines": {
+    "node": "16.13.0"
   }
 }

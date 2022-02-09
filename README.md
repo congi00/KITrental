@@ -1,6 +1,2 @@
 # KITrental
-
-*SEEEEE PORCA MADONNAAA*
-
--VITALI è UN FROCIO-
-AHAHAHAHHAHA siamo a buon punto
+professional and home kitchen utilities
