@@ -67,6 +67,11 @@ app.get('/backoffice', (req, res) => {
 })
 
 app.get('/dashboard', (req, res) => {
+  res.sendFile(global.rootDir + '/dashboard/dist/index.html');
+})
+
+
+app.get('/dashboard/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './dashboard/dist', 'index.html'));
 })
 
