@@ -1,3 +1,4 @@
 vendor/
+dashboard/
 composer.*
 node_modules/

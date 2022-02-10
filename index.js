@@ -1,3 +1,4 @@
+//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   TOKEN Congi
 global.rootDir = __dirname ;
 const mongoose = require("mongoose");
 const path = require('path');
@@ -21,8 +22,8 @@ const mongoCredentials = {
 	site: process.env.DB_SITE
 }
 
-const hostedMongo = `mongodb://${mongoCredentials.user}:${mongoCredentials.pwd}@${mongoCredentials.site}?writeConcern=majority`
-//const mongodb = "mongodb://localhost:27017/KITrental";
+//const hostedMongo = `mongodb://${mongoCredentials.user}:${mongoCredentials.pwd}@${mongoCredentials.site}?writeConcern=majority`
+const hostedMongo = "mongodb://localhost:27017/KITrental";
 const port = process.env.PORT || 8000;
 const db = mongoose.connection;
 
@@ -39,6 +40,7 @@ app.use("/js",express.static(global.rootDir + "/back-office/js"));
 app.use("/css",express.static(global.rootDir + "/back-office/css"));
 app.use("/img",express.static(global.rootDir + "/back-office/img"));
 
+app.use(express.static('public'));
 
 
 app.use(bodyParser.urlencoded({
@@ -47,7 +49,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 
 app.use(express.static(path.resolve(__dirname, './front-office/build')));
-//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
+app.use(express.static(path.resolve(__dirname, './dashboard/build/js')));
 
 mongoose.connect(hostedMongo, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
@@ -65,7 +67,7 @@ app.get('/backoffice', (req, res) => {
 })
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(global.rootDir + "/dashboard/admin-dashboard.html");
+  res.sendFile(global.rootDir + '/dashboard/build/index.html');
 })
 
 app.get('*', (req, res) => {
