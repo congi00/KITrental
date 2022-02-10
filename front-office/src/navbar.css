@@ -24,22 +24,22 @@
 
 .userIcon{
   position: relative;
-  left: 5vw;
+  right: 15vw;
   top: 4vh;
   color: #222;
 }
 
 .cartIcon{
   position: relative;
-  top: 4vh;
+  bottom: 4vh;
+  right: 4vw;
   color: #222;
 }
 
 .hamburgerIcon{
   display: inline-block;
   position: relative;
-  right: 70vw;
-  top:4vh;
+  right: 80vw;
   color: #222;
 }
 
