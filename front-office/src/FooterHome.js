@@ -28,7 +28,7 @@ function FooterHome(){
           <Accordion.Item eventKey="2">
             <Accordion.Header>How much it cost the shipping?</Accordion.Header>
             <Accordion.Body>
-              For more informations about shipping fee visit our <a href="/">Terms and Conditions</a>.
+              For more informations about shipping fee visit our <a href="/" class="custom-link">Terms and Conditions</a>.
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>

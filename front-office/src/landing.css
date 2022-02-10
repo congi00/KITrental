@@ -206,4 +206,20 @@
     z-index: 1;
     font-family: 'Jost', sans-serif;
   }
+  .footer-wrapper {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .footerTitles {
+    padding-top: 0;
+  }
+  .custom-link {
+    color: #06514c;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .custom-link:hover {
+    color: #06514c;
+    text-decoration: underline;
+  }
 }
