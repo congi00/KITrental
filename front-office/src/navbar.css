@@ -142,7 +142,6 @@
   }
   .userIcon, .cartIcon {
     color: white;
-    left: unset;
-    top: unset;
+    position: unset;
   }
 }
