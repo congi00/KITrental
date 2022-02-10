@@ -15,14 +15,6 @@
   left:27.5vw;
   top:-2vh;
 }
-@media (min-width: 992px) {
-  .logoNav{
-    width: 10rem;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
 
 .MenuIcon{
   width: 30vw;
@@ -66,15 +58,22 @@
   width: 200px;
 }
 
-.menuToggle{
-  position: absolute;
-  top:-30vh;
-  background-color: #fffe;
-  text-align: left;
-  border-radius: 100%;
-  z-index: 3;
-  transition:all 0.5s;
+@media (max-width: 992px) {
+  .menuToggle{
+    position: absolute;
+    top:-30vh;
+    background-color: #fffe;
+    text-align: left;
+    border-radius: 100%;
+    z-index: 3;
+    transition:all 0.5s;
+  }
+  .menuToggle .nav-item{
+    width: 80vw;
+    height: 5vh;
+  }
 }
+
 .menuToggleTwo{
   top:-20vh;
   background-color: #dddc;
@@ -104,12 +103,46 @@
   right:  -20vw;
 }
 
-.menuToggle .nav-item{
-  width: 80vw;
-  height: 5vh;
-}
-
 .timesIcon{
   position: relative;
   left: 70vw;
+}
+
+@media (min-width: 992px) {
+  .Nav-container{
+    width: 100%;
+    background: transparent;
+    box-shadow: unset;
+    position: fixed;
+    z-index: 2;
+  }
+  .logoNav{
+    width: 10rem;
+    top: 0;
+    left: auto;
+  }
+  .menuToggleTwo, .menuToggleThree{
+    display: none;
+  }
+  .menuToggle > .nav-item:first-child, .menu-icons > .nav-item:nth-child(2) {
+    display: none;
+  }
+  .menuToggle {
+    gap: 40px;
+    padding-top: 3rem;
+    color: white;
+  }
+  .displayNone {
+    width: unset;
+    height: unset;
+  }
+  .menu-icons {
+    gap: 25px;
+    padding-top: 3rem;
+  }
+  .userIcon, .cartIcon {
+    color: white;
+    left: unset;
+    top: unset;
+  }
 }

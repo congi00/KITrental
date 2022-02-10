@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import './navbar.css'
 import navIcon from "./menuicon.svg"
 import logo from "./img/KITrental-logos_transparent.png"
+import logo_white from "./img/KITrental-logos_white.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -13,24 +14,27 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { faHamburger } from '@fortawesome/free-solid-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
+import { useMediaQuery } from 'react-responsive';
 
 
 function NavB(){
   const [isActive, setActive] = React.useState("false");
+  const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
   const handleToggle = () => {
     setActive(!isActive);
   };
+  
   return (
     <div className="Nav-container">
-        <Navbar bg="light" expand="lg">
-          <Container>
+        <Navbar expand="lg">
+          <Container fluid className='px-lg-5'>
             <Navbar.Brand>
               <Link to="/">
-                <img className="logoNav" src={logo} />
+                <img className="logoNav" src={isDesktop ? logo_white : logo} />
               </Link>
             </Navbar.Brand>
-            <Nav justify>
+            <Nav justify className={isDesktop ? "menu-icons order-last" : "menu-icons"}>
               <Nav.Item>
                 <Link to="/login">
                   <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
