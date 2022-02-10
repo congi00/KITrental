@@ -4,8 +4,8 @@
   "description": "Rental of kitchen utilities",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index.js)",
-    "build": "cd front-office && npm install && npm run build"
+    "build": "cd front-office && npm install && npm run build",
+    "start": "nodemon ./index.js"
   },
   "repository": {
     "type": "git",
