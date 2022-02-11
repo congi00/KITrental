@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Rental of kitchen utilities",
   "main": "index.js",
+  "proxy": "http://localhost:8000",
   "scripts": {
     "build": "cd front-office && npm install && npm run build",
     "start": "nodemon ./index.js"

@@ -6,7 +6,7 @@
         <h2 class="subtitle">
           make sure you are in the right place!
         </h2>
-        <div class="formSection" @submit.prevent="submitForm">
+        <form class="formSection" v-on:submit="login">
           <img src="../img/KITrental-logos_black.png">
           <div class="field">
             <label class="label">Username</label>
@@ -21,12 +21,15 @@
             </div>
           </div>
           <button type="submit">Login</button>
-        </div>
+        </form>
       </div>
     </section>
   </div>
 </template>
 <script>
+  //import router from "../router"    
+  import axios from "axios"  
+  
   export default {
     name: 'home',
     components: {},
@@ -37,21 +40,26 @@
       }
     },
     methods: {
-      // submit the form to our backend api
-      async submitForm() {
-        const res = await fetch('/API/login/Managers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          // pass in the information from our form
-          body: JSON.stringify({
-            username: this.username,
-            email: this.email,
-            password: this.password,
-          })
-        });
-        if(res=="")
-          return 0;
-      }
+      login: (e) => {    
+       e.preventDefault()    
+       let email = "a@a.aa"   
+       let password = "password"    
+       let login = () => {    
+        let data = {    
+          email: email,    
+          password: password    
+        }    
+        axios.post("/api/login", data)    
+          .then((response) => {    
+            console.log(response)    
+            //router.push("/dashboard")    
+          })    
+          .catch((errors) => {    
+            console.log(errors)    
+          })    
+        }    
+        login()
+      }  
     },
   };
 </script>

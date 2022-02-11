@@ -49,7 +49,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 
 app.use(express.static(path.resolve(__dirname, './front-office/build')));
-app.use(express.static(path.resolve(__dirname, './dashboard/build/js')));
+app.use(express.static(path.resolve(__dirname, './dashboard/dist')));
 
 mongoose.connect(hostedMongo, {useNewUrlParser: true, useUnifiedTopology: true});
 //Bind connection to error event (to get notification of connection errors)
@@ -67,7 +67,12 @@ app.get('/backoffice', (req, res) => {
 })
 
 app.get('/dashboard', (req, res) => {
-  res.sendFile(global.rootDir + '/dashboard/build/index.html');
+  res.sendFile(global.rootDir + '/dashboard/dist/index.html');
+})
+
+
+app.get('/dashboard/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './dashboard/dist', 'index.html'));
 })
 
 app.get('*', (req, res) => {

@@ -14,7 +14,8 @@ var router = express.Router();
 router.post('/', jsonParser, async (req, res) => {
   const username = req.body.emplUsername;
   const password = req.body.emplPassword;
-
+  console.log(username);
+  
   const employee = await Employees.findOne({ username: username });
   if(!employee){
       res.status(404).json({message: "false"});
@@ -38,6 +39,20 @@ router.post('/clients', jsonParser, async (req, res) => {
   }
 })
 
+router.post('/managers', jsonParser, async (req, res) => {
+  const username = req.body.emplUsername;
+  const password = req.body.emplPassword;
+  console.log(username);
+  
+  const employee = await Employees.findOne({ username: username });
+  if(!employee){
+      res.status(404).json({message: "false"});
+  }else{
+    var pass = await bcrypt.compare(password,employee.password);
+    pass = pass && employee.role=="manager";
+    res.status(200).json({password: pass, id:employee._id, role: employee.role});
+  }
+})
 
 
 module.exports = router;
