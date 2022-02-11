@@ -37,10 +37,10 @@ function FormLogin({ setToken }){
   return(
     <div className="formSection">
       <div className="formFields">
-        <Form  onSubmit={handleSubmit}>
+        <Form  onSubmit={handleSubmit} className="login-form">
         <Form.Text>
           <div className="titleFormL">
-            LOG IN
+            <h1 className="login-title">LOG IN</h1>
           </div>
         </Form.Text>
         <div className="firstSectionL">

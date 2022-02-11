@@ -96,3 +96,71 @@
   vertical-align: middle;
   width: 30vw;
 }
+
+@media (min-width: 992px) {
+  .formPageL {
+    background: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0)),url(https://auditkitchengear.com/wp-content/uploads/2022/01/20191011-DSC_7759-Edit_HI_RES.jpeg);
+    background-size: cover;
+  }
+  .joinImg, .divRotL, .formContainerL {
+    display: none;
+  }
+  .titleFormL {
+    background-image: url("img/note.png");
+    background-size: cover;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: -10rem;
+    aspect-ratio: 1.04;
+    width: 12rem;
+  }
+  .login-title{
+    transform: rotate(-9deg);
+    padding-top: 3.5rem;
+    padding-left: 1rem;
+    color: #06514c;
+  }
+  .firstSectionL{
+    text-align: left;
+  }
+  .formFields {
+    width: 25vw;
+    height: 55vh;
+    margin: auto;
+    margin-top: 40vh;
+    position: unset;
+  }
+  .form-label {
+    color: white;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+  }
+  .login-form {
+    padding: 2rem;
+    position: relative;
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    background: #00AA9E;
+    border: 2px solid #06514c;
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+  }
+  .btnFormL{
+    color: white;
+    font-weight: bold;
+    border: 2px solid #06514c;
+    width: 6rem;
+    height: unset;
+    position: unset;
+    display: block;
+    margin: auto;
+    margin-top: 3rem;
+    background-color: transparent;
+  }
+  .btnFormL:hover {
+    background-color: #06514c;
+    border-color: #06514c;
+  }
+}
