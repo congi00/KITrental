@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Landing from "./routes/Landing";
 import JoinUs from "./routes/JoinUs";
@@ -17,7 +16,6 @@ ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Landing />}/>
-      <Route path="/api" element={<App />}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
       <Route path="/privateArea" element={<Login />} />
