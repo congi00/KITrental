@@ -1,35 +1,40 @@
 <template>
-  <div class="home">
+  <div id="home">
     <section class="homeSection">
       <div class="container-fluid">
         <h1 class="title">Welcome into the Manager <br>Dashboard</h1>
         <h2 class="subtitle">
           make sure you are in the right place!
         </h2>
-        <form class="formSection" v-on:submit="login">
+        <form class="formSection">
           <img src="../img/KITrental-logos_black.png">
+          <h3  class="errorMsg" ref="errorMSG">Wrong password or username!</h3>
           <div class="field">
             <label class="label">Username</label>
             <div class="control">
-              <input v-model="username" type="text" placeholder="Username">
+              <input type="text" placeholder="Username" ref="username">
             </div>
           </div>
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input type="password" v-model="password" placeholder="Password">
+              <input type="password" placeholder="Password" ref="password">
             </div>
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" @click.prevent="login()">Login</button>
         </form>
       </div>
     </section>
   </div>
 </template>
+
 <script>
-  //import router from "../router"    
+  import router from "../router/index"    
   import axios from "axios"  
-  
+  import Vue from 'vue'
+  import VueCookies from 'vue-cookies'
+  Vue.use(VueCookies)
+
   export default {
     name: 'home',
     components: {},
@@ -39,31 +44,32 @@
         password: '',
       }
     },
-    methods: {
-      login: (e) => {    
-       e.preventDefault()    
-       let email = "a@a.aa"   
-       let password = "password"    
-       let login = () => {    
-        let data = {    
-          email: email,    
-          password: password    
-        }    
-        axios.post("/api/login", data)    
+    methods: { 
+      login(){    
+        this.username = this.$refs.username.value;
+        this.password = this.$refs.password.value;
+        let data={
+          emplUsername: this.$refs.username.value,
+          emplPassword: this.$refs.password.value
+        }
+        axios.post("/api/login/managers",data)    
           .then((response) => {    
-            console.log(response)    
-            //router.push("/dashboard")    
+            if(response.data.password==true){
+              this.$cookies.set("user_session",response.data.id);
+              router.push("/about");
+            }else{
+              this.$refs.errorMSG.style.display ="block";
+            }    
           })    
-          .catch((errors) => {    
-            console.log(errors)    
+          .catch((errors) => {
+            console.log(errors);    
+            this.$refs.errorMSG.style.display ="block";
           })    
-        }    
-        login()
-      }  
+        }      
     },
   };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
   @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300&display=swap');
 
   .homeSection{
@@ -83,7 +89,6 @@
     font-family: 'Jost', sans-serif;
     font-weight:bold;
   }
-
   .homeSection .title{
     position:absolute;
     top:30vh;
@@ -97,7 +102,6 @@
     left:2vw;
     text-align:left;
   }
-
   .formSection{
     height:50vh;
     width:25vw;
@@ -109,6 +113,14 @@
     top:25vh;
     text-align:left;
     padding-left:2vw;
+    .errorMsg{
+      color: red;
+      font-size: 1vw;
+      position: absolute;
+      left: 5vw;
+      top: 12vh;
+      display: none;
+    }
     img{
       width:10vw;
       position:relative;
@@ -141,3 +153,4 @@
     }
   }
 </style>
+
