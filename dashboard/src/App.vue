@@ -34,7 +34,6 @@
 </template>
 
 <script>
-  import router from "./router"    
   import axios from "axios"  
   import Vue from 'vue'
   import VueCookies from 'vue-cookies'
@@ -61,7 +60,7 @@
           .then((response) => {    
             if(response.data.password==true){
               this.$cookies.set("user_session",response.data.id);
-              router.push("/about")
+              this.$router.push('/about');
             }else{
               this.$refs.errorMSG.style.display ="block";
             }    
