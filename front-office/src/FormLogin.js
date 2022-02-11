@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import './login.css';
+import { useNavigate } from "react-router-dom";
 
 
 function FormLogin({ setToken }){
   const [username, setUserName] = React.useState();
   const [password, setPassword] = React.useState();
-
+  let navigate = useNavigate();
 
   async function loginUser(credentials) {
     return fetch('http://localhost:8000/API/login/clients', {
@@ -33,6 +34,7 @@ function FormLogin({ setToken }){
       password
     });
     setToken(token);
+    navigate("/privateArea");
   }
   return(
     <div className="formSection">

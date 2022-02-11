@@ -132,6 +132,10 @@
     padding-top: 3rem;
     color: white;
   }
+  .menuToggle .nav-item a {
+    text-decoration: none;
+    color: white;
+  }
   .displayNone {
     width: unset;
     height: unset;

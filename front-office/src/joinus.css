@@ -76,3 +76,72 @@
   left: 20vw;
   margin-top: 3vh;
 }
+
+@media (min-width: 992px) {
+  .formPage {
+    background: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.2)),url(https://i.pinimg.com/originals/bb/94/bf/bb94bfa0147a558bae038bb3477abd8e.jpg);
+    background-size: cover;
+  }
+  .joinImg, .divRot, .formContainer {
+    display: none;
+  }
+  .titleForm {
+    background-image: url("img/note.png");
+    background-size: cover;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: -10rem;
+    aspect-ratio: 1.04;
+    width: 12rem;
+  }
+  .signup-title{
+    transform: rotate(-9deg);
+    padding-top: 3.5rem;
+    padding-left: 0.5rem;
+    color: #06514c;
+  }
+  .fields-section{
+    text-align: left;
+  }
+  .formFields {
+    width: 25vw;
+    height: 55vh;
+    margin: auto;
+    margin-top: 40vh;
+    position: unset;
+  }
+  .form-label {
+    color: white;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+  }
+  .signup-form {
+    padding: 2rem;
+    position: relative;
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    background: #E85D75;
+    border: 2px solid #06514c;
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+  }
+  .btnForm{
+    color: white;
+    font-weight: bold;
+    border: 2px solid #06514c;
+    width: 6rem;
+    height: unset;
+    position: unset;
+    display: block;
+    margin: auto;
+    margin-top: 3rem;
+    background-color: transparent;
+  }
+  .btnForm:hover, .btnForm:active, .btnForm:focus {
+    background-color: #06514c;
+    border-color: #06514c;
+    box-shadow: none;
+  }
+}

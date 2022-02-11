@@ -15,11 +15,13 @@ import { faHamburger } from '@fortawesome/free-solid-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 import { useMediaQuery } from 'react-responsive';
+import useToken from './useToken';
 
 
 function NavB(){
   const [isActive, setActive] = React.useState("false");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+  const { token, setToken } = useToken();
 
   const handleToggle = () => {
     setActive(!isActive);
@@ -35,7 +37,7 @@ function NavB(){
               </Link>
             </Navbar.Brand>
             <Nav justify className={isDesktop ? "menu-icons order-last" : "menu-icons"}>
-              <Nav.Item>
+              <Nav.Item className={(isDesktop && !token) ? 'd-none' : ''} >
                 <Link to="/login">
                   <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
                 </Link>
@@ -54,20 +56,32 @@ function NavB(){
                 <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle}/>
               </Nav.Item>
               <Nav.Item >
-                <h3>Home</h3>
+                <Link to="/">
+                  <h3>Home</h3>
+                </Link>
               </Nav.Item>
               <Nav.Item>
-                <h3>Professional utilities</h3>
+                <Link to="/joinus">
+                  <h3>Professional utilities</h3>
+                </Link>
               </Nav.Item>
               <Nav.Item>
-                <h3>Household products</h3>
+                <Link to="/joinus">
+                  <h3>Household products</h3>
+                </Link>
               </Nav.Item>
               <Nav.Item>
-                <h3>Sign Up</h3>
+                <Link to="/joinus">
+                  <h3>Sign Up</h3>
+                </Link>
               </Nav.Item>
-              <Nav.Item>
-                <h3>Log In</h3>
-              </Nav.Item>
+              {!token &&
+                <Nav.Item>
+                  <Link to="/login">
+                    <h3>Log In</h3>
+                  </Link>
+                </Nav.Item>
+              }
             </Nav> 
           </Container>
         </Navbar>

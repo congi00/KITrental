@@ -20,6 +20,8 @@ ReactDOM.render(
       <Route path="/api" element={<App />}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/privateArea" element={<Login />} />
+      <Route path="/rentalSingle" element={<Login />} />
       <Route path="/productSingle" element={<Product />} />
       <Route path="/catalog" element={<Inventory />} />
       <Route path="/cart" element={<Cart />} />
