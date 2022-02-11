@@ -1,5 +1,5 @@
 <template>
-  <router-view/>
+  <RouterView />
 </template>
 
 <script>
@@ -15,3 +15,8 @@
     methods: {},
   };
 </script>
+
+<style>
+@import '@/assets/base.css';
+
+</style>
