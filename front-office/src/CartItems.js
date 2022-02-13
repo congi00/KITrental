@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './cart.css';
 import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap"
-import ImageThumb from "./img/Blender.jpg"
+import ImageThumb from "./img/blender.jpg"
 import ImageThumb2 from "./img/torch.jpg"
 import {Form, Button }from 'react-bootstrap'
 

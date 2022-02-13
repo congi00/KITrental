@@ -15,6 +15,7 @@ function CardsSlider(){
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [products, setProducts] = React.useState([]);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory")
@@ -34,7 +35,11 @@ function CardsSlider(){
         }
       )
   }, [])
+  
 
+  const handleClick = (callback) => {
+      navigate("/productSingle?prdID="+callback);
+  }
   return(
     <div className="CardsSliderPage">
       <div className="titlesSection"></div>
@@ -58,8 +63,8 @@ function CardsSlider(){
         >
           {products.map(item => (
               <SwiperSlide style={{backgroundImage:'url(img/products/'+item.image+')'}} 
-              onClick={"/productSingle"}
-              message={item._id}></SwiperSlide>
+              onClick={() => handleClick(item._id)}
+              ></SwiperSlide>
           ))}
       </Swiper>
     </div>

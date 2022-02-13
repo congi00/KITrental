@@ -7,7 +7,6 @@ import CardsSlider from "../CardsSlider";
 
 
 function Inventory(){
-
   return(
     <div className="inventoryPage">
       <CardsSlider/>
