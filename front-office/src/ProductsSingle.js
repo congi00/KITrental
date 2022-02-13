@@ -1,7 +1,7 @@
 import React from 'react'
 import {onAdd} from "./routes/Product"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link,useSearchParams } from "react-router-dom";
+import { Link,useSearchParams,useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import LinkProduct from "./img/blender.jpg"
 import './products.css';
@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie';
 
 function ProductsSingle(){
   const cookies = new Cookies();
+  const navigate = useNavigate();
   const [controlledSwiper, setControlledSwiper] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -64,6 +65,10 @@ function ProductsSingle(){
     }
   };*/
 
+  const onRent = (products) =>{
+    onAdd(products);
+    navigate("/cart");
+  }
   return(
     <div className="productSinglePage">
       <Link to="/catalog">
@@ -75,7 +80,7 @@ function ProductsSingle(){
         <h4 className="priceTit"><b>Price<br/><span className="productPrice">{products.price}</span></b></h4>
         <h3 className="productDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et tempus enim. Nunc elementum lectus sed purus convallis, non dictum massa malesuada.</h3>
         <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
-        <Button  className="btnBuy" size="lg">Rent now</Button>
+        <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
       </div>
     </div>
   );

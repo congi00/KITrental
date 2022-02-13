@@ -5,9 +5,19 @@
   background-size: cover;
   height: 100vh;
 }
+
+.pageTitle{
+  color: #fff;
+  font-size: 15vw;
+  position: relative;
+  bottom: 11vh;
+  left: 10vw;
+  font-family: 'Jost', sans-serif;
+}
+
 .CardsSliderPage{
   position: relative;
-  top:30vh;
+  top:20vh;
   height: 40vh;
   width: 100vw;
 }

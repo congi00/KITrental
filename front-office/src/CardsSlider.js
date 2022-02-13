@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useSearchParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './inventory.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,9 +16,11 @@ function CardsSlider(){
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [products, setProducts] = React.useState([]);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/inventory")
+    fetch("http://localhost:8000/API/inventory/category/"+ param)
       .then(res => res.json())
       .then(
         (result) => {
@@ -40,8 +42,10 @@ function CardsSlider(){
   const handleClick = (callback) => {
       navigate("/productSingle?prdID="+callback);
   }
+
   return(
     <div className="CardsSliderPage">
+      <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
       <div className="titlesSection"></div>
       <Swiper modules={[Controller]} controller={{ control: controlledSwiper }} onSwiper={setControlledSwiper}
         slidesPerView={"auto"}
