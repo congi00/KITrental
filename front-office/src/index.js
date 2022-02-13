@@ -18,9 +18,11 @@ ReactDOM.render(
       <Route path="/" element={<Landing/>}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/productSingle" element={<Product/>} />
-      <Route path="/catalog" element={<Inventory/>} />
-      <Route path="/cart" element={<Cart/>} />
+      <Route path="/privateArea" element={<Login />} />
+      <Route path="/rentalSingle" element={<Login />} />
+      <Route path="/productSingle" element={<Product />} />
+      <Route path="/catalog" element={<Inventory />} />
+      <Route path="/cart" element={<Cart />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

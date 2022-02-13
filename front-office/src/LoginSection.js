@@ -8,20 +8,10 @@ import Avatar from "./avatar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-
-
-function setToken(userToken) {
-  sessionStorage.setItem('token', JSON.stringify(userToken));
-}
-
-function getToken() {
-  const tokenString = sessionStorage.getItem('token');
-  const userToken = JSON.parse(tokenString);
-  return userToken?.id;
-}
+import useToken from './useToken';
 
 function LoginSection(){
-  const token = getToken();
+  const { token, setToken } = useToken();
   if(!token) {
     return(
       <div className="formPageL">

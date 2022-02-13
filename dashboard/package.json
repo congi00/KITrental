@@ -1,32 +1,26 @@
 {
-  "name": "dashboard",
-  "version": "0.1.0",
-  "private": true,
+  "name": "kitrental",
+  "version": "0.0.0",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5050"
   },
   "dependencies": {
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
-    "bootstrap-vue": "^2.21.2",
-    "bulma": "^0.9.3",
-    "core-js": "^3.6.5",
-    "vue": "^2.6.14",
-    "vue-cookies": "^1.7.4",
-    "vue-router": "^3.2.0"
+    "chart.js": "^3.7.0",
+    "moment": "^2.29.1",
+    "vue": "^3.2.29",
+    "vue-axios": "^3.4.1",
+    "vue-chart-3": "^3.0.9",
+    "vue-router": "^4.0.12",
+    "vue3-cookies": "^1.0.6",
+    "vue3-date-time-picker": "^2.5.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "@vitejs/plugin-vue": "^2.1.0",
+    "sass": "^1.49.7",
+    "vite": "^2.7.13"
   }
 }

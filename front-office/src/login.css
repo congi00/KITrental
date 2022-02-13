@@ -159,8 +159,9 @@
     margin-top: 3rem;
     background-color: transparent;
   }
-  .btnFormL:hover {
+  .btnFormL:hover, .btnFormL:active, .btnFormL:focus {
     background-color: #06514c;
     border-color: #06514c;
+    box-shadow: none;
   }
 }

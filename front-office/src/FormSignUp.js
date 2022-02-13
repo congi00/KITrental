@@ -11,13 +11,13 @@ function FormSignUp(){
   return(
     <div className="formSection">
       <div className="formFields">
-        <Form>
+        <Form className='signup-form'>
         <Form.Text>
           <div className="titleForm">
-            SIGN UP
+            <h1 className="signup-title">SIGN UP</h1>
           </div>
         </Form.Text>
-        <div className="firstSection">
+        <div className="fields-section">
           <Form.Group className="mb-3" controlId="formBasicText">
             <Form.Label>Name</Form.Label>
             <Form.Control type="text" placeholder="Name" />
