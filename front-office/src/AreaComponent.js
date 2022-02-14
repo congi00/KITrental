@@ -11,7 +11,7 @@ function AreaComponent(){
   return(
     <div className="areaSection">
       <Link to="/logout">
-        <FontAwesomeIcon className="userIcon" icon={faArrowRight} size="2x"/>
+        <FontAwesomeIcon className="logoutIcon" icon={faArrowRight} size="2x"/>
       </Link>
       <h1 className="personalTitle">Personal Area</h1>
       <img className="imgPersonalArea" src="/img/Products/blender.jpg"></img>

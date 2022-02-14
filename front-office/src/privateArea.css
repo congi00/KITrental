@@ -28,3 +28,10 @@
     top:10vh;
     left: 50vw;
 }
+
+.logoutIcon{
+    position: relative;
+    left: 85vw;
+    top: 16vh;
+    color: #fff;
+}
