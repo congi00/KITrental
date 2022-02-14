@@ -74,6 +74,11 @@
   }
 }
 
+.menuToggle a{
+  text-decoration: none;
+  color:#222;
+}
+
 .menuToggleTwo{
   top:-20vh;
   background-color: #dddc;

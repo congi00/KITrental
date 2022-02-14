@@ -50,7 +50,21 @@ router.get('/:id', function (req, res) {
   .exec()
   .then(products =>
     {if(products) res.status(200).json({ products })
-    else res.status(404).json({message: "User not found"})
+    else res.status(404).json({message: "Product not found"})
+  })
+  .catch(err =>
+    res.status(400).json({message: "Error accessing server data", error: err})
+  );
+})
+
+
+// Get single category
+router.get('/category/:category', function (req, res) {
+  Products.find({ category: req.params.category})
+  .exec()
+  .then(products =>
+    {if(products) res.status(200).json({ products })
+    else res.status(404).json({message: "Category not found"})
   })
   .catch(err =>
     res.status(400).json({message: "Error accessing server data", error: err})

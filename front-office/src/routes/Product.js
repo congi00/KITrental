@@ -7,6 +7,7 @@ import ProductsSingle from "../ProductsSingle";
 
 
 function Products(){
+
   return(
     <div className="productsPage">
       <ProductsSingle/>

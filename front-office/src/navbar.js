@@ -61,12 +61,12 @@ function NavB(){
                 </Link>
               </Nav.Item>
               <Nav.Item>
-                <Link to="/joinus">
+                <Link to="/catalog?category=professional">
                   <h3>Professional utilities</h3>
                 </Link>
               </Nav.Item>
               <Nav.Item>
-                <Link to="/joinus">
+                <Link to="/catalog?category=household">
                   <h3>Household products</h3>
                 </Link>
               </Nav.Item>

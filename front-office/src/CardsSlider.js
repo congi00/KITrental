@@ -1,12 +1,15 @@
 import React from 'react'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate,useSearchParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './inventory.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Controller } from "swiper";
 import "swiper/css";
 import "swiper/css/scrollbar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 
 
 
@@ -15,9 +18,12 @@ function CardsSlider(){
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [products, setProducts] = React.useState([]);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/inventory")
+    fetch("http://localhost:8000/API/inventory/category/"+ param)
       .then(res => res.json())
       .then(
         (result) => {
@@ -34,9 +40,24 @@ function CardsSlider(){
         }
       )
   }, [])
+  
+
+  const handleClick = (callback) => {
+      navigate("/productSingle?prdID="+callback);
+  }
 
   return(
     <div className="CardsSliderPage">
+      <Link to="/">
+        <FontAwesomeIcon className="homeIcon" icon={faHome} size="2x"/>
+      </Link>
+      <Link to="/login">
+        <FontAwesomeIcon className="userIconP" icon={faUser} size="2x"/>
+      </Link>
+      <Link to="/cart">
+        <FontAwesomeIcon className="cartIconP" icon={faShoppingCart} size="2x" />
+      </Link>
+      <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
       <div className="titlesSection"></div>
       <Swiper modules={[Controller]} controller={{ control: controlledSwiper }} onSwiper={setControlledSwiper}
         slidesPerView={"auto"}
@@ -58,8 +79,8 @@ function CardsSlider(){
         >
           {products.map(item => (
               <SwiperSlide style={{backgroundImage:'url(img/products/'+item.image+')'}} 
-              onClick={"/productSingle"}
-              message={item._id}></SwiperSlide>
+              onClick={() => handleClick(item._id)}
+              ></SwiperSlide>
           ))}
       </Swiper>
     </div>

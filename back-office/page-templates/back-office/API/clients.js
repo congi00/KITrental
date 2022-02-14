@@ -18,6 +18,7 @@ router.get('/', function (req, res) {
 
 //Add a new client
 router.post('/', async function (req, res) {
+  
   const client = new Client({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,

@@ -60,6 +60,26 @@
   left: 5%;
 }
 
+.form-select{
+  width: 90%;
+  position: relative;
+  left: 5%;
+  border:none;
+}
+
+.form-select option{
+  width: 90%;
+  position: relative;
+  background-color: #fff;
+  color:#222;
+}
+
+.form-select option :hover{
+  background-color: #222;
+  color:#fff;
+}
+
+
 .form-label{
   color: #fff;
   position: relative;
@@ -75,6 +95,14 @@
   position: relative;
   left: 20vw;
   margin-top: 3vh;
+}
+
+.dNone{
+  display:none;
+}
+
+.dBlock{
+  display:block;
 }
 
 @media (min-width: 992px) {
