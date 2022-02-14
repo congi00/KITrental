@@ -84,3 +84,24 @@
   background: transparent;
   z-index: 2;
 }
+
+.homeIcon{
+  color: #fff;
+  position: relative;
+  bottom: 17vh;
+  left: 7vw;
+}
+
+.cartIconP{
+  color: #fff;
+  position: relative;
+  bottom: 17vh;
+  left: 65vw;
+}
+
+.userIconP{
+  color: #fff;
+  position: relative;
+  bottom: 17vh;
+  left: 62vw;
+}

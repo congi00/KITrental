@@ -31,6 +31,7 @@
   font-weight: bold;
   font-size: 5vw;
   background-color: #111;
+  color:#fff;
   position:relative;
   left: 6vw;
   top: 30vh;
@@ -62,7 +63,7 @@
 
 .footerSection{
   width: 100vw;
-  height: 50vh;
+  height: 75vh;
   position: absolute;
   top: 220vh;
   background-color: #222;

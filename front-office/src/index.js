@@ -9,6 +9,7 @@ import Login from "./routes/Login";
 import Product from "./routes/Product";
 import Inventory from "./routes/Inventory";
 import Cart from "./routes/Cart";
+import PrivateArea from './routes/PrivateArea';
 
 
 
@@ -18,7 +19,7 @@ ReactDOM.render(
       <Route path="/" element={<Landing/>}/>
       <Route path="/joinus" element={<JoinUs />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/privateArea" element={<Login />} />
+      <Route path="/privateArea" element={<PrivateArea />} />
       <Route path="/rentalSingle" element={<Login />} />
       <Route path="/productSingle" element={<Product />} />
       <Route path="/catalog" element={<Inventory />} />

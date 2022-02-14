@@ -7,7 +7,7 @@ import LinkProduct from "./img/blender.jpg"
 import './products.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
-import Cookies from 'universal-cookie';
+import Cookies from 'universal-cookie'
 
 function ProductsSingle(){
   const cookies = new Cookies();
@@ -73,7 +73,7 @@ function ProductsSingle(){
     <div className="productSinglePage">
       <Link to="/catalog">
         <FontAwesomeIcon className="arrowIcon" icon={faAngleLeft} size="2x"/>
-    </Link>
+      </Link>
       <img className="productsImg" src={'img/products/'+products.image}/>
       <div className="productDesc">
         <h2 className="productName"><b>{products.name}</b></h2>
