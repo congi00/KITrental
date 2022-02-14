@@ -5,7 +5,7 @@
         <div style="display: flex; justify-content: center">
           
         </div>
-        <ScatterChart ref="doughnutRef" :chartData="testData" :options="options" />
+        <LineChart ref="doughnutRef" :chartData="testData" :options="options" />
       </div>
       <div class="col">
         <div class="chart-form">
@@ -21,7 +21,7 @@
 <script lang='ts'>
 import { computed, ref } from "vue";
 import { shuffle } from "lodash";
-import { ScatterChart } from "vue-chart-3";
+import { LineChart } from "vue-chart-3";
 import Form from "../components/Form.vue";
 import { Chart, registerables } from 'chart.js'
 import moment from 'moment';
@@ -30,7 +30,7 @@ Chart.register(...registerables)
 
 export default {
   name: "App",
-  components: { ScatterChart, Form },
+  components: { LineChart, Form },
   data() {
     return {
       form: {}
@@ -56,20 +56,7 @@ export default {
       },
     });
 
-    const MONTHS = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December'
-        ];
+    
 
     const testData = computed(() => ({
       labels: labelsChart,
@@ -81,9 +68,9 @@ export default {
       ],
     }));
 
-    function setData(d) {
+    function setData(d, l) {
       dataChart.value = d
-      labelsChart = MONTHS
+      labelsChart = l
     }
 
     return { testData, setData, doughnutRef, options };
@@ -112,36 +99,51 @@ export default {
       var q = {"client_id" : record} // !!!HARD-CODED!!!
       this.axios.get("api/" + col + "/", {params: q})
         .then((res) => {
-            var rental = res.data.rental 
-            console.log(rental)
+            var rental = res.data.rental
 
             /* Only rental that fit within the picked date range (check based on *start_date*) */
-            // const filteredByValue = Object.fromEntries(
-            //   Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= rangeDate[0] && new Date(value.start_date) <= rangeDate[1] ) )
-            this.countPerMonth(rental, rangeDate)
+            const resultObj = this.countPerMonth(rental, rangeDate)
+            this.setData(resultObj.data, resultObj.labels)
         })    
         .catch((errors) => {
             console.log(errors);
         })  
-      var data = [0, 0, 1, 2, 3]
-      this.setData(data)
+      // var data = [0, 0, 1, 2, 3]
+      // this.setData(data)
     },
     countPerMonth(rental, range) {
-      /* Initialization first range */
+      /* Initialization first sub range (month) */
       var start_date = range[0]
       var end_date = new Date(range[0].getFullYear(), start_date.getMonth() + 1, 0); // This way you get the last day of the previous month
       var counter = []
+      var months = []
       var start_m = moment(start_date)
       var end_m = moment(end_date)
+      const MONTHS = [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December'
+        ];
 
       /* The range is smaller than one month */
       if (end_date > range[1]) return rental.length 
 
+      /* Count how many records per month within the given range */
       do {
         const filteredByValue = Object.fromEntries(
               Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
 
         counter.push(Object.keys(filteredByValue).length)
+        months.push(MONTHS[start_date.getMonth()])
 
         /* Month Range Update */
         start_date = start_m.add(1, 'month').toDate()
@@ -149,8 +151,7 @@ export default {
         if (end_date > range[1]) end_date = range[1]
       } while (start_date < range[1])
 
-      console.log(counter)
-      return counter
+      return {data: counter, labels: months} 
     }
   }
 };
