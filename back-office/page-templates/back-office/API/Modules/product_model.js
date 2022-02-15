@@ -22,6 +22,15 @@ const product = new Schema({
     enum: ["new","perfect","good","broken"],
     required: true,
   },
+  description:{
+    type: String,
+    required: true,
+  },
+  category:{
+    type: String,
+    enum: ["Professional","Household"],
+    required: true,
+  },
   price:{
     type: Number,
     required: true,

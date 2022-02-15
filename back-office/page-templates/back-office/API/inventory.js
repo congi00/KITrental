@@ -60,6 +60,7 @@ router.get('/:id', function (req, res) {
 
 // Get single category
 router.get('/category/:category', function (req, res) {
+  console.log(req.params.category)
   Products.find({ category: req.params.category})
   .exec()
   .then(products =>
