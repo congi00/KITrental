@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './PrivateArea.css';
+import './privateArea.css';
 import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

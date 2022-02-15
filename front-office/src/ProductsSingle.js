@@ -3,7 +3,7 @@ import {onAdd} from "./routes/Product"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link,useSearchParams,useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import LinkProduct from "./img/blender.jpg"
+import LinkProduct from "./img/Blender.jpg"
 import './products.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
