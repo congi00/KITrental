@@ -11,18 +11,37 @@ import Cookies from 'universal-cookie';
 function CartItems(){
   const cookies = new Cookies();
   const cartItems = cookies.get('myCart');
-  const [totalPrice,setTotalPrice] = React.useState({
-    total:0,
-  })
-
+  const [totalPrice,setTotalPrice] = React.useState(0);
 
   React.useEffect(() => {
-    cartItems.forEach(item => {
-      setTotalPrice(totalPrice.total + item.price*item.qty)
-      console.log(totalPrice.total)
-    });
-    console.log(totalPrice.total)
-  }, [])
+    console.log(cartItems);
+    if(cartItems){
+      const cartItemsF = cartItems.filter(x=> {if(x.qty != 0) return x});
+      console.log(cartItemsF.length);
+      if(cartItemsF.length != 0){
+        cookies.set('myCart', cartItemsF, { path: '/' });
+        cartItems.map(item =>  (
+          setTotalPrice((prevState, props) => prevState + item.price*item.qty)
+      ))}
+      else
+        cookies.remove("myCart");
+    }
+  }, []);
+
+  const onTodoChange = (value,product) =>{
+    const cartItems = cookies.get('myCart');
+    const exist = cartItems.find(x => x._id === product._id);
+    console.log(exist);
+
+    if(exist && value == 0 && cartItems.length == 1)
+    cookies.remove("myCart");
+    else if(exist){
+      cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: parseFloat(value) } : x), { path: '/' });
+    }
+    console.log(cookies.get('myCart'));
+    window.location.reload(false);
+  }
+
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -54,13 +73,13 @@ function CartItems(){
                 </div>
                 <div className="itemPrice">
                   <h2>{item.price*item.qty}$</h2>
-                  <Form.Control type="number" placeholder={item.qty} />
+                  <Form.Control type="number" min="0" placeholder={item.qty} onChange={e => onTodoChange(e.target.value,item)} />
                 </div>
               </Card.Body>
             </Card>
             ))}
             <h2 className="totalItems">Total:</h2>
-            <h2 className="totalItemsPrice">{totalPrice.total}$</h2>
+            <h2 className="totalItemsPrice">{totalPrice}$</h2>
             <Button variant="danger"  onClick={handleClick}>
               Submit
             </Button>

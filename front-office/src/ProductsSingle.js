@@ -52,6 +52,7 @@ function ProductsSingle(){
     }
       console.log(cookies.get('myCart'));
   }
+
   /*const onRemove = (product) => {
     const exist = cartItems.find((x) => x.id === product.id);
     if (exist.qty === 1) {
