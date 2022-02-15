@@ -24,7 +24,7 @@ router.post('/', async function (req, res) {
       name: req.body.name,
       surname: req.body.surname,
       username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 16),
+      password: await bcrypt.hash(req.body.password, 14),
       address: req.body.address,
       email: req.body.email,
       avatar: req.body.avatar,
@@ -76,7 +76,7 @@ router.delete('/:id', function (req, res) {
 
 //Update client
 router.patch('/:id', async function (req, res) {
-  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 16);
+  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 14);
   await Client.findOneAndUpdate(
     { _id: req.params.id},
     req.body,
