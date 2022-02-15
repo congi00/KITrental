@@ -22,6 +22,7 @@ function NavB(){
   const [isActive, setActive] = React.useState("false");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
   const { token, setToken } = useToken();
+  console.log(token)
 
   const handleToggle = () => {
     setActive(!isActive);
@@ -37,7 +38,7 @@ function NavB(){
               </Link>
             </Navbar.Brand>
             <Nav justify className={isDesktop ? "menu-icons order-last" : "menu-icons"}>
-              <Nav.Item className={(isDesktop && !token) ? 'd-none' : ''} >
+              <Nav.Item className={(isDesktop && token) ? 'd-none' : ''} >
                 <Link to="/login">
                   <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
                 </Link>
@@ -75,7 +76,7 @@ function NavB(){
                   <h3>Sign Up</h3>
                 </Link>
               </Nav.Item>
-              {!token &&
+              {token &&
                 <Nav.Item>
                   <Link to="/login">
                     <h3>Log In</h3>
