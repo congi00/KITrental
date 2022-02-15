@@ -12,7 +12,6 @@ import useToken from './useToken';
 
 function LoginSection(){
   const { token, setToken } = useToken();
-  if(!token) {
     return(
       <div className="formPageL">
         <Navbar/>
@@ -23,17 +22,6 @@ function LoginSection(){
         <FormLogin setToken={setToken}/>
       </div>
     );
-  }
-  return(
-    <div className="loggedPage">
-      <FontAwesomeIcon className="arrowIcon" icon={faAngleLeft} size="2x"/>
-      <FontAwesomeIcon className="cogIcon" icon={faCog} size="2x"/>
-      <Avatar/>
-      <div className="nameWelcome">
-        <h1>Hi alecongi!</h1>
-      </div>
-    </div>
-  );
 }
 
 export default LoginSection;

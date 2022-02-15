@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 function FormLogin({ setToken }){
   const [username, setUserName] = React.useState();
   const [password, setPassword] = React.useState();
+  const [error,setError] = React.useState(false);
   let navigate = useNavigate();
 
   async function loginUser(credentials) {
@@ -33,8 +34,13 @@ function FormLogin({ setToken }){
       username,
       password
     });
-    setToken(token);
-    navigate("/privateArea");
+    
+    if(!token.message){
+      setToken(token);
+      navigate("/privateArea");
+    }else{
+      setError(true);
+    }
   }
   return(
     <div className="formSection">
@@ -46,6 +52,7 @@ function FormLogin({ setToken }){
           </div>
         </Form.Text>
         <div className="firstSectionL">
+
           <Form.Group className="mb-3" controlId="formBasicText">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Username" onChange={e => setUserName(e.target.value)} />
@@ -55,6 +62,7 @@ function FormLogin({ setToken }){
             <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
           </Form.Group>
           </div>
+          <Form.Label className={error ? "errVisible" : "errNone"}>Wrong password or email</Form.Label>
           <Button type = 'submit' className="btnFormL">
             Login
           </Button>

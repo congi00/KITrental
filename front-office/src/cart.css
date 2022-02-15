@@ -19,6 +19,26 @@
   margin-top: 5vh;
 }
 
+.cartSection h2{
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: 2.5rem;
+  position: relative;
+  top: 25vh;
+}
+
+.emptyCartBtn {
+  position: relative;
+  top: 30vh;
+  width: 50vw;
+  height: 7vh;
+  background: #fff;
+  color: #222;
+  font-weight: bold;
+  font-size: 6vw;
+}
+
+
 .cartItem{
   width: 90vw;
   height: 15vh;
@@ -97,4 +117,16 @@
   height: 7vh;
   left: 5vw;
   bottom:2vh;
+}
+
+.errNone{
+  display: none;
+}
+
+.errVisible{
+  color: red;
+  font-size: 5.5vw;
+  position: absolute;
+  top: 27vh;
+  left: 10vw;
 }
