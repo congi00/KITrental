@@ -31,29 +31,29 @@ function NavB(){
     <div className="Nav-container">
         <Navbar expand="lg">
           <Container fluid className='px-lg-5'>
-            <Navbar.Brand>
-              <Link to="/">
+            <Navbar.Brand aria-labelledby="logoNav">
+              <Link to="/" >
                 <img className="logoNav" src={isDesktop ? logo_white : logo} />
               </Link>
             </Navbar.Brand>
             <Nav justify className={isDesktop ? "menu-icons order-last" : "menu-icons"}>
               <Nav.Item className={(isDesktop && !token) ? 'd-none' : ''} >
                 <Link to="/login">
-                  <FontAwesomeIcon className="userIcon" icon={faUser} size="2x"/>
+                  <FontAwesomeIcon className="userIcon" aria-label="login and personal area" icon={faUser} size="2x"/>
                 </Link>
               </Nav.Item>
               <Nav.Item>
-                <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle}/>
+                <FontAwesomeIcon className="hamburgerIcon" icon={faHamburger} size="2x" onClick={handleToggle} aria-label="menu"/>
               </Nav.Item>
               <Nav.Item >
                 <Link to="/cart">
-                  <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" />
+                  <FontAwesomeIcon className="cartIcon" icon={faShoppingCart} size="2x" aria-label="cart"/>
                 </Link>
               </Nav.Item>
             </Nav>
             <Nav className={isActive ? "displayNone menuToggle" : "displayBlock menuToggle"} >
               <Nav.Item >
-                <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle}/>
+                <FontAwesomeIcon className="timesIcon" icon={faTimes} size="2x" onClick={handleToggle} aria-label="close menu"/>
               </Nav.Item>
               <Nav.Item >
                 <Link to="/">
