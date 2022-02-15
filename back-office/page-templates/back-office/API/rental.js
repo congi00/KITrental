@@ -11,12 +11,6 @@ var router = express.Router();
 router.get('/', function (req, res) {
   const reqQuery = req.query
   const query = {}
-  // let multiquery= {}
-  // if(queryPassed.state)
-  //     multiquery = {'$in' : queryPassed.state.split(',')}
-  // if (queryPassed.state) query.state = multiquery
-  // if (queryPassed.date_start) query.date_start = queryPassed.date_start
-  // if (queryPassed.date_end) query.date_end = queryPassed.date_end
   if (reqQuery.client_id) query.client_id = reqQuery.client_id
 
   Rental.find(query)
@@ -30,26 +24,26 @@ router.get('/', function (req, res) {
 router.post('/', async function (req, res) {
   console.log(req.body)
   const rental = new Rental({
-      _id: new mongoose.Types.ObjectId(),
-      client_id: req.body.client_id,
-      product_id: req.body.product_id,
-      start_date: req.body.start_date,
-      end_date: req.body.end_date,
-    });
-    rental
-      .save()
-      .then(result => {
-        res.status(200).json({
-          message: "Successful operation",
-          rental: rental
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          message: "Invalid data inserted",
-          error: err
-        });
+    _id: new mongoose.Types.ObjectId(),
+    client_id: req.body.client_id,
+    product_id: req.body.product_id,
+    start_date: req.body.start_date,
+    end_date: req.body.end_date,
+  });
+  rental
+    .save()
+    .then(result => {
+      res.status(200).json({
+        message: "Successful operation",
+        rental: rental
       });
+    })
+    .catch(err => {
+      res.status(400).json({
+        message: "Invalid data inserted",
+        error: err
+      });
+    });
 })
 
 // Get single rental

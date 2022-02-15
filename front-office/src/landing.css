@@ -163,6 +163,13 @@
     background-color: #06514c;
     color: white;
   }
+  .catalogButton {
+    display: block;
+    margin: auto;
+    margin-top: 2rem;
+    border: 2px solid #06514c;
+    text-decoration: none;
+  }
   .aboutSection{
     width: unset;
     height: unset;

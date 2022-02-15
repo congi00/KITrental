@@ -4,13 +4,22 @@ import { Link } from "react-router-dom";
 import '../inventory.css';
 import Navbar from "../navbar";
 import CardsSlider from "../CardsSlider";
+import { useMediaQuery } from 'react-responsive';
 
 
 function Inventory(){
+  const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+
   return(
-    <div className="inventoryPage">
-      <CardsSlider/>
+    <div>
+      {isDesktop &&
+        <Navbar />
+      }
+      <div className="inventoryPage">
+        <CardsSlider/>
+      </div>
     </div>
+
   );
 }
 
