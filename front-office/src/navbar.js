@@ -21,7 +21,7 @@ import useToken from './useToken';
 function NavB(){
   const [isActive, setActive] = React.useState("false");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
-  const  token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const handleToggle = () => {
     setActive(!isActive);
@@ -81,6 +81,13 @@ function NavB(){
                 <Nav.Item>
                   <Link to="/login">
                     <h3>Log In</h3>
+                  </Link>
+                </Nav.Item>
+              }
+              {token &&
+                <Nav.Item>
+                  <Link to="/logout">
+                    <h3>Log Out</h3>
                   </Link>
                 </Nav.Item>
               }

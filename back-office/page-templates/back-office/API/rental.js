@@ -20,6 +20,19 @@ router.get('/', function (req, res) {
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+// Get every rental from frontoffice
+router.get('/client/:query', function (req, res) {
+  const client = req.params.query
+  const query = {}
+  query.client_id = client
+
+  Rental.find(query)
+    .sort({ start_date: -1 })
+    .exec()
+    .then(rental => res.status(200).json({ rental }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
 //Add a new rental
 router.post('/', async function (req, res) {
   console.log(req.body)
@@ -29,6 +42,7 @@ router.post('/', async function (req, res) {
     product_id: req.body.product_id,
     start_date: req.body.start_date,
     end_date: req.body.end_date,
+    state: req.body.state
   });
   rental
     .save()

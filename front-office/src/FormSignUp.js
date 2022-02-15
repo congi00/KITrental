@@ -48,8 +48,8 @@ function FormSignUp(){
       fetch('/API/clients/', requestOptions)
         .then(response => response.json())
         .then(data =>{
-          const token = { id: data.client._id }
-          sessionStorage.setItem('token', JSON.stringify(token));
+          const token = data.client._id
+          sessionStorage.setItem('token', token);
           navigate('/privateArea')
         });
     }

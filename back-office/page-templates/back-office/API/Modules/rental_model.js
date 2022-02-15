@@ -24,6 +24,11 @@ const rental = new Schema({
     type: Date,
     required: true,
   },
+  state:{
+    type: String,
+    enum: ["Pending","Accepted","Active","Confirmed","Closed"],
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("RentalModel", rental, "rental");

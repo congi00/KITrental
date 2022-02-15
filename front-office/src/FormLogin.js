@@ -62,7 +62,7 @@ function FormLogin({ setToken }){
             <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
           </Form.Group>
           </div>
-          <Form.Label className={error ? "errVisible" : "errNone"}>Wrong password or email</Form.Label>
+          <Form.Label className={error ? "errVisibleLogin" : "errNone"}>Wrong password or email!</Form.Label>
           <Button type = 'submit' className="btnFormL">
             Login
           </Button>

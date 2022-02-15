@@ -97,6 +97,14 @@
   width: 30vw;
 }
 
+.errVisibleLogin{
+  color: red;
+  font-size: 5.5vw;
+  position: absolute;
+  top: 27vh;
+  left: 10vw;
+}
+
 @media (min-width: 992px) {
   .formPageL {
     background: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0)),url(https://auditkitchengear.com/wp-content/uploads/2022/01/20191011-DSC_7759-Edit_HI_RES.jpeg);
@@ -163,5 +171,15 @@
     background-color: #06514c;
     border-color: #06514c;
     box-shadow: none;
+  }
+  .errVisibleLogin {
+    color: red;
+    position: absolute;
+    top: 2rem;
+    font-size: 1vw;
+    left: 0;
+    left: 50%;
+    transform: translate(-50%);
+    width: fit-content;
   }
 }

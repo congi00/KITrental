@@ -708,6 +708,9 @@ function createRecord(col, id, el) {
       });
     }
   }
+  if (col === 'rental') {
+    toCreateObject['state'] = 'Accepted';
+  }
 
   // Create AJAX Request
   $.ajax({

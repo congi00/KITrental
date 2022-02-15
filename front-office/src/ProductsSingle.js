@@ -8,6 +8,7 @@ import './products.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import Cookies from 'universal-cookie'
+import { useMediaQuery } from 'react-responsive'
 
 function ProductsSingle(){
   const cookies = new Cookies();
@@ -18,6 +19,8 @@ function ProductsSingle(){
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = React.useState([]);
   const param = searchParams.get("prdID");
+  const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/"+param)
       .then(res => res.json())
@@ -74,14 +77,20 @@ function ProductsSingle(){
       <Link to="/catalog">
         <FontAwesomeIcon className="arrowIcon" icon={faAngleLeft} size="2x"/>
       </Link>
-      <img className="productsImg" src={'img/products/'+products.image}/>
-      <div className="productDesc">
-        <h2 className="productName"><b>{products.name}</b></h2>
-        <h4 className="priceTit"><b>Price<br/><span className="productPrice">{products.price}$</span></b></h4>
-        <h3 className="productDescription">{products.description}</h3>
-        <h3 className="productDescription">State: {products.state}</h3>
-        <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
-        <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
+      <div className="row product-wrapper">
+        <div className="col-12 col-lg-6 img-col">
+          <img className="productsImg" src={'img/products/'+products.image}/>
+        </div>
+        <div className="col-12 col-lg-6 desc-col">
+          <div className="productDesc">
+            <h2 className="productName"><b>{products.name}</b></h2>
+            <h4 className="priceTit"><b>{!isDesktop && <React.Fragment>Price<br/></React.Fragment>}<span className="productPrice">{products.price}$</span></b></h4>
+            <h3 className="productDescription">{products.description}</h3>
+            <h3 className="productDescription">State: {products.state}</h3>
+            <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
+            <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
+          </div>
+        </div>
       </div>
     </div>
   );

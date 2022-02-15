@@ -35,3 +35,24 @@
     top: 16vh;
     color: #fff;
 }
+
+/******************** MEDIA QUERIES **************************/
+
+@media (min-width: 992px) {
+    .areaSection {
+        width: 100%;
+    }
+    .personalTitle {
+        position: unset;
+        font-size: 5vw;
+    }
+    .imgPersonalArea {
+        width: 20vw;
+        height: 20vw;
+        position: unset;
+    }
+    .Infos {
+        position: unset;
+       font-size: 4vw; 
+    }
+}
