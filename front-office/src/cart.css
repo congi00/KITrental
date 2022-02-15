@@ -19,6 +19,14 @@
   margin-top: 5vh;
 }
 
+.cartSection h2{
+  font-family: 'Jost', sans-serif;
+  font-size: 2rem;
+  color: #fff;
+  position: relative;
+  top: 25vh;
+}
+
 .cartSection .itemTitle{
   color: #222;
   font-family: 'Jost', sans-serif;
