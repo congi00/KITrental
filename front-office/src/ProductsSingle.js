@@ -77,8 +77,9 @@ function ProductsSingle(){
       <img className="productsImg" src={'img/products/'+products.image}/>
       <div className="productDesc">
         <h2 className="productName"><b>{products.name}</b></h2>
-        <h4 className="priceTit"><b>Price<br/><span className="productPrice">{products.price}</span></b></h4>
-        <h3 className="productDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et tempus enim. Nunc elementum lectus sed purus convallis, non dictum massa malesuada.</h3>
+        <h4 className="priceTit"><b>Price<br/><span className="productPrice">{products.price}$</span></b></h4>
+        <h3 className="productDescription">{products.description}</h3>
+        <h3 className="productDescription">State: {products.state}</h3>
         <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
         <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
       </div>

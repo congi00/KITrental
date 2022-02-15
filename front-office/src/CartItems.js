@@ -11,6 +11,18 @@ import Cookies from 'universal-cookie';
 function CartItems(){
   const cookies = new Cookies();
   const cartItems = cookies.get('myCart');
+  const [totalPrice,setTotalPrice] = React.useState({
+    total:0,
+  })
+
+
+  React.useEffect(() => {
+    cartItems.forEach(item => {
+      setTotalPrice(totalPrice.total + item.price*item.qty)
+      console.log(totalPrice.total)
+    });
+    console.log(totalPrice.total)
+  }, [])
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -38,17 +50,17 @@ function CartItems(){
                 </div>
                 <div className="itemTitle">
                   <h2>{item.name}</h2>
-                  <h3>Professional</h3>
+                  <h3>{item.category}</h3>
                 </div>
                 <div className="itemPrice">
-                  <h2>{item.price}</h2>
+                  <h2>{item.price*item.qty}$</h2>
                   <Form.Control type="number" placeholder={item.qty} />
                 </div>
               </Card.Body>
             </Card>
             ))}
             <h2 className="totalItems">Total:</h2>
-            <h2 className="totalItemsPrice">130$</h2>
+            <h2 className="totalItemsPrice">{totalPrice.total}$</h2>
             <Button variant="danger"  onClick={handleClick}>
               Submit
             </Button>
