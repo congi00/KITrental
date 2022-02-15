@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate,useSearchParams } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Button } from 'react-bootstrap';
 import './inventory.css';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Controller } from "swiper";
@@ -10,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { useMediaQuery } from 'react-responsive';
 
 
 
@@ -21,6 +23,7 @@ function CardsSlider(){
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
+  const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/category/"+ param)
@@ -57,32 +60,63 @@ function CardsSlider(){
       <Link to="/cart">
         <FontAwesomeIcon className="cartIconP" icon={faShoppingCart} size="2x" />
       </Link>
-      <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
-      <div className="titlesSection"></div>
-      <Swiper modules={[Controller]} controller={{ control: controlledSwiper }} onSwiper={setControlledSwiper}
-        slidesPerView={"auto"}
-        className="titles"
-        >
-          {products.map(item => (
-            <SwiperSlide>{item.name}</SwiperSlide>
-          ))}
-      </Swiper>
-      <Swiper modules={[Controller]} controller={{ control: controlledSwiper }}
-        slidesPerView={"auto"}
-        pagination={{
-          clickable: true,
-        }}
-        className="mySwiper"
-        onTransitionEnd={e => {
-          console.log(controlledSwiper.realIndex);
-        }}
-        >
-          {products.map(item => (
-              <SwiperSlide style={{backgroundImage:'url(img/products/'+item.image+')'}} 
-              onClick={() => handleClick(item._id)}
-              ></SwiperSlide>
-          ))}
-      </Swiper>
+      <div className='container'>
+        <div className="hero-products-wrapper">
+          <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
+          <div className="scroll-icon-wrapper">
+            <a href="#products">
+              <div class="scroll"></div>
+            </a>
+          </div>
+        </div>
+        <div className="titlesSection"></div>
+        {!isDesktop &&
+          <React.Fragment>
+            <Swiper modules={[Controller]} controller={{ control: controlledSwiper }} onSwiper={setControlledSwiper}
+              slidesPerView={"auto"}
+              className="titles"
+              >
+                {products.map(item => (
+                  <SwiperSlide>{item.name}</SwiperSlide>
+                ))}
+            </Swiper>
+            <Swiper modules={[Controller]} controller={{ control: controlledSwiper }}
+              slidesPerView={"auto"}
+              pagination={{
+                clickable: true,
+              }}
+              className="mySwiper"
+              onTransitionEnd={e => {
+                console.log(controlledSwiper.realIndex);
+              }}
+              >
+                {products.map(item => (
+                    <SwiperSlide style={{backgroundImage:'url(img/products/'+item.image+')'}} 
+                    onClick={() => handleClick(item._id)}
+                    ></SwiperSlide>
+                ))}
+            </Swiper>
+          </React.Fragment>
+        }
+        {isDesktop &&
+          <React.Fragment>
+            <div className="products-wrapper" id='products'>
+              {products.map(item => (
+                <Card style={{ width: '18rem' }} onClick={() => handleClick(item._id)} >
+                  <Card.Img variant="top" src={"url(img/products/" + item.image + ")"} />
+                  <Card.Body>
+                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Text>
+                      {/* {item.desc} */}
+                    </Card.Text>
+                    <Button variant="primary" className='product-button'>See More</Button>
+                  </Card.Body>
+                </Card>
+              ))} 
+            </div>
+          </React.Fragment>
+        }
+      </div>
     </div>
   );
 }

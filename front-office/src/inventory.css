@@ -105,3 +105,104 @@
   bottom: 17vh;
   left: 62vw;
 }
+
+
+/******************** MEDIA QUERIES **************************/
+
+@media (min-width: 992px) {
+  .CardsSliderPage {
+    top: 0;
+    height: unset;
+    width: unset;
+  }
+  .CardsSliderPage > a {
+    display: none;
+  }
+  .titlesSection {
+    display: none;
+  }
+  .hero-products-wrapper {
+    height: 100vh;
+    padding-top: 30vh;
+    position: relative;
+  }
+  .pageTitle{
+    color: #fff;
+    font-size: 7vw;
+    position: unset;
+    left: 0;
+    font-family: 'Jost', sans-serif;
+  }
+  .scroll-icon-wrapper {
+    position: absolute;
+    bottom: 3rem;
+    display: block;
+    margin: auto;
+    left: 50%;
+    transform: translate(-50%);
+  }
+  .scroll {
+    width: 60px;
+    height: 60px;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: relative;
+    animation: down 1.5s infinite;
+    -webkit-animation: down 1.5s infinite;
+  }
+  .scroll::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 18px;
+    width: 18px;
+    height: 18px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+  }
+  
+  @keyframes down {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translateY(15px);
+    }
+    40% {
+      transform: translate(0);
+    }
+  }
+  
+  @-webkit-keyframes down {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translateY(15px);
+    }
+    40% {
+      transform: translate(0);
+    }
+  }
+  .products-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 18rem);
+    grid-gap: 3rem;
+    justify-content: space-between;
+    padding-top: 5rem;
+  }
+  .product-button {
+      /* padding: 0.5rem 2rem;
+      font-size: 2.5rem;
+      margin-top: 2rem; */
+      background-color: transparent;
+      border: 2px solid #06514c;
+      color: #06514c;
+  }
+  .product-button:hover {
+    background-color: #06514c;
+    border-color: #06514c;
+    color: white;
+  }
+}
