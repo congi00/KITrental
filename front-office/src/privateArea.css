@@ -55,6 +55,8 @@
     .areaSection {
         background-color: cadetblue;
         width: 100%;
+        height: unset;
+        min-height: 100vh;
     }
     .personalTitle {
         position: unset;
@@ -90,10 +92,34 @@
         border-radius: 0 50px 50px 0
     }
     .desktop-rental-wrapper {
-        margin-left: 22vw;
-        padding-top: 15vh;
+        margin-left: 20vw;
+        padding: 15vh 2vw 0 2vw;
     }
     .desktop-rental-wrapper > .personalTitle {
         font-size: 5vw;
+    }
+    .rental-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 18rem);
+        grid-gap: 3rem;
+        justify-content: space-between;
+        padding: 2rem 0 2rem 0;
+        min-height: 50vh;
+    }
+    .btnChangeInfo {
+        position: unset;
+        height: 5vh;
+        width: 7vw;
+    }
+    .card-img-top {
+        max-height: 22vh;
+        object-fit: cover;
+    }
+    .empty-rental {
+        color: white;
+        font-size: 1.5vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

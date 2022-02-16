@@ -138,3 +138,20 @@
   top: 27vh;
   left: 10vw;
 }
+
+/*************** MEDIA QUERIES ****************/
+
+@media (min-width: 992px) {
+  .emptyCartBtn {
+    background-color: transparent;
+    color: white;
+    font-size: 2vw;
+    height: unset;
+    border: none;
+    width: unset;
+  }
+  .emptyCartBtn:hover {
+    background-color: transparent;
+    text-decoration: underline;
+  }
+}

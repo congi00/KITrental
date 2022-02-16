@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import './navbar.css'
 import navIcon from "./menuicon.svg"
-import logo from "./img/KITrental-logos_transparent.png"
+import logo from "./img/KITrental-logos_black.png"
 import logo_white from "./img/KITrental-logos_white.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar';
@@ -26,14 +26,50 @@ function NavB(){
   const handleToggle = () => {
     setActive(!isActive);
   };
+
+  //navbar scroll when active state
+  const [navbar, setNavbar] = useState(false)
+
+  //logo scroll when active
+  const [navbarLogo, setNavbarLogo] = useState(logo_white)
+
+  //navbar scroll changeBackground function
+  const changeBackground = () => {
+    if (window.scrollY >= 66) {
+      setNavbar(true)
+    } else {
+      setNavbar(false)
+    }
+  }
+
+  React.useEffect(() => {
+    changeBackground()
+    // adding the event when scroll change background
+    window.addEventListener("scroll", changeBackground)
+  })
+
+  //logo scroll function
+  const changeLogo = () => {
+    if (window.scrollY >= 60) {
+      setNavbarLogo(logo)
+    } else {
+      setNavbarLogo(logo_white)
+    }
+  }
+
+  React.useEffect(() => {
+    changeLogo()
+    // adding the event when scroll change Logo
+    window.addEventListener("scroll", changeLogo)
+  })
   
   return (
     <div className="Nav-container">
-        <Navbar expand="lg">
+        <Navbar expand="lg" className={navbar ? "scrolled-navbar" : ""}>
           <Container fluid className='px-lg-5'>
             <Navbar.Brand aria-labelledby="logoNav">
               <Link to="/" >
-                <img className="logoNav" src={isDesktop ? logo_white : logo} />
+                <img className="logoNav" src={isDesktop ? navbarLogo : logo} />
               </Link>
             </Navbar.Brand>
             <Nav justify className={isDesktop ? "menu-icons order-last" : "menu-icons"}>

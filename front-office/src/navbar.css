@@ -134,7 +134,6 @@
   }
   .menuToggle {
     gap: 40px;
-    padding-top: 3rem;
     color: white;
   }
   .menuToggle .nav-item a {
@@ -147,10 +146,22 @@
   }
   .menu-icons {
     gap: 25px;
-    padding-top: 3rem;
   }
   .userIcon, .cartIcon {
     color: white;
     position: unset;
+  }
+  .navbar-expand-lg {
+    height: 100%;
+  }
+  .navbar-expand-lg > .container-fluid {
+    align-items: center;
+  }
+  .scrolled-navbar {
+    background-color: white;
+    box-shadow: 0 10px 3px 0 rgba(0,0,0,.2);
+  }
+  .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > svg {
+    color: black;
   }
 }

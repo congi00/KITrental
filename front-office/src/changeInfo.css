@@ -36,3 +36,11 @@
     top:5vh;
     color: #fff;
 }
+
+/********** MEDIA QUERIES ************/
+
+@media (min-width: 992px) {
+    .formFields {
+        margin-top: 25vh;
+    }
+}

@@ -70,40 +70,17 @@ function AreaComponent(){
         <h1 className="personalTitle">Future and Active Rental</h1>
             {rental ?
               <React.Fragment>
-                {rental.map(item => (item.state !== 'Closed' &&
-                  <Card style={{ width: '18rem' }} >
-                    <Card.Img variant="top" src={"url(img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '') + ")"} />
-                    <Card.Body>
-                      <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
-                      <Card.Text>
-                        {/* {item.desc} */}
-                      </Card.Text>
-                      <ListGroup className="list-group-flush">
-                        <ListGroup.Item>State: </ListGroup.Item>
-                        <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
-                        <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
-                      </ListGroup>
-                      <Button variant="primary" className='product-button'>See More</Button>
-                    </Card.Body>
-                  </Card>
-                ))}
-              </React.Fragment>
-              : 
-              <p>blabla</p>
-            }
-        <h1 className="personalTitle">Past Rental</h1>
-            {rental ?
-              <React.Fragment>
-                  {rental.map(item => (item.state === 'Closed' &&
+                <div className='rental-wrapper'>
+                  {rental.map(item => (item.state !== 'Closed' &&
                     <Card style={{ width: '18rem' }} >
-                      <Card.Img variant="top" src={"url(img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '') + ")"} />
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
                       <Card.Body>
                         <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
                         <Card.Text>
                           {/* {item.desc} */}
                         </Card.Text>
                         <ListGroup className="list-group-flush">
-                          <ListGroup.Item>State: </ListGroup.Item>
+                          <ListGroup.Item>State: {item.state}</ListGroup.Item>
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
@@ -111,9 +88,44 @@ function AreaComponent(){
                       </Card.Body>
                     </Card>
                   ))}
+                </div>
+                
+              </React.Fragment>
+              : 
+              <div className='empty-rental'>
+                <h2>No rental here yet.</h2>
+                <Link to="/catalog">
+                  Rent a product
+                </Link>
+              </div>
+            }
+        <h1 className="personalTitle">Past Rental</h1>
+            {rental ?
+              <React.Fragment>
+                <div className='rental-wrapper'>
+                  {rental.map(item => (item.state === 'Closed' &&
+                    <Card style={{ width: '18rem' }} >
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                      <Card.Body>
+                        <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                        <Card.Text>
+                          {/* {item.desc} */}
+                        </Card.Text>
+                        <ListGroup className="list-group-flush">
+                          <ListGroup.Item>State: {item.state}</ListGroup.Item>
+                          <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
+                          <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                        </ListGroup>
+                        <Button variant="primary" className='product-button'>See More</Button>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
                 </React.Fragment>
                 : 
-                <p>blabla</p>
+                <div className='empty-rental'>
+                  <h2>No rental here yet.</h2>
+                </div>
               }
       </div>
     </div>
