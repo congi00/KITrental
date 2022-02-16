@@ -41,7 +41,6 @@ router.post('/', async function (req, res) {
     client_id: req.body.client_id,
     product_id: req.body.product_id,
     start_date: req.body.start_date,
-    invoice_id: req.body.invoice_id,
     end_date: req.body.end_date,
     state: req.body.state
   });

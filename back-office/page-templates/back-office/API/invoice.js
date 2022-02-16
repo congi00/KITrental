@@ -1,8 +1,42 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
+const fs = require('fs');
 const PDFDocument = require('pdfkit');
 
+async function createInvoice(invoice, path) {
+	let doc = new PDFDocument({ margin: 50 });
 
+	//generateHeader(doc);
+	//generateCustomerInformation(doc, invoice);
+	//generateInvoiceTable(doc, invoice);
+	generateFooter(doc);
+
+	doc.end();
+	doc.pipe(fs.createWriteStream(path+"change.pdf"));
+}
+
+/*function generateHeader(doc) {
+	doc.image('img/products/blender.jpg', 50, 45, { width: 50 })
+		.fillColor('#444444')
+		.fontSize(20)
+		.text('ACME Inc.', 110, 57)
+		.fontSize(10)
+		.text('123 Main Street', 200, 65, { align: 'right' })
+		.text('New York, NY, 10025', 200, 80, { align: 'right' })
+		.moveDown();
+}*/
+
+function generateFooter(doc) {
+	doc.fontSize(
+		10,
+	).text(
+		'Payment is due within 15 days. Thank you for your business.',
+		50,
+		780,
+		{ align: 'center', width: 500 },
+	);
+}
 
 const Invoice = require('./Modules/invoice_model');
 const Rental = require('./Modules/rental_model');
@@ -82,9 +116,9 @@ router.post('/', async function (req, res) {
   console.log(req.body)
   const invoice = new Invoice({
     _id: new mongoose.Types.ObjectId(),
-    rentals_id: req.body.rentals_id._id,
+    rentals_id: req.body.rentals_id,
     end_date: req.body.end_date,
-    filePdf: req.body.total
+    filePdf: req.body.filePdf
   });
   
   invoice
@@ -104,20 +138,25 @@ router.post('/', async function (req, res) {
 })
 
 
-router.post('/pdf/:id', (req, res) => {
-    const doc = new PDFDocument()
-    let filename = req.body.rental_id
-    // Stripping special characters
-    filename = encodeURIComponent(filename) + '.pdf'
-    // Setting response to 'attachment' (download).
-    // If you use 'inline' here it will automatically open the PDF
-    res.setHeader('Content-disposition', 'attachment; filename="' + filename + '"')
-    res.setHeader('Content-type', 'application/pdf')
-    const content = req.body.content
-    doc.y = 300
-    doc.text(content, 50, 50)
-    doc.pipe(res)
-    doc.end()
+router.patch('/pdf/:id', async (req, res) => {
+    console.log(req.params.id)
+    await Invoice.findOneAndUpdate(
+      {_id: req.params.id},
+      {$set: 
+        {"rental_id" : "prova"}
+      },
+      {overwrite: true}
+    )
+    .exec()
+    .then(result => {
+      if(result){
+        createInvoice(result, "back-office/invoices/")
+        res.status(200).json({ message: "Successful operation", result : result })
+      }else res.status(404).json({message: "Invoice not found"})
+    })
+    .catch(err =>
+       res.status(400).json({message: "Error accessing server data", error: err})
+    );
 })
 
 module.exports = router;

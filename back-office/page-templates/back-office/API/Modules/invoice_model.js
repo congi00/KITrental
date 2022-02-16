@@ -8,12 +8,11 @@ const Schema = mongoose.Schema;
 const invoice = new Schema({
   _id: Schema.Types.ObjectId,
   rental_id:{
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "Rental",
   },
   filePdf:{
     type: String,
-    required: true,
   },
   end_date:{
     type: Date,
