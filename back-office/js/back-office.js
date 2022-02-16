@@ -358,7 +358,8 @@ function showRental() {
       $(content).append(createModal(body))
 
       // Event listeners
-      $(document).on("click", "#createRecord", function(){
+      $(document).off("click", "#createRecord")
+      $(document).on("click", "#createRecord", function createRental(){
         createRecord('rental', '', this)
       });
       var myModalEl = document.getElementById('staticBackdrop')
@@ -399,27 +400,25 @@ function singleRental(id) {
           <div class="col-md-6 p-5">
               <!-- Display Rented Object -->
               <div class="row mb-4">
-                <div class="col-md-4 d-flex align-items-center">
-                  <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
+                <div class="col-md-6 d-flex colsRental">
+                  <h2>Rented Product</h2>
+                  <div class="thumbnail-wrapper">
+                    <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
+                  </div>
+                  <h2>${rented_product.name ? rented_product.name : ''}</h2>
                 </div>
-                <div class="col-md-8 d-flex align-items-center">
-                  <h2>Product: ${rented_product.name ? rented_product.name : ''}</h2>
-                </div>
-              </div>
-
-              <!-- Display Associated Client -->
-              <div class="row">
-                <div class="col-md-4 d-flex align-items-center">
-                  <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : ''}" alt="Rented Product photo">
-                </div>
-                <div class="col-md-8 d-flex align-items-center">
-                  <h2>Username: ${renting_client.username ? renting_client.username : ''}</h2>
+                <div class="col-md-6 d-flex colsRental">
+                  <h2>Renting Client</h2>
+                  <div class="thumbnail-wrapper">
+                    <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : 'profile-placeholder.png'}" alt="Rented Product photo">
+                  </div>
+                  <h2>${renting_client.username ? renting_client.username : ''}</h2>
                 </div>
               </div>
           </div>
 
           <!-- Display Rental Data -->
-          <div class="col-md-6 p-5">
+          <div class="col-md-6 p-5" style="width: 50%;">
               <form action="">
                   <label for="rentalStartDate" class="form-label">Starting Date</label>
                   <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
@@ -505,9 +504,15 @@ function singleRental(id) {
             </textarea>
         </div>`
       $(content).append(createModal(body))
+      $(document).off("click", "#createRecord")
       $(document).on("click", "#createRecord", function(){
         createRecord('operations', id, this)
       });
+
+      var myModalEl = document.getElementById('staticBackdrop')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        singleRental(id);
+      })
     },
   });
 }
@@ -601,6 +606,7 @@ function showInventory() {
       $(content).append(createModal(body))
 
       // Event listeners
+      $(document).off("click", "#createRecord")
       $(document).on("click", "#createRecord", function(){
         createRecord('inventory', '', this)
       });
@@ -714,8 +720,8 @@ function showPromotions() {
         $(tbdy).append(`
           <tr class="table-light">
             <td>${prom.name}</td>
-            <td>${prom.start_date}</td>
-            <td>${prom.end_date}</td>
+            <td>${new Date(prom.start_date).toLocaleString()}</td>
+            <td>${new Date(prom.end_date).toLocaleString()}</td>
             <td>${prom.percentage}</td>
             <td><i onclick="deleteRecord('promotions', '${prom._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
           </tr>`);
@@ -746,6 +752,7 @@ function showPromotions() {
     $(content).append(createModal(body))
   
     // Event listeners
+    $(document).off("click", "#createRecord")
     $(document).on("click", "#createRecord", function(){
       createRecord('promotions', '', this)
     });
@@ -836,7 +843,7 @@ function createRecord(col, id, el) {
   if (col === 'rental') {
     toCreateObject['state'] = 'Accepted';
   }
-
+  
   // Create AJAX Request
   $.ajax({
     url: "API/" + col + "/",

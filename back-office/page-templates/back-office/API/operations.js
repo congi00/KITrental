@@ -23,8 +23,8 @@ router.post('/', async function (req, res) {
   const operation = new Operation({
       _id: new mongoose.Types.ObjectId(),
       type: req.body.type,
-      employeeId: req.body.employeeId,
-      rentalId: req.body.rentalId,
+      employee_id: req.body.employee_id,
+      rental_id: req.body.rental_id,
       notes: req.body.notes,
     });
     operation

@@ -28,7 +28,8 @@ router.post('/', async function (req, res) {
       state: req.body.state,
       description: req.body.description,
       category: req.body.category,
-      price: req.body.price
+      price: req.body.price,
+      quantity: req.body.quantity,
     });
     product
       .save()
