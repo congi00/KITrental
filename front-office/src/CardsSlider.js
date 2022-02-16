@@ -103,11 +103,11 @@ function CardsSlider(){
             <div className="products-wrapper" id='products'>
               {products.map(item => (
                 <Card style={{ width: '18rem' }} onClick={() => handleClick(item._id)} >
-                  <Card.Img variant="top" src={"url(img/products/" + item.image + ")"} />
+                  <Card.Img variant="top" src={"img/products/" + item.image} />
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
                     <Card.Text>
-                      {/* {item.desc} */}
+                      {item.desc}
                     </Card.Text>
                     <Button variant="primary" className='product-button'>See More</Button>
                   </Card.Body>

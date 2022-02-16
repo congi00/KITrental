@@ -551,6 +551,63 @@ function showInventory() {
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
       content.appendChild(container).appendChild(tbl);
+
+      var body = `
+        <div class="mb-3">
+          <label for="productName" class="form-label">Name</label>
+          <input required class="form-control" id="productName" placeholder="Barbeque" data-db-field="name">
+        </div>
+        <div class="mb-3">
+          <label for="productImage" class="form-label">Image</label>
+          <input required class="form-control" id="productImage" placeholder="[image].[format]" data-db-field="image">
+        </div>
+        <div class="mb-3">
+          <label for="productAval" class="form-label">Availability</label>
+          <select class="form-select" id="productAval" aria-label="Select Availability" data-db-field="avaiability">
+            <option selected>Open this select menu</option>
+            <option value="available">Available</option>
+            <option value="unavaiable">Unavailable</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="productState" class="form-label">State</label>
+          <select class="form-select" id="productState" aria-label="Select State" data-db-field="state">
+            <option selected>Open this select menu</option>
+            <option value="new">New</option>
+            <option value="perfect">Perfect</option>
+            <option value="good">Good</option>
+            <option value="broken">Broken</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="productDesc" class="form-label">Description</label>
+          <textarea class="form-control" id="productDesc" rows="3" data-db-field="description"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="productCat" class="form-label">Category</label>
+          <select class="form-select" id="productCat" aria-label="Select Category" data-db-field="category">
+            <option selected>Open this select menu</option>
+            <option value="Professional">Professional</option>
+            <option value="Household">Household</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="productPrice" class="form-label">Price</label>
+          <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="text" class="form-control" id="productPrice" aria-label="Price in dollars" data-db-field="price">
+          </div>
+        </div>`
+      $(content).append(createModal(body))
+
+      // Event listeners
+      $(document).on("click", "#createRecord", function(){
+        createRecord('inventory', '', this)
+      });
+      var myModalEl = document.getElementById('staticBackdrop')
+      myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        showInventory();
+      })
     },
   });
 }
@@ -570,7 +627,6 @@ function singleInventory(id) {
       var product = res.products;
       var content = document.getElementById("content");
       content.innerHTML = "";
-      alert(product.image);
       $(content).append(`
         <div class="row">
           <div class="col-md-4 p-5">
@@ -641,7 +697,7 @@ function createModal(body) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Add an Operation</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Add a Record</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="" autocomplete="off">
