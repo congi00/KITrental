@@ -840,61 +840,65 @@ function createRecord(col, id, el) {
               contentType: "application/json",
               dataType: "json",      
               data: JSON.stringify({ 
-                rental_id: "",
+                rental_id: toCreateObject['rental_id'],
                 end_date: new Date(),
-                filePdf : ""
+                filePdf : toCreateObject['rental_id']
               }),
               success: function (response) {
                 if (response) {  
                   $.ajax({
-                    url: "API/invoice/pdf/"+response.invoice._id,
-                    type: "PATCH",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify({
-                      rental_id: "nome",
-                    }),
-                    success: function (response) {
-                      if (response) {
-                      } else {
-                        alert("There was an error.");
-                      }
-                    },      
-                    error: function(err){
-                      console.log(err);
-                    }
-                  });    
-                  
-                /*  toCreateObject['invoice_id'] = response.invoice._id;
-                  $.ajax({
-                    url: "API/" + col + "/",
-                    type: "POST",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify(toCreateObject),
-                    success: function (response) {
-                      if (response) {
-                        var rentID = response.rental._id;
-                        $.ajax({
-                          url: "API/invoice/"+toCreateObject['invoice_id'],
-                          type: "PATCH",
-                          contentType: "application/json",
-                          dataType: "json",
-                          data: JSON.stringify({
-                            rental_id: rentID,
-                          }),
-                          success: function (response) {
-                            if (response) {
-                            } else {
-                              alert("There was an error.");
+                    url: "API/rental/" + id,
+                    type: "GET",
+                    success: res => {
+                      const prod = res.rental.product_id;
+                      $.ajax({
+                        url: "API/clients/" + res.rental.client_id,
+                        type: "GET",
+                        success: res => {
+                          const clientInfo = {
+                              client_name: res.client.name,
+                              client_surname: res.client.surname,
+                              client_address: res.client.address,
+                              client_payment: res.client.payment,
+                          }
+                          $.ajax({
+                            url: "API/inventory/" + prod,
+                            type: "GET",
+                            success: res => {
+                              const productInfo = {
+                                product_name: res.products.name,
+                                product_image: res.products.image,
+                                product_state: res.products.state,
+                                product_price: res.products.price,
+                                product_category: res.products.category,
+                              }
+                            
+                              $.ajax({
+                                url: "API/invoice/pdf/",
+                                type: "POST",
+                                contentType: "application/json",
+                                dataType: "json",
+                                data: JSON.stringify({
+                                  clientInfo,
+                                  productInfo
+                                }),
+                                success: function (response) {
+                                  if (response) {
+                                  } else {
+                                    alert("There was an error.");
+                                  }
+                                },      
+                                error: function(err){
+                                  console.log(err);
+                                }
+                              });
                             }
-                          },
-                        });
-                      } else {
-                        alert("There was an error.");
-                      }
-                    },
-                  });*/
+                          });
+                        }
+                      });
+                    }
+                  });
+                 
                 } else {
                   alert("There was an error.");
                 }
