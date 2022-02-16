@@ -36,6 +36,19 @@
     color: #fff;
 }
 
+
+.btnChangeInfo{
+    background-color: #fff;
+    border-color: #222;
+    color:#222;
+    position: relative;
+    left:50vw;
+    width: 40vw;
+    height: 7vh;
+    top:15vh;
+    font-weight: bold;
+}
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {

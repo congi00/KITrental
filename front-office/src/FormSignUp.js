@@ -28,6 +28,7 @@ function FormSignUp(){
     setInfo(info => ({ ...info, [e.target.name]: e.target.value}))
  }
   
+ 
 
   const navigate = useNavigate();
   const signupChange = () =>{
@@ -40,10 +41,10 @@ function FormSignUp(){
           surname: info.surname,
           username: info.username,
           password: info.password,
-          address: "this.info.address",
+          address: info.address,
           email: info.email,
-          avatar: "img",
-          notes: ""})
+          avatar: info.avatar,
+          notes: info.notes})
       };
       fetch('/API/clients/', requestOptions)
         .then(response => response.json())
@@ -77,6 +78,7 @@ function FormSignUp(){
             <Form.Control name="name" type="text" placeholder="Name" 
               aria-label="signup name"
               aria-required="true"
+              required
               onChange={setInfoHandler}/>
           </Form.Group>
           <Form.Group className={(joinSectionsN.count == 0) ? "dBlock" : "dNone"} controlId="formSurname">
@@ -84,6 +86,7 @@ function FormSignUp(){
             <Form.Control name="surname" type="text" placeholder="Surname" 
             aria-label="signup surname"
             aria-required="true"
+            required
             onChange={setInfoHandler} />
           </Form.Group>
             <Form.Group className={(joinSectionsN.count == 0) ? "dBlock" : "dNone"} controlId="formUsername">
@@ -91,6 +94,7 @@ function FormSignUp(){
               <Form.Control name="username" type="text" placeholder="Username" 
               aria-label="signup username"
               aria-required="true"
+              required
               onChange={setInfoHandler} />
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 0) ? "dBlock" : "dNone"} controlId="formEmail">
@@ -98,6 +102,7 @@ function FormSignUp(){
               <Form.Control name="email" type="text" placeholder="Email" 
               aria-label="signup email"
               aria-required="true"
+              required
               onChange={setInfoHandler} />
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 1) ? "dBlock" : "dNone"} controlId="formPassword">
@@ -105,6 +110,7 @@ function FormSignUp(){
               <Form.Control name="password" type="password" placeholder="Password" 
               aria-label="signup password"
               aria-required="true"
+              required
               onChange={setInfoHandler}/>
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 1) ? "dBlock" : "dNone"} controlId="formPasswordConfirm">
@@ -112,22 +118,31 @@ function FormSignUp(){
               <Form.Control name="confirmPassword" type="password" 
               aria-label="signup confirm password"
               aria-required="true"
+              required
               placeholder="Retype Password" />
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 1) ? "dBlock" : "dNone"} controlId="formInterests">
+              <Form.Label name="address" htmlFor="address">Address</Form.Label>
+              <Form.Control name="address" type="text" 
+              aria-label="signup address"
+              aria-required="true"
+              required
+              placeholder="Address" />
+            </Form.Group>
+            <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formInterests">
               <Form.Label name="interests" htmlFor="interestsSelection">Interesting in</Form.Label>
               <Form.Select aria-label="signup interesting in"
               aria-required="true">
-                <option name="ProfessionalUtilities">Professional utilities</option>
-                <option name="HouseholdUtilities">Household utilities</option>
+                <option name="Professional">Professional utilities</option>
+                <option name="Household">Household utilities</option>
               </Form.Select>
             </Form.Group>
-            <Form.Group className={(joinSectionsN.count == 1) ? "dBlock" : "dNone"} controlId="formPayment">
+            <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formPayment">
               <Form.Label name="payment" htmlFor="paymentSelection">Methods of payment</Form.Label>
               <Form.Select aria-label="signup payment method"
               aria-required="true">
                 <option name="Cash">Cash</option>
-                <option name="CreditCard">Credit Card</option>
+                <option name="Credit">Credit Card</option>
               </Form.Select>
             </Form.Group>
           </div>

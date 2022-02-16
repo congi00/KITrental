@@ -11,6 +11,7 @@ import Inventory from "./routes/Inventory";
 import Cart from "./routes/Cart";
 import PrivateArea from './routes/PrivateArea';
 import Logout from './routes/Logout';
+import ChangeInfos from './routes/ChangeInfos';
 
 
 
@@ -22,6 +23,7 @@ ReactDOM.render(
       <Route path="/login" element={<Login />} />
       <Route path="/privateArea" element={<PrivateArea />} />
       <Route path="/rentalSingle" element={<Login />} />
+      <Route path="/changeInfos" element={<ChangeInfos />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/productSingle" element={<Product />} />
       <Route path="/catalog" element={<Inventory />} />

@@ -28,6 +28,8 @@ router.post('/', async function (req, res) {
       address: req.body.address,
       email: req.body.email,
       avatar: req.body.avatar,
+      interests: req.body.interests,
+      payment: req.body.payment,
       notes: req.body.notes,
     });
     client
@@ -76,11 +78,13 @@ router.delete('/:id', function (req, res) {
 
 //Update client
 router.patch('/:id', async function (req, res) {
-  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 14);
+  let updateData = req.body
+  if(updateData.password) updateData.password = await bcrypt.hash(updateData.password, 14)
+ 
   await Client.findOneAndUpdate(
-    { _id: req.params.id},
-    req.body,
-    { overwrite: true }
+    {_id: req.params.id},
+    {$set : updateData},
+    {overwrite: true}
   )
   .exec()
   .then(result => {

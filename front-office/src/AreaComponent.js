@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './privateArea.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {Card, Button, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
@@ -9,6 +9,7 @@ import { useMediaQuery } from 'react-responsive'
 
 
 function AreaComponent(){  
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
   const [client, setClient] = React.useState([]);
   const [rental, setRental] = React.useState([]);
@@ -78,6 +79,7 @@ function AreaComponent(){
       <h1 className="personalTitle">Personal Area</h1>
       <img className="imgPersonalArea" src="/img/Products/blender.jpg"></img>
       <h3 className='Infos'>{client.username}</h3>
+      <button className='btnChangeInfo' onClick={() => navigate('/changeInfos?usrID='+client._id)}>Change info</button>
       {/* <h3 className='Infos'>Cognome</h3>
       <h3 className='Infos'>Email</h3> */}
       <h1 className="personalTitle">Future and Active Rental</h1>
