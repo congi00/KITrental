@@ -833,22 +833,40 @@ function createRecord(col, id, el) {
           }
         },
       });
-      //create invoice
+      //fill invoice
       
+      var rentID = response.rental._id;
       /*$.ajax({
-        url: "API/rental/" + toCreateObject['rental_id'],
-        type: "GET",
+        url: "API/invoice/"+toCreateObject['invoice_id'],
+        type: "PATCH",
         contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          rental_id: rentID,
+        }),
         success: function (response) {
-          console.log(response)
           if (response) {
-            
           } else {
             alert("There was an error.");
           }
         },
       });*/
-      
+
+      $.ajax({
+        url: "API/invoice/pdf/"+toCreateObject['invoice_id'],
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          rental_id: rentID,
+        }),
+        success: function (response) {
+          if (response) {
+          } else {
+            alert("There was an error.");
+          }
+        },
+      });
 
     }
   }
@@ -861,7 +879,7 @@ function createRecord(col, id, el) {
       contentType: "application/json",
       dataType: "json",      
       data: JSON.stringify({ 
-        rentals_id: [],
+        rentals_id: "",
         client_id: " ",
         product_id: " ",
         end_date: new Date(),
@@ -882,6 +900,22 @@ function createRecord(col, id, el) {
             data: JSON.stringify(toCreateObject),
             success: function (response) {
               if (response) {
+                var rentID = response.rental._id;
+                $.ajax({
+                  url: "API/invoice/"+toCreateObject['invoice_id'],
+                  type: "PATCH",
+                  contentType: "application/json",
+                  dataType: "json",
+                  data: JSON.stringify({
+                    rental_id: rentID,
+                  }),
+                  success: function (response) {
+                    if (response) {
+                    } else {
+                      alert("There was an error.");
+                    }
+                  },
+                });
               } else {
                 alert("There was an error.");
               }
@@ -966,6 +1000,17 @@ function deleteRecord(col, id, el) {
   var errMsg = "";
   var toDelete = true;
   if (col === 'rental') {
+    $.ajax({
+      async: false,
+      url: "API/rental/",
+      type: "GET",
+      success: function (response) {
+        if (response) {
+          deleteRecord('invoice', response.rental[0].invoice_id, this);
+        }
+      },
+    });
+
     var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
     if (new Date(startDate) > new Date()) {
       toDelete = false;
@@ -988,6 +1033,8 @@ function deleteRecord(col, id, el) {
       },
     });
   }
+
+  
 
   if (toDelete) {
     var confirmalert = confirm("Are you sure?");
