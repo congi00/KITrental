@@ -23,8 +23,8 @@ router.post('/', async function (req, res) {
       end_date: req.body.end_date,
       percentage: req.body.percentage,
     });
-    console.log(promotion);
-    client
+
+    promotion
       .save()
       .then(result => {
         res.status(200).json({
@@ -43,11 +43,11 @@ router.post('/', async function (req, res) {
 
 //Delete promotion
 router.delete('/:id', function (req, res) {
-  Client.findOneAndDelete({ _id: req.params.id})
+  Promotion.findOneAndDelete({ _id: req.params.id})
   .exec()
   .then(result => {
     if(result) res.status(200).json({ message: "Successful operation", result : result })
-    else res.status(404).json({message: "Client not found"})
+    else res.status(404).json({message: "Promotion not found"})
   })
   .catch(err =>
     res.status(400).json({message: "Error accessing server data", error: err})

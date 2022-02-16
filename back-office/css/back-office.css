@@ -166,9 +166,20 @@ nav{
     background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/handshake.jpg");
 }
 
-
-
-
+/**** SINGLE RENTAL ***/
+.colsRental {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+.colsRental .img-thumbnail {
+  max-height: 25vh;
+  display: block;
+  margin: auto;
+}
+.thumbnail-wrapper {
+  width: 100%;
+}
 
 
 table {
