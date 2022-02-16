@@ -9,6 +9,7 @@ const routeInventory = require("./back-office/page-templates/back-office/API/inv
 const routeOperations = require("./back-office/page-templates/back-office/API/operations");
 const routeRental = require("./back-office/page-templates/back-office/API/rental");
 const routeLogin = require("./back-office/page-templates/back-office/API/login");
+const routeInvoice = require("./back-office/page-templates/back-office/API/invoice");
 const routePromotions = require("./back-office/page-templates/back-office/API/promotions");
 const bodyParser = require("body-parser");
 
@@ -36,6 +37,7 @@ app.use("/API/inventory",routeInventory);
 app.use("/API/operations",routeOperations);
 app.use("/API/rental",routeRental);
 app.use("/API/login",routeLogin);
+app.use("/API/invoice",routeInvoice);
 app.use("/API/promotions",routePromotions);
 
 app.use("/js",express.static(global.rootDir + "/back-office/js"));

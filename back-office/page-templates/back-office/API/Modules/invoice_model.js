@@ -1,40 +1,44 @@
 const mongoose = require("mongoose");
 const Clients = require("./client_model.js");
 const Products = require("./product_model.js");
-const Invoice = require("./invoice_model.js");
+const Rental = require("./rental_model.js");
 const Schema = mongoose.Schema;
 
 
-const rental = new Schema({
+const invoice = new Schema({
   _id: Schema.Types.ObjectId,
   client_id:{
     type: Schema.Types.ObjectId,
     ref: "Clients",
-    required : true,
   },
   product_id:{
     type: Schema.Types.ObjectId,
     ref: "Products",
-    required : true,
   },
-  invoice_id:{
+  rentals_id:[{
     type: Schema.Types.ObjectId,
-    ref: "Invoice",
-    required : true,
-  },
-  start_date:{
-    type: Date,
-    required: true,
-  },
+    ref: "Rental",
+  }],
   end_date:{
     type: Date,
     required: true,
   },
-  state:{
+  client_name:{
     type: String,
-    enum: ["Pending","Accepted","Active","Confirmed","Closed"],
-    required: true,
+  },
+  client_surname:{
+    type: String,
+  },
+  client_address:{
+    type: String,
+  },
+  client_payment:{
+    type: String,
+    enum: ["Cash","Credit"],
+  },
+  total:{
+    type: Number,
   },
 });
 
-module.exports = mongoose.model("RentalModel", rental, "rental");
+module.exports = mongoose.model("InvoiceModel", invoice, "invoice");
