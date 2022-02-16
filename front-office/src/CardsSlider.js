@@ -102,14 +102,13 @@ function CardsSlider(){
           <React.Fragment>
             <div className="products-wrapper" id='products'>
               {products.map(item => (
-                <Card style={{ width: '18rem' }} onClick={() => handleClick(item._id)} >
+                <Card style={{ width: '18rem', cursor: 'pointer' }} onClick={() => handleClick(item._id)} >
                   <Card.Img variant="top" src={"img/products/" + item.image} />
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
-                    <Card.Text>
-                      {item.desc}
+                    <Card.Text className='product-desc'>
+                      {item.description}
                     </Card.Text>
-                    <Button variant="primary" className='product-button'>See More</Button>
                   </Card.Body>
                 </Card>
               ))} 

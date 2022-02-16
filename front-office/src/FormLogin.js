@@ -44,7 +44,7 @@ function FormLogin({ setToken }){
   }
   return(
     <div className="formSection">
-      <div className="formFields">
+      <div className="formFieldsL">
         <Form  onSubmit={handleSubmit} className="login-form">
         <Form.Text>
           <div className="titleFormL">

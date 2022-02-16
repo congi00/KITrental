@@ -12,11 +12,13 @@ import Cart from "./routes/Cart";
 import PrivateArea from './routes/PrivateArea';
 import Logout from './routes/Logout';
 import ChangeInfos from './routes/ChangeInfos';
+import ScrollToTop from './scrollToTop';
 
 
 
 ReactDOM.render(
   <BrowserRouter>
+    <ScrollToTop />
     <Routes>
       <Route path="/" element={<Landing/>}/>
       <Route path="/joinus" element={<JoinUs />} />

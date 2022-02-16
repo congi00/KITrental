@@ -190,7 +190,10 @@
     grid-template-columns: repeat(auto-fill, 18rem);
     grid-gap: 3rem;
     justify-content: space-between;
-    padding-top: 5rem 0 5rem 0;
+    padding: 5rem 0 5rem 0;
+  }
+  .product-desc {
+    white-space: pre-wrap;
   }
   .product-button {
       /* padding: 0.5rem 2rem;
