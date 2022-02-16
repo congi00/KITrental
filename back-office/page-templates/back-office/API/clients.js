@@ -16,6 +16,18 @@ router.get('/', function (req, res) {
   .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+// Check insert username
+router.get('/usrCheck/:query', function (req, res) {
+  const client = req.params.query
+  const query = {}
+  query.username = client
+
+  Client.find(query)
+    .exec()
+    .then(client => res.status(200).json({message: "true"}))
+    .catch(err => res.status(400).json({message: "false"}));
+})
+
 //Add a new client
 router.post('/', async function (req, res) {
   

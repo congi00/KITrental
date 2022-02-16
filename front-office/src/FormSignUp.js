@@ -33,21 +33,35 @@ function FormSignUp(){
     setInfo(info => ({ ...info, [e.target.name]: e.target.value}))
   }
   const [errorS,setError] = React.useState(false);
- 
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const navigate = useNavigate();
-  const checkFields = () =>{
-    if(joinSectionsN.count == 0 )
+
+
+  const checkFields = async () =>{
+    if(joinSectionsN.count == 0 ){
       if(info.name != "" && 
         info.surname != "" && 
-        info.username != ""){
-        setError(false);
-        return true;
+        info.username != "" && 
+        re.test(info.email)){
+        await fetch('/API/clients/usrCheck/'+ info.username)
+          .then(response => response.json())
+          .then(data =>{
+          if(data.message){
+            console.log(data.message)
+            setError(true);
+            return false;  
+          }else{
+            console.log(data.message)  
+            setError(false);
+            return true;
+          }
+        });
       }else{
         setError(true);
         return false;
       }
-    else if(joinSectionsN.count == 1 )
+    }else if(joinSectionsN.count == 1 )
       if(info.password != "" && 
           info.password == passwordC.password && 
           info.address != ""){
@@ -58,10 +72,14 @@ function FormSignUp(){
           setError(true);
           return false;
         }
+    
+    return true;
   }
   const signupChange = () =>{
+    console.log(checkFields())
     if(checkFields()){
-      if(joinSectionsN.count+1 == 3 ){      
+      if(joinSectionsN.count+1 == 3 ){     
+        alert(); 
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -80,12 +98,15 @@ function FormSignUp(){
         fetch('/API/clients/', requestOptions)
           .then(response => response.json())
           .then(data =>{
-            const token = { id: data.client._id }
-            sessionStorage.setItem('token', JSON.stringify(token));
-            navigate('/privateArea')
+            if(data.client){
+              const token = { id: data.client._id }
+              sessionStorage.setItem('token', JSON.stringify(token));
+              navigate('/privateArea')
+            }
           });
       }
 
+      console.log("s")
       setJoinSectionN((prevState)=>{
         return{
           ...joinSectionsN,
@@ -164,7 +185,7 @@ function FormSignUp(){
               placeholder="Address"
               onChange={setInfoHandler} />
             </Form.Group>
-            <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formInterests">
+            <Form.Group className={(joinSectionsN.count >= 2) ? "dBlock" : "dNone"} controlId="formInterests">
               <Form.Label name="interests" htmlFor="interestsSelection">Interesting in</Form.Label>
               <Form.Select aria-label="signup interesting in"
               aria-required="true"
@@ -173,7 +194,7 @@ function FormSignUp(){
                 <option name="Household" value="Household">Household utilities</option>
               </Form.Select>
             </Form.Group>
-            <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formPayment">
+            <Form.Group className={(joinSectionsN.count >= 2) ? "dBlock" : "dNone"} controlId="formPayment">
               <Form.Label name="payment" htmlFor="paymentSelection">Methods of payment</Form.Label>
               <Form.Select aria-label="signup payment method"
               aria-required="true"
