@@ -32,6 +32,7 @@ router.post('/', async function (req, res) {
       payment: req.body.payment,
       notes: req.body.notes,
     });
+    console.log(client);
     client
       .save()
       .then(result => {

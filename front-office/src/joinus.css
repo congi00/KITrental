@@ -44,7 +44,7 @@
 }
 
 .titleForm{
-  font-size: 3rem;
+  font-size: 10vw;
   font-family: 'Abril Fatface', cursive;
   color: #222;
   position: relative;
@@ -95,6 +95,12 @@
   position: relative;
   left: 20vw;
   margin-top: 3vh;
+}
+
+.messageError{
+  position: absolute;
+  color: red;
+  left: 20vw;
 }
 
 .dNone{

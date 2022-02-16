@@ -72,27 +72,27 @@ function InfosForm(){
           </div>
         </Form.Text>
         <div className="firstSectionC">
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formName">
             <Form.Label>Name</Form.Label>
             <Form.Control type="text" placeholder={clientInfo.name} onChange={e => changeC(changedInfo => ({ ...changedInfo, name: e.target.value}))}/>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formSurname">
             <Form.Label>Surname</Form.Label>
             <Form.Control type="text" placeholder={clientInfo.surname} onChange={e => changeC(changedInfo => ({ ...changedInfo, surname: e.target.value}))}/>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder={clientInfo.username} onChange={e => changeC(changedInfo => ({ ...changedInfo, username: e.target.value}))}/>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder ="password" onChange={e => changeC(changedInfo => ({ ...changedInfo, password: e.target.value}))}/>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formPasswordConfirm">
             <Form.Label>Confirm password</Form.Label>
             <Form.Control type="password" placeholder="confirm password" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Group className="mb-3" controlId="formEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control type="text" placeholder={clientInfo.email} onChange={e => changeC(changedInfo => ({ ...changedInfo, email: e.target.value}))}/>
           </Form.Group>
