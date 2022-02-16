@@ -53,19 +53,47 @@
 
 @media (min-width: 992px) {
     .areaSection {
+        background-color: cadetblue;
         width: 100%;
     }
     .personalTitle {
         position: unset;
-        font-size: 5vw;
     }
     .imgPersonalArea {
-        width: 20vw;
-        height: 20vw;
         position: unset;
+        max-height: 8vh;
+        width: auto;
+        aspect-ratio: 1;
     }
     .Infos {
         position: unset;
-       font-size: 4vw; 
+        color: black;
+       font-size: 2vw; 
+       margin-left: 1.5vw;
+    }
+    .desktop-fixed-client-wrapper > .personalTitle {
+        color: black;
+        font-size: 2.5vw;
+    }
+    .desktop-fixed-client-wrapper {
+        position: fixed;
+        width: 20vw;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        top: 50%;
+        padding: 7vh 0 7vh 1vw;
+        left: 0;
+        transform: translate(0, -50%);
+        background: white;
+        row-gap: 5vh;
+        border-radius: 0 50px 50px 0
+    }
+    .desktop-rental-wrapper {
+        margin-left: 22vw;
+        padding-top: 15vh;
+    }
+    .desktop-rental-wrapper > .personalTitle {
+        font-size: 5vw;
     }
 }
