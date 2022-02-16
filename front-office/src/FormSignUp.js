@@ -21,46 +21,78 @@ function FormSignUp(){
     password: "",
     address: "",
     email: "",
+    interests: "Professional",
+    payment: "Cash",
     avatar: "",
     notes: ""
   });
+  const [passwordC,setConfirm] = React.useState({
+    password: ""
+  });
   const setInfoHandler = e => {
     setInfo(info => ({ ...info, [e.target.name]: e.target.value}))
- }
-  
+  }
+  const [errorS,setError] = React.useState(false);
  
 
   const navigate = useNavigate();
+  const checkFields = () =>{
+    if(joinSectionsN.count == 0 )
+      if(info.name != "" && 
+        info.surname != "" && 
+        info.username != ""){
+        setError(false);
+        return true;
+      }else{
+        setError(true);
+        return false;
+      }
+    else if(joinSectionsN.count == 1 )
+      if(info.password != "" && 
+          info.password == passwordC.password && 
+          info.address != ""){
+          setError(false);
+          return true;
+        }else{
+          console.log(info.password+" "+passwordC.password +" "+info.address)
+          setError(true);
+          return false;
+        }
+  }
   const signupChange = () =>{
-    if(joinSectionsN.count+1 == 2 ){
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: info.name,
-          surname: info.surname,
-          username: info.username,
-          password: info.password,
-          address: info.address,
-          email: info.email,
-          avatar: info.avatar,
-          notes: info.notes})
-      };
-      fetch('/API/clients/', requestOptions)
-        .then(response => response.json())
-        .then(data =>{
-          const token = { id: data.client._id }
-          sessionStorage.setItem('token', JSON.stringify(token));
-          navigate('/privateArea')
-        });
-    }
+    if(checkFields()){
+      if(joinSectionsN.count+1 == 3 ){      
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name: info.name,
+            surname: info.surname,
+            username: info.username,
+            password: info.password,
+            address: info.address,
+            email: info.email,
+            interests: info.interests,
+            payment: info.payment,
+            avatar: info.avatar,
+            notes: info.notes})
+        };
+        fetch('/API/clients/', requestOptions)
+          .then(response => response.json())
+          .then(data =>{
+            const token = { id: data.client._id }
+            sessionStorage.setItem('token', JSON.stringify(token));
+            navigate('/privateArea')
+          });
+      }
 
-    setJoinSectionN((prevState)=>{
-      return{
-        ...joinSectionsN,
-        count: prevState.count + joinSectionsN.incValue
-      };
-    });
+      setJoinSectionN((prevState)=>{
+        return{
+          ...joinSectionsN,
+          count: prevState.count + joinSectionsN.incValue
+        };
+      });
+    }
   }
 
   return(
@@ -70,6 +102,7 @@ function FormSignUp(){
         <Form.Text>
           <div className="titleForm">
             <h1 className="signup-title">SIGN UP</h1>
+            <h4 className={errorS ? "dBlock messageError" :" dNone messageError"}>Wrong data inserted</h4>
           </div>
         </Form.Text>
         <div className="fields-section">
@@ -119,6 +152,7 @@ function FormSignUp(){
               aria-label="signup confirm password"
               aria-required="true"
               required
+              onChange={e => setConfirm({password : e.target.value})}
               placeholder="Retype Password" />
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 1) ? "dBlock" : "dNone"} controlId="formInterests">
@@ -127,22 +161,25 @@ function FormSignUp(){
               aria-label="signup address"
               aria-required="true"
               required
-              placeholder="Address" />
+              placeholder="Address"
+              onChange={setInfoHandler} />
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formInterests">
               <Form.Label name="interests" htmlFor="interestsSelection">Interesting in</Form.Label>
               <Form.Select aria-label="signup interesting in"
-              aria-required="true">
-                <option name="Professional">Professional utilities</option>
-                <option name="Household">Household utilities</option>
+              aria-required="true"
+              onChange={setInfoHandler}>
+                <option name="Professional" value="Professional">Professional utilities</option>
+                <option name="Household" value="Household">Household utilities</option>
               </Form.Select>
             </Form.Group>
             <Form.Group className={(joinSectionsN.count == 2) ? "dBlock" : "dNone"} controlId="formPayment">
               <Form.Label name="payment" htmlFor="paymentSelection">Methods of payment</Form.Label>
               <Form.Select aria-label="signup payment method"
-              aria-required="true">
-                <option name="Cash">Cash</option>
-                <option name="Credit">Credit Card</option>
+              aria-required="true"
+              onChange={setInfoHandler}>
+                <option name="Cash" value="Cash" >Cash</option>
+                <option name="Credit" value="Credit">Credit Card</option>
               </Form.Select>
             </Form.Group>
           </div>
