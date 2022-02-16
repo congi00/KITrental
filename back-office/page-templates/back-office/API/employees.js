@@ -24,7 +24,7 @@ router.post('/', async function (req, res) {
       name: req.body.name,
       surname: req.body.surname,
       username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 16),
+      password: await bcrypt.hash(req.body.password, 14),
       role: req.body.role,
       email: req.body.email,
       avatar: req.body.avatar
@@ -75,7 +75,7 @@ router.delete('/:id', function (req, res) {
 
 //Update employee
 router.patch('/:id', async function (req, res) {
-  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 16);
+  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 14);
   await Employees.findOneAndUpdate(
     { _id: req.params.id},
     req.body,

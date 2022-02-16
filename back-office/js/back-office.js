@@ -675,8 +675,10 @@ function createRecord(col, id, el) {
   });
 
   if (col === 'operations') {
+    //creation of operetion closed etc.
     toCreateObject['rental_id'] = id;
     toCreateObject['employee_id'] = sessionStorage.getItem("usr_id");
+
 
     if (toCreateObject['type'] === 'rent_confirm') {
       // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
@@ -706,10 +708,69 @@ function createRecord(col, id, el) {
           }
         },
       });
+      //create invoice
+      
+      /*$.ajax({
+        url: "API/rental/" + toCreateObject['rental_id'],
+        type: "GET",
+        contentType: "application/json",
+        success: function (response) {
+          console.log(response)
+          if (response) {
+            
+          } else {
+            alert("There was an error.");
+          }
+        },
+      });*/
+      
+
     }
   }
   if (col === 'rental') {
     toCreateObject['state'] = 'Accepted';
+
+    $.ajax({
+      url: "API/invoice/",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",      
+      data: JSON.stringify({ 
+        rentals_id: [],
+        client_id: " ",
+        product_id: " ",
+        end_date: new Date(),
+        client_name:" ",
+        client_surname:" ",
+        client_address:" ",
+        client_payment:"Cash",
+        total: 0
+      }),
+      success: function (response) {
+        if (response) {     
+          toCreateObject['invoice_id'] = response.invoice._id;
+          $.ajax({
+            url: "API/" + col + "/",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(toCreateObject),
+            success: function (response) {
+              if (response) {
+              } else {
+                alert("There was an error.");
+              }
+            },
+          });
+        } else {
+          alert("There was an error.");
+        }
+      },
+      error: function(err){
+        console.log(err);
+      }
+    });
+    return;
   }
 
   // Create AJAX Request
