@@ -32,7 +32,16 @@ const client = new Schema({
   },
   avatar:{
     type: String,
-    required: true,
+  },
+  interests:{
+    type: String,
+    enum: ["Professional","Household"],
+    required : true    
+  },
+  payment:{
+    type: String,
+    enum: ["Cash","Credit"],
+    required : true 
   },
   notes:{
     type: String,
