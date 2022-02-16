@@ -108,13 +108,13 @@
   }
   .productsImg {
     width: auto;
-    max-width: 100%;
+    max-width: 30vw;
     border: 2px solid white;
     border-radius: 50px;
   }
   .productDesc {
     width: unset;
-    min-width: 20vw;
+    min-width: 30vw;
     height: unset;
     position: unset;
     padding-right: 0;
@@ -127,6 +127,9 @@
     position: unset;
     width: unset;
     display: block;
+  }
+  .productDescription {
+    white-space: pre-wrap;
   }
   .btnCart { margin-top: 1.5rem; }
   .btnBuy { margin-top: 1rem; }

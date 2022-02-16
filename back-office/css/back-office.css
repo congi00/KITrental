@@ -192,10 +192,14 @@ table {
     height: 50px;
     width: 50px;
     border-radius: 50%;
+    background-color: #06514c;
+    border-color: #06514c;
 }
 
-
-
+.btn-add-rental:hover, .btn-add-rental:active, .btn-add-rental:focus {
+  background-color: #06514c;
+  border-color: #06514c;
+}
 
 
 /* Extra small devices (phones, 600px and down) */

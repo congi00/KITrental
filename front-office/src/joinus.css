@@ -35,7 +35,7 @@
 
 }
 
-.formFields{
+.formFieldsSU{
   width: 80vw;
   height: 55vh;
   position: absolute;
@@ -138,11 +138,11 @@
   .fields-section{
     text-align: left;
   }
-  .formFields {
+  .formFieldsSU {
     width: 25vw;
     height: 55vh;
     margin: auto;
-    margin-top: 40vh;
+    margin-top: 35vh;
     position: unset;
   }
   .form-label {
@@ -152,6 +152,7 @@
     font-size: 1.5rem;
   }
   .signup-form {
+    height: 100%;
     padding: 2rem;
     position: relative;
     backdrop-filter: blur(8px);

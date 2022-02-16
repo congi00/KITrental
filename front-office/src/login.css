@@ -105,6 +105,14 @@
   left: 10vw;
 }
 
+.formFieldsL{
+  width: 80vw;
+  height: 55vh;
+  position: absolute;
+  top:42vh;
+  left:10vw;
+}
+
 @media (min-width: 992px) {
   .formPageL {
     background: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0)),url(https://auditkitchengear.com/wp-content/uploads/2022/01/20191011-DSC_7759-Edit_HI_RES.jpeg);
@@ -132,7 +140,7 @@
   .firstSectionL{
     text-align: left;
   }
-  .formFields {
+  .formFieldsL {
     width: 25vw;
     height: 55vh;
     margin: auto;

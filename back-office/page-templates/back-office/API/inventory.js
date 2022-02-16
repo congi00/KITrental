@@ -25,7 +25,9 @@ router.post('/', async function (req, res) {
       name: req.body.name,
       image: req.body.image,
       avaiability: req.body.avaiability,
-      state: req.body.role,
+      state: req.body.state,
+      description: req.body.description,
+      category: req.body.category,
       price: req.body.price
     });
     product
@@ -60,7 +62,6 @@ router.get('/:id', function (req, res) {
 
 // Get single category
 router.get('/category/:category', function (req, res) {
-  console.log(req.params.category)
   Products.find({ category: req.params.category})
   .exec()
   .then(products =>

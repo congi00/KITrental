@@ -190,7 +190,10 @@
     grid-template-columns: repeat(auto-fill, 18rem);
     grid-gap: 3rem;
     justify-content: space-between;
-    padding-top: 5rem;
+    padding: 5rem 0 5rem 0;
+  }
+  .product-desc {
+    white-space: pre-wrap;
   }
   .product-button {
       /* padding: 0.5rem 2rem;
@@ -204,5 +207,9 @@
     background-color: #06514c;
     border-color: #06514c;
     color: white;
+  }
+  .products-wrapper .card-img-top {
+    max-height: unset;
+    object-fit: cover;
   }
 }

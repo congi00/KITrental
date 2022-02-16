@@ -118,7 +118,7 @@ function FormSignUp(){
 
   return(
     <div className="formSection">
-      <div className="formFields">
+      <div className="formFieldsSU">
         <Form className='signup-form'>
         <Form.Text>
           <div className="titleForm">

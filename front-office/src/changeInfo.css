@@ -40,7 +40,30 @@
 /********** MEDIA QUERIES ************/
 
 @media (min-width: 992px) {
+    .infoSection {
+        width: 100%;
+    }
     .formFields {
-        margin-top: 25vh;
+        margin-top: 0;
+        padding-top: 17vh;
+    }
+    .backIcon {
+        font-size: 4vw;
+        top: 50vh;
+        transform: translate(0, -50%);
+    }
+    .titleFormC {
+        position: unset;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .firstSectionC {
+        position: unset;
+    }
+    .btnFormC {
+        position: unset;
+        width: 50%;
+        display: block;
+        margin: 3rem auto 1rem auto;
     }
 }
