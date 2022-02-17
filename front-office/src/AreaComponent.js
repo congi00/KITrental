@@ -128,7 +128,7 @@ function AreaComponent(){
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
                         <Button variant="primary" className='product-button'>See More</Button>
-                        <Button variant="danger" className='product-button' onClick={}>See More</Button>
+                        <Button variant="danger" className='product-button' >See More</Button>
                       </Card.Body>
                     </Card>
                   ))}

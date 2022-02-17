@@ -25,11 +25,15 @@ function CardsSlider(){
   const [titlesName, settitlesName] = React.useState("");
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [Asc,setAsc] = React.useState(false);
+  const [Desc,setDesc] = React.useState(false);
   const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
+  const price = searchParams.get("price");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/inventory/category/"+ param)
+    if(!price)
+      fetch("http://localhost:8000/API/inventory/category/"+ param)
       .then(res => res.json())
       .then(
         (result) => {
@@ -45,6 +49,23 @@ function CardsSlider(){
           setError(error);
         }
       )
+    else
+      fetch("http://localhost:8000/API/inventory/price/"+ price+"&" +param)
+        .then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result.products);
+            setIsLoaded(true);
+            setProducts(result.products);
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        )
   }, [])
   
   const searchProduct = (e) =>{
@@ -55,13 +76,35 @@ function CardsSlider(){
   const [show, setShow] = React.useState(false);
   const loggedIn = sessionStorage.getItem("token");
 
-  const handleClick = (callback) => {
-      navigate("/productSingle?prdID="+callback);
+  const handleClick = (e) => {
+    
+      navigate("/productSingle?prdID="+e);
+  }
+
+  const onAsc = () => {
+    setAsc(!Asc);
+  }
+  const onDesc = () => {
+    setDesc(!Desc);
   }
 
   function handleShow() {
     setShow(true);
   }
+
+  const checkFilter = (e) => {
+    e.preventDefault();
+    if(Asc){
+      navigate("/catalog?category="+searchParams.get("category")+"&price=ASC");
+    }else if(Desc){
+      navigate("/catalog?category="+searchParams.get("category")+"&price=DESC");
+    }else{console.log("c")}
+
+    window.location.reload(false);
+  }
+  
+
+
   return(
     <div className="CardsSliderPage">
       <Link to="/">
@@ -85,17 +128,21 @@ function CardsSlider(){
             type="radio"
             label="Descendent price"
             name="priceFilter"
+            onChange={onDesc}
           />
           <Form.Check 
             type="radio"
             label="Ascendent price"
             name="priceFilter"
+            onChange={onAsc}
           />
           <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
           <Form.Control type="date" name='startDate'  />
           <Form.Label className="filterDate" for="endDate">To</Form.Label>
           <Form.Control type="date" name='endDate'  />
-          <Button type = 'submit' className="btnFormL">
+          <Button type = 'submit' className="btnFormL"
+          onClick={checkFilter}
+          > 
             Submit
           </Button>
           </Form>
@@ -117,7 +164,7 @@ function CardsSlider(){
               slidesPerView={"auto"}
               className="titles"
               >
-                {products.map(item => (item.avaiability == "unavailable")? "":( 
+                {products.map(item => (item.avaiability == "unavailable" && ! loggedIn)? "":( 
                   <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "titlesName dBlock" : "titlesName dNone"}>{item.name}</SwiperSlide>
                 ))}
             </Swiper>
@@ -131,7 +178,7 @@ function CardsSlider(){
                 console.log(controlledSwiper.realIndex);
               }}
               >
-                {products.map(item => (item.avaiability == "unavailable")? "":(
+                {products.map(item => (item.avaiability == "unavailable" && ! loggedIn)? "":(
                     <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"} style={{backgroundImage:'url(img/products/'+item.image+')'}} 
                     onClick={() => handleClick(item._id)}
                     ></SwiperSlide>

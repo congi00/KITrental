@@ -9,15 +9,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
 import Cookies from 'universal-cookie'
 import { useMediaQuery } from 'react-responsive'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function ProductsSingle(){
   const cookies = new Cookies();
   const navigate = useNavigate();
-  const [controlledSwiper, setControlledSwiper] = React.useState(null);
-  const [error, setError] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [categoryP, setCategoryP] = useSearchParams();
   const [products, setProducts] = React.useState([]);
+  const [startDate, setStartDate] = React.useState(new Date());
+  const [endDate, setEndDate] = React.useState(new Date());
   const param = searchParams.get("prdID");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
@@ -27,15 +29,14 @@ function ProductsSingle(){
       .then(
         (result) => {
           console.log(result.products);
-          setIsLoaded(true);
           setProducts(result.products);
+          setCategoryP(products.category.toLowerCase());
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
-          setIsLoaded(true);
-          setError(error);
+          console.log(error);
         }
       )
   }, [])
@@ -56,18 +57,12 @@ function ProductsSingle(){
       console.log(cookies.get('myCart'));
   }
 
-  /*const onRemove = (product) => {
-    const exist = cartItems.find((x) => x.id === product.id);
-    if (exist.qty === 1) {
-      setCartItems(cartItems.filter((x) => x.id !== product.id));
-    } else {
-      setCartItems(
-        cartItems.map((x) =>
-          x.id === product.id ? { ...exist, qty: exist.qty - 1 } : x
-        )
-      );
-    }
-  };*/
+
+  const onSelectDate = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };  
 
   const onRent = (products) =>{
     onAdd(products);
@@ -75,7 +70,7 @@ function ProductsSingle(){
   }
   return(
     <div className="productSinglePage">
-      <Link to="/catalog">
+      <Link to={"/catalog?category="+ categoryP}>
         <FontAwesomeIcon className="arrowIcon" icon={faAngleLeft} size="2x"/>
       </Link>
       <div className="row product-wrapper">
@@ -88,6 +83,18 @@ function ProductsSingle(){
             <h4 className="priceTit"><b>{!isDesktop && <React.Fragment>Price<br/></React.Fragment>}<span className="productPrice">{products.price}$</span></b></h4>
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
+            <div>
+            <DatePicker
+              selected={startDate}
+              startDate={startDate}
+              endDate={endDate}
+              excludeDates={[new Date(products.startD),new Date(products.endD)]}
+              selectsRange
+              selectsDisabledDaysInRange
+              inline
+              onChange={onSelectDate}
+            />
+            </div>
             <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
             <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
           </div>
