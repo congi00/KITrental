@@ -372,6 +372,16 @@ function showRental() {
 
             <label for="rentalEndDate" class="form-label">Rental Ending Date</label>
             <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate">
+        </div>
+        <div class="mb-3">
+          <label for="productState" class="form-label">State</label>
+          <select class="form-select" id="productState" aria-label="Select State" data-db-field="state">
+            <option selected>Open this select menu</option>
+            <option value="new">New</option>
+            <option value="perfect">Perfect</option>
+            <option value="good">Good</option>
+            <option value="broken">Broken</option>
+          </select>
         </div>`
       $(content).append(createModal(body))
 
@@ -397,32 +407,43 @@ function singleRental(id) {
     beforeSend: xhr => {
       xhr.setRequestHeader('auth', authToken)
     },
-    success: res => {
+    success: async res => {
       var rental = res.rental;
       var content = document.getElementById("content");
       content.innerHTML = "";
       var rented_product = {};
-      $.ajax({
-        async: false,
+      var renting_client = {};
+
+      await $.ajax({
         url: "API/inventory/" + rental.product_id,
         type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
-        success: res => rented_product = res.products
-      });
+        success: async res => {
+          rented_product = res.products
+          // await $.ajax({
+          //   url: "API/clients/" + rental.client_id,
+          //   type: "GET",
+          //   beforeSend: xhr => {
+          //     xhr.setRequestHeader('auth', authToken)
+          //   },
+          //   success: res => renting_client = res.client
+          // });
+        }
+      }).then(res => {
+        $.ajax({
+          url: "API/clients/" + rental.client_id,
+          type: "GET",
+          beforeSend: xhr => {
+            xhr.setRequestHeader('auth', authToken)
+          },
+          success: res => renting_client = res.client
+        });
+      })
 
-      var renting_client = {};
-      $.ajax({
-        async: false,
-        url: "API/clients/" + rental.client_id,
-        type: "GET",
-        beforeSend: xhr => {
-          xhr.setRequestHeader('auth', authToken)
-        },
-        success: res => renting_client = res.client
-      });
-
+      console.log(rented_product)
+      console.log(renting_client)
       $(content).append(`
         <div class="row">
           <div class="col-md-6 p-5">
@@ -489,7 +510,7 @@ function singleRental(id) {
         },
       });
 
-      var rented_product = {};
+      var body
       $.ajax({
         async: false,
         url: "API/inventory/" + rental.product_id,
@@ -497,46 +518,48 @@ function singleRental(id) {
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
-        success: res => rented_product = res.products
+        success: res => {
+          rented_product = res.products
+          body = `
+            <div class="mb-3">
+              <label for="operationType" class="form-label">Type of Operation</label>
+              <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
+                  <!-- <option value="rent_create">Create Rent</option>
+                  <option value="rent_update">Update Rent</option> -->
+                  <option value="rent_confirm">Rent Confirmation</option>
+                  <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
+              </select>
+            </div>
+
+            <!-- Possible fields to edit in case of a rental confirmation operation -->
+            <div class="mb-3" id="rentConfirm">
+              <label for="searchObjects" class="form-label">Object Rented</label>
+              <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+              <datalist id="objectsList"></datalist>
+            </div>
+
+            <!-- Possible fields to edit in case of a rental closing operation -->
+            <div class="mb-3" id="rentClose" style="display: none;">
+              <div class="mb-3">
+                  <label for="productAvaiability" class="form-label">Avaiability</label>
+                  <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
+                      <option value="available">Available</option>
+                      <option value="unavailable">Unavailable</option>
+                  </select>
+              </div>
+              <div class="mb-3">
+                  <label for="productState" class="form-label">State</label>
+                  <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_product.state}">
+              </div>
+            </div>
+            <div class="mb-3">
+                <label for="operationNotes" class="form-label">Notes</label>
+                <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
+                </textarea>
+            </div>`
+        }
       });
 
-      var body = `
-        <div class="mb-3">
-          <label for="operationType" class="form-label">Type of Operation</label>
-          <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
-              <!-- <option value="rent_create">Create Rent</option>
-              <option value="rent_update">Update Rent</option> -->
-              <option value="rent_confirm">Rent Confirmation</option>
-              <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
-          </select>
-        </div>
-
-        <!-- Possible fields to edit in case of a rental confirmation operation -->
-        <div class="mb-3" id="rentConfirm">
-          <label for="searchObjects" class="form-label">Object Rented</label>
-          <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
-          <datalist id="objectsList"></datalist>
-        </div>
-
-        <!-- Possible fields to edit in case of a rental closing operation -->
-        <div class="mb-3" id="rentClose" style="display: none;">
-          <div class="mb-3">
-              <label for="productAvaiability" class="form-label">Avaiability</label>
-              <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
-                  <option value="available">Available</option>
-                  <option value="unavailable">Unavailable</option>
-              </select>
-          </div>
-          <div class="mb-3">
-              <label for="productState" class="form-label">State</label>
-              <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_product.state}">
-          </div>
-        </div>
-        <div class="mb-3">
-            <label for="operationNotes" class="form-label">Notes</label>
-            <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
-            </textarea>
-        </div>`
       $(content).append(createModal(body))
       $(document).off("click", "#createRecord")
       $(document).on("click", "#createRecord", function(){
@@ -639,6 +662,12 @@ function showInventory() {
           <div class="input-group">
           <span class="input-group-text">$</span>
           <input type="text" class="form-control" id="productPrice" aria-label="Price in dollars" data-db-field="price">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="productQty" class="form-label">Quantity</label>
+          <div class="input-group">
+          <input type="number" class="form-control" id="productQty" aria-label="Product Quantity" data-db-field="quantity">
           </div>
         </div>`
       if (loggedin) $(content).append(createModal(body))

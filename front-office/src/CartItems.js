@@ -6,13 +6,15 @@ import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap";
 import {Form, Button }from 'react-bootstrap';
 import Cookies from 'universal-cookie';
+import $ from 'jquery'
 
 
 function CartItems(){
   const cookies = new Cookies();
   const cartItems = cookies.get('myCart');
   const [totalPrice,setTotalPrice] = React.useState(0);
-
+  const auth_token = sessionStorage.getItem("auth")
+  
   React.useEffect(() => {
     console.log(cartItems);
     if(cartItems){
@@ -44,17 +46,32 @@ function CartItems(){
 
 
   const handleClick = (e) => {
+    
     e.preventDefault();
-    fetch("http://localhost:8000/API/rental/", {
-        method: 'POST',
-        headers: new Headers(),
-        body: JSON.stringify({ client_id: "id",
-          product_id: "id",
-          start_date: "dara",
-          end_date: "ss"})
-    }).then((res) => res.json())
-        .then((data) => console.log(data))
-        .catch((err) => console.log(err))
+    $.ajax({
+      url: "http://localhost:8000/API/rental/",
+      type: "POST",
+      body: JSON.stringify({ client_id: "id",
+        product_id: "id",
+        start_date: "dara",
+        end_date: "ss"}),
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', auth_token)
+      },
+      success: res => {console.log(res)},
+      error: err => {console.log(err)}
+    });
+
+    // fetch("http://localhost:8000/API/rental/", {
+    //     method: 'POST',
+    //     headers: new Headers(),
+    //     body: JSON.stringify({ client_id: "id",
+    //       product_id: "id",
+    //       start_date: "dara",
+    //       end_date: "ss"})
+    // }).then((res) => res.json())
+    //     .then((data) => console.log(data))
+    //     .catch((err) => console.log(err))
   }
   return(
     cartItems ? (

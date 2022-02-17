@@ -62,7 +62,7 @@ router.post('/', async function (req, res) {
 })
 
 // Get single client
-router.get('/:id', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
+router.get('/:id', login.verifyPermission(login.permissionRoleLevels["client"]), login.verifyRightClient, function (req, res) {
   Client.findOne({ _id: req.params.id})
   .exec()
   .then(client => {

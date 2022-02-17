@@ -42,7 +42,7 @@
                 const col = this.form.selected
                 const field = col === "clients" ? "username" : "name"
                 var q = {[field] : e.target.value};
-                this.axios.get("api/" + col + "/", {params: q})
+                this.axios.get("api/" + col + "/", {params: q, headers: {'auth': sessionStorage}})
                     .then((res) => {    
                         // Conversion from String to JSON object
                         this.$refs.recordsList.innerHTML = ""

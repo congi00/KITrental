@@ -61,8 +61,10 @@
         }
         this.axios.post("/api/login/managers",data)    
           .then((response) => {    
+            console.log(response)
             if(response.data.password==true){
               this.cookies.set("user_session",response.data.id);
+              this.cookies.set('auth', response.data.auth);
               router.push("/about");
             }else{
               this.$refs.errorMSG.style.display ="block";

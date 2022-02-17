@@ -6,6 +6,7 @@ import {Card, Button, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive'
+import $ from 'jquery';
 
 
 function AreaComponent(){  
@@ -16,38 +17,38 @@ function AreaComponent(){
   const [products, setProducts] = React.useState(null);
 
   const token = JSON.parse(sessionStorage.getItem("token")).id;
-  var auth_token = sessionStorage.getItem("auth")
+  const auth_token = sessionStorage.getItem("auth")
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/clients/" + token, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : auth_token
+    $.ajax({
+      url: "http://localhost:8000/API/clients/" + token,
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', auth_token)
       },
-      credentials: 'same-origin',
-    })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setClient(result.client);
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
+      success: res => {
+        setClient(res.client);
+      },
+      error: err => console.log(err)
+    });
   }, [])
 
   React.useEffect(() => {
     async function fetchMyAPI() {
-      let response = await fetch("http://localhost:8000/API/rental/client/" + token)
-      response = await response.json()
+      let response = await $.ajax({url: "http://localhost:8000/API/rental/client/" + token,
+        type: "GET",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', auth_token)
+        }})
       var clientRental = response.rental
       setRental(clientRental);
 
       async function fetchMySubAPI() {
         clientRental.map(async (rntl) => {
-          let response = await fetch("http://localhost:8000/API/inventory/" + rntl.product_id)
-          response = await response.json()
+          let response = await $.ajax({url: "http://localhost:8000/API/inventory/" + rntl.product_id,
+            type: "GET",
+            beforeSend: xhr => {
+              xhr.setRequestHeader('auth', auth_token)
+            }})
           var rentalProd = response.products
           setProducts(products => ({ ...products, [rentalProd._id] : {'img': rentalProd.image, 'name': rentalProd.name}}))
         })
@@ -58,6 +59,8 @@ function AreaComponent(){
     
     fetchMyAPI()
   }, [])
+
+  // function 
 
   return(
     <div className="areaSection">
@@ -93,6 +96,7 @@ function AreaComponent(){
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
                         <Button variant="primary" className='product-button'>See More</Button>
+                        <Button variant="danger" className='product-button' onClick={}>See More</Button>
                       </Card.Body>
                     </Card>
                   ))}

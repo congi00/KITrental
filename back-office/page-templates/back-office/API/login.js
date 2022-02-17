@@ -81,9 +81,19 @@ const permissionRoleLevels = {
   "manager" : 4,
 }
 
+async function verifyRightClient(req, res, next) {
+    let client_id = req.validToken.id;
+    let isClient = req.validToken.auth <= 1;
+    console.log(req.params.id)
+    if(!isClient || isClient && req.params.id == client_id){
+        next();
+    }else{
+        return res.status(401).json({message: "Caller doesn't match actual client"});
+    }
+}
+
 function verifyPermission (basePermissionLevel){
-  return async function verifyLogin(req, res, next){
-    console.log(req.headers)
+  return async function (req, res, next){
     if('auth' in req.headers && req.headers['auth'] !== null && req.headers['auth']){
       let token
       try{
@@ -93,10 +103,11 @@ function verifyPermission (basePermissionLevel){
         return res.status(400).json({message: "Error in retriving token from header", error: err});
       }
       if(token){
-        await jwt.verify(token, jwt_secret, (err, decoded)=>{
+        await jwt.verify(token, jwt_secret, (err, verified)=>{
             if(!err) {
-                let auth = decoded.auth;
-                console.log(decoded)
+                let auth = verified.auth;
+                req.validToken = verified;
+                console.log(auth >= basePermissionLevel)
                 if(auth >= basePermissionLevel) next();
                 else return res.status(401).json({message: "Not sufficient permission level"});
             }
@@ -166,6 +177,7 @@ async function generateToken(authLvl, id){
 // })
 
 module.exports = router
+module.exports.verifyRightClient = verifyRightClient
 module.exports.verifyPermission = verifyPermission
 // module.exports.checkUser = checkUser
 module.exports.generateToken = generateToken
