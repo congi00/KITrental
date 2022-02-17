@@ -64,7 +64,7 @@ function showHome() {
                 <div id="titleCS">\
                   <h2 class="text-white display-3 text-center ">Back Office</h2>\
                 </div>\
-                <button class="btn btn-dark btn-lg" id="noLogIn">Guest access</button>\
+                <button class="btn btn-dark btn-lg" id="noLogIn" onclick="$(\'nav\').show(); showInventory(); return false;">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
                 <form id="formEmployees" action="http://localhost:8000/API/login">\
@@ -538,7 +538,7 @@ function showInventory() {
           <th>State</th>
           <th>Price</th>
           <th>Archive</th>
-          <th>Delete</th>
+          ${loggedin ? '<th>Delete</th>' : ''}
         </tr>`)
       var tbdy = document.createElement('tbody');
       $.each(res.products, (i, product) => {
@@ -550,7 +550,7 @@ function showInventory() {
             <td>${product.state}</td>
             <td>${product.price}</td>
             <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            <td><i onclick="deleteRecord('inventory', '${product._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            ${loggedin ? '<td><i onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>' : ''}
           </tr>`);
       })
       tbl.appendChild(thd);
@@ -603,7 +603,7 @@ function showInventory() {
           <input type="text" class="form-control" id="productPrice" aria-label="Price in dollars" data-db-field="price">
           </div>
         </div>`
-      $(content).append(createModal(body))
+      if (loggedin) $(content).append(createModal(body))
 
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -652,7 +652,7 @@ function singleInventory(id) {
                   <label for="productPrice" class="form-label">Price</label>
                   <input type="number" data-db-field="price" class="form-control mb-3" id="productPrice" value="${product.price ? product.price : ''}" readonly>
 
-                  <button id="updateData" onclick="updateRecordInfo('inventory', '${product._id}', this)" type="button" class="btn btn-primary">Update Data</button>
+                  ${loggedin ? '<button id="updateData" onclick="updateRecordInfo(\'inventory\', \''+product._id+'\', this)" type="button" class="btn btn-primary">Update Data</button>' : ''}
               </form>
           </div>
         </div>`)

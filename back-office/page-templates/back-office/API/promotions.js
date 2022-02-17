@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const login = require('./login')
 
 const Promotion = require('./Modules/promotion_model');
 
 var router = express.Router();
 
 // Get all the promotions
-router.get('/', function (req, res) {
+router.get('/',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
     Promotion.find()
   .exec()
   .then(promotions => res.status(200).json({ promotions }))
@@ -42,7 +43,7 @@ router.post('/', async function (req, res) {
 
 
 //Delete promotion
-router.delete('/:id', function (req, res) {
+router.delete('/:id',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   Promotion.findOneAndDelete({ _id: req.params.id})
   .exec()
   .then(result => {

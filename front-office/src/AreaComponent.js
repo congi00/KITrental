@@ -16,8 +16,16 @@ function AreaComponent(){
   const [products, setProducts] = React.useState(null);
 
   const token = JSON.parse(sessionStorage.getItem("token")).id;
+  var auth_token = sessionStorage.getItem("auth")
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/clients/" + token)
+    fetch("http://localhost:8000/API/clients/" + token, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : auth_token
+      },
+      credentials: 'same-origin',
+    })
       .then(res => res.json())
       .then(
         (result) => {

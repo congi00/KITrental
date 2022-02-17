@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const login = require('./login')
 
 const Rental = require('./Modules/rental_model');
 
@@ -8,7 +8,7 @@ const Rental = require('./Modules/rental_model');
 var router = express.Router();
 
 // Get every rental
-router.get('/', function (req, res) {
+router.get('/',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   const reqQuery = req.query
   const query = {}
   if (reqQuery.client_id) query.client_id = reqQuery.client_id
@@ -62,7 +62,7 @@ router.post('/', async function (req, res) {
 })
 
 // Get single rental
-router.get('/:id', function (req, res) {
+router.get('/:id',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
     Rental.findOne({ _id: req.params.id})
   .exec()
   .then(rental => {

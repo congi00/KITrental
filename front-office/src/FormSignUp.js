@@ -78,11 +78,18 @@ function FormSignUp(){
   const signupChange = () =>{
     console.log(checkFields())
     if(checkFields()){
-      if(joinSectionsN.count+1 == 3 ){     
-        alert(); 
+      if(joinSectionsN.count+1 == 3 ){
         const requestOptions = {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "http://localhost:8000",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods":"DELETE, POST, GET",
+            "Access-Control-Allow-Headers":"Content-Type, Authorization",
+            "Authorization" : "auth_token"
+          },
+          credentials: 'include',
           body: JSON.stringify({ 
             name: info.name,
             surname: info.surname,
