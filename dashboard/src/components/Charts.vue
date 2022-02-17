@@ -22,14 +22,15 @@
 import { computed, ref } from "vue";
 import { shuffle } from "lodash";
 import { LineChart } from "vue-chart-3";
-import Form from "../components/Form.vue";
+import Form from "./Form.vue";
 import { Chart, registerables } from 'chart.js'
 import moment from 'moment';
+import { defineComponent } from 'vue'
 
 Chart.register(...registerables)
 
-export default {
-  name: "App",
+export default defineComponent({
+  name: "Charts",
   components: { LineChart, Form },
   data() {
     return {
@@ -55,8 +56,6 @@ export default {
         },
       },
     });
-
-    
 
     const testData = computed(() => ({
       labels: labelsChart,
@@ -154,7 +153,7 @@ export default {
       return {data: counter, labels: months} 
     }
   }
-};
+});
 </script>
 
 <style lang="scss">
@@ -165,36 +164,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-.charts-wrapper {
-  width: 100%;
-  height: 100vh;
-  padding: 5rem;
-  display: flex; 
-  justify-content: center;
-  background: #031f1c;
-  .chart-wrapper {
-    background: white;
-    display: flex;
-    align-self: flex-start;
-    max-width: 40vw;
-    padding: 1.5rem;
-    .chart-form {
-      display: block;
-      margin: auto;
-      margin-top: 1rem;
-      width: 80%;
-      .update-button {
-        margin-top: 1rem;
-      }
-      .errorMsg{
-        color: red;
-        font-size: 1vw;
-        display: none;
-        margin-top: 1rem;
-      }
-    }
-  }
-}
+
 .dp__month_year_row {
     position: unset; // CSS fix for vue3-date-time-picker overlay
 }

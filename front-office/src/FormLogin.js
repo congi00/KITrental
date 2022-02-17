@@ -14,30 +14,35 @@ function FormLogin({ setToken }){
   let navigate = useNavigate();
 
   async function loginUser(credentials) {
+    // var auth_token = JSON.parse(sessionStorage.getItem("token")).id
     return fetch('http://localhost:8000/API/login/clients', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods":"DELETE, POST, GET, OPTIONS",
-        "Access-Control-Allow-Headers":"Content-Type, Authorization, X-Requested-With"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://localhost:8000",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods":"DELETE, POST, GET",
+        "Access-Control-Allow-Headers":"Content-Type, Authorization",
+        "Authorization" : "auth_token"
       },
+      credentials: 'include',
       body: JSON.stringify(credentials)
-    })
-    .then(
-      data => data.json()
-    )
+    }).then((res) => res.json())
   }
   const handleSubmit = async e => {
     e.preventDefault();
+    
     const token = await loginUser({
       username,
       password
     });
-    
+    console.log(token)
     if(!token.message){
-      setToken(token);
-      navigate("/privateArea");
+      if (token.password) {
+        setToken({id:token.id});
+        sessionStorage.setItem('auth', token.auth)
+        navigate("/privateArea");
+      }
     }else{
       setError(true);
     }

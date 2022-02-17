@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const login = require('./login')
 
 const Client = require('./Modules/client_model');
 
@@ -9,7 +9,7 @@ var router = express.Router();
 var bcrypt = require('bcrypt');
 
 // Get all the clients
-router.get('/', function (req, res) {
+router.get('/', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   Client.find()
   .exec()
   .then(clients => res.status(200).json({ clients }))
@@ -62,7 +62,7 @@ router.post('/', async function (req, res) {
 })
 
 // Get single client
-router.get('/:id', function (req, res) {
+router.get('/:id', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   Client.findOne({ _id: req.params.id})
   .exec()
   .then(client => {
@@ -76,7 +76,7 @@ router.get('/:id', function (req, res) {
 
 
 //Delete client
-router.delete('/:id', function (req, res) {
+router.delete('/:id', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   Client.findOneAndDelete({ _id: req.params.id})
   .exec()
   .then(result => {
