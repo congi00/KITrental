@@ -580,7 +580,7 @@ function singleRental(id) {
 // Retrieve and display all the products
 function showInventory(){
   $.ajax({
-    url: "API/employee/",
+    url: "API/employees/",
     type: "POST",
     data: {
       name: 'Employee',
