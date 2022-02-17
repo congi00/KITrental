@@ -296,6 +296,7 @@ function showRental() {
           <th>End Date</th>
           <th>Archive</th>
           <th>Client</th>
+          <th>Invoice</th>
           <th>Delete</th>
         </tr>`)
       $(past_thd).append(`
@@ -815,7 +816,7 @@ function createRecord(col, id, el) {
     if (toCreateObject['type'] === 'rent_confirm') {
       // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
     } else if (toCreateObject['type'] === 'rent_close') {
-
+      var updInventoryID = toCreateObject['product_id'];
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
       var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
@@ -827,82 +828,143 @@ function createRecord(col, id, el) {
 
        // Update AJAX Request
        $.ajax({
-        url: "API/inventory/" + productID,
+        url: "API/inventory/" + updInventoryID,
         type: "PATCH",
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify(toUpdateObject),
         success: function (response) {
-          console.log(response)
           if (response) {
+            $.ajax({
+              url: "API/invoice/",
+              type: "POST",
+              contentType: "application/json",
+              dataType: "json",      
+              data: JSON.stringify({ 
+                rental_id: toCreateObject['rental_id'],
+                end_date: new Date(),
+                filePdf : toCreateObject['rental_id']
+              }),
+              success: function (response) {
+                if (response) {  
+                  $.ajax({
+                    url: "API/rental/" + id,
+                    type: "GET",
+                    success: res => {
+                      const prod = res.rental.product_id;
+                      $.ajax({
+                        url: "API/clients/" + res.rental.client_id,
+                        type: "GET",
+                        success: res => {
+                          const clientInfo = {
+                              client_name: res.client.name,
+                              client_surname: res.client.surname,
+                              client_address: res.client.address,
+                              client_payment: res.client.payment,
+                          }
+                          $.ajax({
+                            url: "API/inventory/" + prod,
+                            type: "GET",
+                            success: res => {
+                              const productInfo = {
+                                product_name: res.products.name,
+                                product_image: res.products.image,
+                                product_state: res.products.state,
+                                product_price: res.products.price,
+                                product_category: res.products.category,
+                              }
+                            
+                              $.ajax({
+                                url: "API/invoice/pdf/",
+                                type: "POST",
+                                contentType: "application/json",
+                                dataType: "json",
+                                data: JSON.stringify({
+                                  clientInfo,
+                                  productInfo
+                                }),
+                                success: function (response) {
+                                  if (response) {
+                                  } else {
+                                    alert("There was an error.");
+                                  }
+                                },      
+                                error: function(err){
+                                  console.log(err);
+                                }
+                              });
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                 
+                } else {
+                  alert("There was an error.");
+                }
+              },
+              error: function(err){
+                console.log(err);
+              }
+            });
           } else {
             alert("There was an error.");
           }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         },
+        error: function(err){
+          console.log(err);
+        }
       });
-      //create invoice
+      //fill invoice
       
-      /*$.ajax({
-        url: "API/rental/" + toCreateObject['rental_id'],
-        type: "GET",
+      /*var rentID = response.rental._id; 
+      $.ajax({
+        url: "API/invoice/"+toCreateObject['invoice_id'],
+        type: "PATCH",
         contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          rental_id: rentID,
+        }),
         success: function (response) {
-          console.log(response)
           if (response) {
-            
           } else {
             alert("There was an error.");
           }
         },
       });*/
-      
+
+      console.log("s")
+
 
     }
   }
   if (col === 'rental') {
     toCreateObject['state'] = 'Accepted';
-
-    $.ajax({
-      url: "API/invoice/",
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",      
-      data: JSON.stringify({ 
-        rentals_id: [],
-        client_id: " ",
-        product_id: " ",
-        end_date: new Date(),
-        client_name:" ",
-        client_surname:" ",
-        client_address:" ",
-        client_payment:"Cash",
-        total: 0
-      }),
-      success: function (response) {
-        if (response) {     
-          toCreateObject['invoice_id'] = response.invoice._id;
-          $.ajax({
-            url: "API/" + col + "/",
-            type: "POST",
-            contentType: "application/json",
-            dataType: "json",
-            data: JSON.stringify(toCreateObject),
-            success: function (response) {
-              if (response) {
-              } else {
-                alert("There was an error.");
-              }
-            },
-          });
-        } else {
-          alert("There was an error.");
-        }
-      },
-      error: function(err){
-        console.log(err);
-      }
-    });
-    return;
   }
   
   // Create AJAX Request
@@ -973,6 +1035,17 @@ function deleteRecord(col, id, el) {
   var errMsg = "";
   var toDelete = true;
   if (col === 'rental') {
+    $.ajax({
+      async: false,
+      url: "API/rental/",
+      type: "GET",
+      success: function (response) {
+        if (response) {
+          deleteRecord('invoice', response.rental[0].invoice_id, this);
+        }
+      },
+    });
+
     var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
     if (new Date(startDate) > new Date()) {
       toDelete = false;
@@ -995,6 +1068,8 @@ function deleteRecord(col, id, el) {
       },
     });
   }
+
+  
 
   if (toDelete) {
     var confirmalert = confirm("Are you sure?");
