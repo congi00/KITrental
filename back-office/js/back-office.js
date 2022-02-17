@@ -585,11 +585,14 @@ function showInventory(){
     data: {
       name: 'Employee',
       surname: 'Employee Surname',
-      username: 'admin',
+      username: 'a@a.a',
       password:  'admin',
       role: 'manager',
       email: 'admin@admin.admin',
       avatar: 'admin.jpg'
+    },
+    success: res => {
+      console.log(res)
     }
   })
   $.ajax({
