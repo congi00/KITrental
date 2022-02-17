@@ -6,6 +6,10 @@ import {Card, Button, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive'
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Controller } from "swiper";
+import "swiper/css";
+import "swiper/css/scrollbar";
 
 
 function AreaComponent(){  
@@ -71,7 +75,35 @@ function AreaComponent(){
             {rental ?
               <React.Fragment>
                 <div className='rental-wrapper'>
+
+                  
+                <Swiper modules={[Controller]}
+                      slidesPerView={"auto"}
+                      className="swiperAreaFuture"
+                      >
                   {rental.map(item => (item.state !== 'Closed' &&
+                    ! isDesktop &&
+                        <SwiperSlide>
+                        <Card style={{ width: '12rem', height: "50vh" }} >
+                          <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                          <Card.Body>
+                            <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                            <Card.Text>
+                              {/* {item.desc} */}
+                            </Card.Text>
+                            <ListGroup className="list-group-flush">
+                              <ListGroup.Item>State: {item.state}</ListGroup.Item>
+                              <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
+                              <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                            </ListGroup>
+                            <Button variant="primary" className='product-button'>See More</Button>
+                          </Card.Body>
+                        </Card>
+                        </SwiperSlide>
+                  ))}
+                  </Swiper>
+                  {rental.map(item => (item.state !== 'Closed' &&
+                    isDesktop &&
                     <Card style={{ width: '18rem' }} >
                       <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
                       <Card.Body>
@@ -99,11 +131,46 @@ function AreaComponent(){
                 </Link>
               </div>
             }
-        <h1 className="personalTitle">Past Rental</h1>
+        <h1 className="personalTitle" style={{ marginTop : "5vh"}}>Past Rental</h1>
             {rental ?
               <React.Fragment>
                 <div className='rental-wrapper'>
+
+                <Swiper modules={[Controller]}
+                      slidesPerView={"auto"}
+                      className="swiperAreaPast"
+                      >
+                  {rental.map(item => (item.state !== 'Closed' &&
+                    ! isDesktop &&
+                        <SwiperSlide>
+                          <Card style={{ width: '12rem', height: "50vh" }} >
+                            <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                            <Card.Body>
+                              <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                              <Card.Text>
+                                {/* {item.desc} */}
+                              </Card.Text>
+                              <ListGroup className="list-group-flush">
+                                <ListGroup.Item>State: {item.state}</ListGroup.Item>
+                                <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
+                                <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                              </ListGroup>
+                              <Button variant="primary" className='product-button'>See More</Button>
+                            </Card.Body>
+                          </Card>
+                        </SwiperSlide>
+                  ))}
+                  </Swiper>
+
+
+
+
+
+
+
+
                   {rental.map(item => (item.state === 'Closed' &&
+                  isDesktop &&
                     <Card style={{ width: '18rem' }} >
                       <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
                       <Card.Body>

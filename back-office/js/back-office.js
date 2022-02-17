@@ -519,7 +519,7 @@ function singleRental(id) {
 }
 
 // Retrieve and display all the products
-function showInventory() {
+function showInventory(){
   $.ajax({
     url: "API/inventory/",
     type: "GET",
@@ -528,11 +528,18 @@ function showInventory() {
       content.innerHTML = "";
       var container = document.createElement('div');
       container.className = "container table-wrapper pt-5";
+
+      $(container).append('\
+      <div class="container pb-5 mb-sm-1">\
+      <i class="bi bi-search" style="position:relative;left:29vw;top:5vh;"></i>\
+      <input id="livesearch" type="text" size="30" onkeyup="showResult(this.value.toLowerCase())" placeholder="Search products">\
+      <div id="productsInventory" class="row"></div>');
+
       var tbl = document.createElement('table');
       tbl.className = "table table-light table-hover";
       var thd = document.createElement('thead');
       $(thd).append(`
-        <tr class="table-light">
+        <tr class="table-light ">
           <th>Name</th>
           <th>Image</th>
           <th>Avaiability</th>
@@ -544,8 +551,8 @@ function showInventory() {
       var tbdy = document.createElement('tbody');
       $.each(res.products, (i, product) => {
         $(tbdy).append(`
-          <tr class="table-light">
-            <td>${product.name}</td>
+          <tr class="table-light prods" >
+            <td class="filterProd">${product.name}</td>
             <td><img src="../img/products/${product.image}" width="30vw"></td>
             <td>${product.avaiability}</td>
             <td>${product.state}</td>
@@ -1166,7 +1173,7 @@ function showResult(str) {
     });
   else
     $(".prods").each(function(){
-      if($(".card h2",this).text().toLowerCase().search(str)!=-1)
+      if($(".filterProd",this).text().toLowerCase().search(str)!=-1)
         $(this).show();
       else
         $(this).hide();

@@ -1,6 +1,6 @@
 .areaSection{
     width:100vw;
-    height:100vh;
+    height:180vh;
     background-color: #222;
 }
 
@@ -47,6 +47,25 @@
     height: 7vh;
     top:15vh;
     font-weight: bold;
+}
+
+
+.list-group-flush .list-group-item{
+    height: 4vh;
+    overflow: hidden;
+}
+
+.swiperAreaFuture,.swiperAreaPast{
+    position: relative;
+    top:22vh;
+}
+
+.swiperAreaFuture .swiper-slide{
+    width: 65vw;
+}
+
+.swiperAreaPast .swiper-slide{
+    width: 65vw;
 }
 
 /******************** MEDIA QUERIES **************************/
