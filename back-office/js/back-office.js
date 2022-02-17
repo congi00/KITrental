@@ -31,8 +31,8 @@ function showHome() {
   if(window.location.href.indexOf("backoffice") > -1){
     $('nav').hide();
     document.getElementById("content").innerHTML = "";
-
-    if(loggedIn){
+    
+    if(sessionStorage.getItem("usr_id")){
       $("#content").append('\
         <div class="container-fluid">\
             <div class="row">\
@@ -129,6 +129,7 @@ function showHome() {
                 $("#formEmployees h3").addClass("text-danger");
               }else{
                 sessionStorage.setItem('usr_id', data.id);
+                sessionStorage.setItem('auth', data.auth);
                 location.reload();// show response from the php script.
               }
             },
@@ -158,6 +159,9 @@ function showClients() {
   $.ajax({
     url: "API/clients/",
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       var content = document.getElementById("content");
       content.innerHTML = "";
@@ -192,9 +196,13 @@ function showClients() {
 
 // Retrieve and display one single client
 function singleClient(id) {
+  var authToken = sessionStorage.getItem('auth')
   $.ajax({
     url: "API/clients/" + id,
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', authToken)
+    },
     success: res => {
       var client = res.client;
       var content = document.getElementById("content");
@@ -228,6 +236,9 @@ function singleClient(id) {
         url: "API/rental/",
         type: "GET",
         data: {query: q},
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: res => {
           if (res.rental.length) {
             var divRow = document.createElement('div');
@@ -238,6 +249,9 @@ function singleClient(id) {
                 async: false,
                 url: "API/inventory/" + rental.product_id,
                 type: "GET",
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', authToken)
+                },
                 success: res => {
                   rented_product = res.products
                 }
@@ -268,6 +282,9 @@ function showRental() {
   $.ajax({
     url: "API/rental/",
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       var content = document.getElementById("content");
       content.innerHTML = "";
@@ -296,7 +313,6 @@ function showRental() {
           <th>End Date</th>
           <th>Archive</th>
           <th>Client</th>
-          <th>Invoice</th>
           <th>Delete</th>
         </tr>`)
       $(past_thd).append(`
@@ -305,6 +321,7 @@ function showRental() {
           <th>End Date</th>
           <th>Archive</th>
           <th>Client</th>
+          <th>Invoice</th>
         </tr>`)
       var tbdy = document.createElement('tbody');
       var past_tbdy = document.createElement('tbody');
@@ -373,9 +390,13 @@ function showRental() {
 
 // Retrieve and display one single rental
 function singleRental(id) {
+  var authToken = sessionStorage.getItem('auth')
   $.ajax({
     url: "API/rental/" + id,
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', authToken)
+    },
     success: res => {
       var rental = res.rental;
       var content = document.getElementById("content");
@@ -385,6 +406,9 @@ function singleRental(id) {
         async: false,
         url: "API/inventory/" + rental.product_id,
         type: "GET",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: res => rented_product = res.products
       });
 
@@ -393,6 +417,9 @@ function singleRental(id) {
         async: false,
         url: "API/clients/" + rental.client_id,
         type: "GET",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: res => renting_client = res.client
       });
 
@@ -438,6 +465,9 @@ function singleRental(id) {
         url: "API/operations/",
         type: "GET",
         data: {query: q},
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: res => {
           if (res.operations.length) {
             var divRow = document.createElement('div');
@@ -464,6 +494,9 @@ function singleRental(id) {
         async: false,
         url: "API/inventory/" + rental.product_id,
         type: "GET",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: res => rented_product = res.products
       });
 
@@ -523,6 +556,9 @@ function showInventory() {
   $.ajax({
     url: "API/inventory/",
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       var content = document.getElementById("content");
       content.innerHTML = "";
@@ -531,6 +567,7 @@ function showInventory() {
       var tbl = document.createElement('table');
       tbl.className = "table table-light table-hover";
       var thd = document.createElement('thead');
+      var loggedin = sessionStorage.getItem("usr_id")
       $(thd).append(`
         <tr class="table-light">
           <th>Name</th>
@@ -630,6 +667,9 @@ function singleInventory(id) {
   $.ajax({
     url: "API/inventory/" + id,
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       var product = res.products;
       var content = document.getElementById("content");
@@ -653,7 +693,7 @@ function singleInventory(id) {
                   <label for="productPrice" class="form-label">Price</label>
                   <input type="number" data-db-field="price" class="form-control mb-3" id="productPrice" value="${product.price ? product.price : ''}" readonly>
 
-                  ${loggedin ? '<button id="updateData" onclick="updateRecordInfo(\'inventory\', \''+product._id+'\', this)" type="button" class="btn btn-primary">Update Data</button>' : ''}
+                  ${sessionStorage.getItem("usr_id") ? '<button id="updateData" onclick="updateRecordInfo(\'inventory\', \''+product._id+'\', this)" type="button" class="btn btn-primary">Update Data</button>' : ''}
               </form>
           </div>
         </div>`)
@@ -699,6 +739,9 @@ function showPromotions() {
   $.ajax({
     url: "API/promotions/",
     type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       var content = document.getElementById("content");
       content.innerHTML = "";
@@ -794,6 +837,7 @@ function createModal(body) {
 
 function createRecord(col, id, el) {
   var fields = $($(el).closest("form")).find("input, select, textarea");
+  var authToken = sessionStorage.getItem('auth')
 
   // JavaScript object to pass as data to update in the POST request
   var toCreateObject = {};
@@ -833,6 +877,9 @@ function createRecord(col, id, el) {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify(toUpdateObject),
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: function (response) {
           if (response) {
             $.ajax({
@@ -845,16 +892,26 @@ function createRecord(col, id, el) {
                 end_date: new Date(),
                 filePdf : toCreateObject['rental_id']
               }),
+              beforeSend: xhr => {
+                xhr.setRequestHeader('auth', authToken)
+              },
               success: function (response) {
                 if (response) {  
+                  console.log(response)
                   $.ajax({
                     url: "API/rental/" + id,
                     type: "GET",
+                    beforeSend: xhr => {
+                      xhr.setRequestHeader('auth', authToken)
+                    },
                     success: res => {
                       const prod = res.rental.product_id;
                       $.ajax({
                         url: "API/clients/" + res.rental.client_id,
                         type: "GET",
+                        beforeSend: xhr => {
+                          xhr.setRequestHeader('auth', authToken)
+                        },
                         success: res => {
                           const clientInfo = {
                               client_name: res.client.name,
@@ -865,6 +922,9 @@ function createRecord(col, id, el) {
                           $.ajax({
                             url: "API/inventory/" + prod,
                             type: "GET",
+                            beforeSend: xhr => {
+                              xhr.setRequestHeader('auth', authToken)
+                            },
                             success: res => {
                               const productInfo = {
                                 product_name: res.products.name,
@@ -883,6 +943,9 @@ function createRecord(col, id, el) {
                                   clientInfo,
                                   productInfo
                                 }),
+                                beforeSend: xhr => {
+                                  xhr.setRequestHeader('auth', authToken)
+                                },
                                 success: function (response) {
                                   if (response) {
                                   } else {
@@ -911,29 +974,6 @@ function createRecord(col, id, el) {
           } else {
             alert("There was an error.");
           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         },
         error: function(err){
           console.log(err);
@@ -957,10 +997,7 @@ function createRecord(col, id, el) {
           }
         },
       });*/
-
       console.log("s")
-
-
     }
   }
   if (col === 'rental') {
@@ -974,6 +1011,9 @@ function createRecord(col, id, el) {
     contentType: "application/json",
     dataType: "json",
     data: JSON.stringify(toCreateObject),
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', authToken)
+    },
     success: function (response) {
       if (response) {
       } else {
@@ -1010,6 +1050,9 @@ function updateRecordInfo(col, id, el) {
         contentType: "application/json",
         dataType: "json",
         data: JSON.stringify(toUpdateObject),
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+        },
         success: function (response) {
           if (response) {
             console.log(response);
@@ -1030,6 +1073,7 @@ function updateRecordInfo(col, id, el) {
 }
 
 function deleteRecord(col, id, el) {
+  var authToken = sessionStorage.getItem('auth')
 
   // Delete operation validation (client only if got no rentals, rental only active or future)
   var errMsg = "";
@@ -1039,6 +1083,9 @@ function deleteRecord(col, id, el) {
       async: false,
       url: "API/rental/",
       type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
       success: function (response) {
         if (response) {
           deleteRecord('invoice', response.rental[0].invoice_id, this);
@@ -1060,6 +1107,9 @@ function deleteRecord(col, id, el) {
       url: "API/rental/",
       type: "GET",
       data: {query: q},
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
       success: function (response) {
         if (response) {
           toDelete = false;
@@ -1078,6 +1128,9 @@ function deleteRecord(col, id, el) {
       $.ajax({
         url: "API/" + col + "/" + id,
         type: "DELETE",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
         success: function (response) {
           if (response) {
             // Remove row from HTML Table
@@ -1120,6 +1173,9 @@ function getResults(val, col, field, dataList) {
     url: "API/" + col + "/",
     type: "GET",
     data: {query: q},
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
     success: res => {
       // Conversion from String to JSON object
       $("#" + dataList).html("");

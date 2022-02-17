@@ -85,10 +85,9 @@ function verifyPermission (basePermissionLevel){
   return async function verifyLogin(req, res, next){
     console.log(req.headers)
     if('auth' in req.headers && req.headers['auth'] !== null && req.headers['auth']){
-      let authHeader, token
+      let token
       try{
-        authHeader = req.headers['auth'];
-        token = await JSON.parse(authHeader);
+        token = req.headers['auth'];
       }
       catch(err){
         return res.status(400).json({message: "Error in retriving token from header", error: err});

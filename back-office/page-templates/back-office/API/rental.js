@@ -40,6 +40,7 @@ router.post('/', async function (req, res) {
     _id: new mongoose.Types.ObjectId(),
     client_id: req.body.client_id,
     product_id: req.body.product_id,
+    invoice_id: req.body.invoice_id,
     start_date: req.body.start_date,
     end_date: req.body.end_date,
     state: req.body.state
