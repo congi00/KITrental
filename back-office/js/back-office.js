@@ -976,7 +976,7 @@ function createRecord(col, id, el) {
                               xhr.setRequestHeader('auth', authToken)
                             },
                             success: async res => {
-                              const finalPrice = await calcPrice(rntl.price, rntl.start_date, rntl.end_date,clnt._id)
+                              const finalPrice = await calcPrice(rntl.price, new Date(rntl.start_date), new Date(rntl.end_date),clnt._id)
                               console.log(finalPrice)
                               const productInfo = {
                                 product_name: res.products.name,
@@ -1100,6 +1100,32 @@ function createRecord(col, id, el) {
     });
   }
 }
+
+/******** PRICE LOGIC *********/
+// Just promotions
+async function calcPrice(rental_price, rental_start_date, rental_end_date, client_id) {
+  console.log(rental_price)
+  let res = await $.ajax({
+    url: "API/promotions/",
+    type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
+    success: res => {
+      var proms = res.promotions
+      for (const [key, value] of Object.entries(proms)) {
+        var prom_start_date = new Date(value.start_date)
+        var prom_end_date = new Date(value.end_date)
+        if (rental_start_date >= prom_start_date && rental_end_date <= prom_end_date) {
+          var old_rental_price = rental_price 
+          rental_price = old_rental_price - ( old_rental_price / 100 * value.percentage )
+        }
+      }
+    },
+  });
+  return rental_price
+}
+
 
 function updateRecordInfo(col, id, el) {
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
