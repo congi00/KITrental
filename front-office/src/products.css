@@ -13,13 +13,14 @@
 
 .productDesc{
   width: 100vw;
-  height: 50vh;
+  height: 85vh;
   position: relative;
   bottom: 10vh;
   z-index: 1;
   background: #222;
   border-radius: 50px 50px 0 0;
   padding-right: 15vw;
+  
 }
 
 .productDesc h2{
@@ -80,6 +81,13 @@
   position: absolute;
   top: 2vh;
   left: 5vw;
+}
+
+
+.calendar{
+  position: relative;
+  top:20vh;
+  left:20vw;
 }
 
 /******************** MEDIA QUERIES **************************/

@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie'
 import { useMediaQuery } from 'react-responsive'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import addDays from "date-fns/addDays";
 
 function ProductsSingle(){
   const cookies = new Cookies();
@@ -83,7 +84,7 @@ function ProductsSingle(){
             <h4 className="priceTit"><b>{!isDesktop && <React.Fragment>Price<br/></React.Fragment>}<span className="productPrice">{products.price}$</span></b></h4>
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
-            <div>
+            <div className='calendar'>
             <DatePicker
               selected={startDate}
               startDate={startDate}
