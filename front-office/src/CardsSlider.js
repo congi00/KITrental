@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link, useNavigate,useSearchParams } from "react-router-dom";
+import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Modal } from 'react-bootstrap';
 import './inventory.css';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Controller } from "swiper";
@@ -11,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { faSearchPlus } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive';
 
 
@@ -20,6 +22,7 @@ function CardsSlider(){
   const [error, setError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [products, setProducts] = React.useState([]);
+  const [titlesName, settitlesName] = React.useState("");
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
@@ -44,11 +47,21 @@ function CardsSlider(){
       )
   }, [])
   
+  const searchProduct = (e) =>{
+    settitlesName(e)
+    console.log("SEt"+titlesName)
+  }
+  
+  const [show, setShow] = React.useState(false);
+  const loggedIn = sessionStorage.getItem("token");
 
   const handleClick = (callback) => {
       navigate("/productSingle?prdID="+callback);
   }
 
+  function handleShow() {
+    setShow(true);
+  }
   return(
     <div className="CardsSliderPage">
       <Link to="/">
@@ -60,6 +73,34 @@ function CardsSlider(){
       <Link to="/cart">
         <FontAwesomeIcon className="cartIconP" icon={faShoppingCart} size="2x" />
       </Link>
+      <FontAwesomeIcon className={loggedIn ? "filterIconP dBlock": "dNone" } icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
+      <Form.Control className={loggedIn ? "searchBar dBlock" : "dNone"}  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
+      <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Filters</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+          <Form.Check 
+            type="radio"
+            label="Descendent price"
+            name="priceFilter"
+          />
+          <Form.Check 
+            type="radio"
+            label="Ascendent price"
+            name="priceFilter"
+          />
+          <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
+          <Form.Control type="date" name='startDate'  />
+          <Form.Label className="filterDate" for="endDate">To</Form.Label>
+          <Form.Control type="date" name='endDate'  />
+          <Button type = 'submit' className="btnFormL">
+            Submit
+          </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
       <div className='container'>
         <div className="hero-products-wrapper">
           <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
@@ -76,8 +117,8 @@ function CardsSlider(){
               slidesPerView={"auto"}
               className="titles"
               >
-                {products.map(item => (
-                  <SwiperSlide>{item.name}</SwiperSlide>
+                {products.map(item => (item.avaiability == "unavailable")? "":( 
+                  <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "titlesName dBlock" : "titlesName dNone"}>{item.name}</SwiperSlide>
                 ))}
             </Swiper>
             <Swiper modules={[Controller]} controller={{ control: controlledSwiper }}
@@ -90,8 +131,8 @@ function CardsSlider(){
                 console.log(controlledSwiper.realIndex);
               }}
               >
-                {products.map(item => (
-                    <SwiperSlide style={{backgroundImage:'url(img/products/'+item.image+')'}} 
+                {products.map(item => (item.avaiability == "unavailable")? "":(
+                    <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"} style={{backgroundImage:'url(img/products/'+item.image+')'}} 
                     onClick={() => handleClick(item._id)}
                     ></SwiperSlide>
                 ))}

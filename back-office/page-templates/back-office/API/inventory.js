@@ -18,6 +18,7 @@ router.get('/', function (req, res) {
   .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+
 //Add a new product
 router.post('/', async function (req, res) {
   const product = new Products({
@@ -62,7 +63,7 @@ router.get('/:id', function (req, res) {
 
 
 // Get single category
-router.get('/category/:category', function (req, res) {
+router.get('/category/:category', async function (req, res) {
   Products.find({ category: req.params.category})
   .exec()
   .then(products =>
