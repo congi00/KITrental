@@ -19,6 +19,7 @@ router.get('/', function (req, res) {
 
 //Add a new employee
 router.post('/', async function (req, res) {
+  console.log(req.body)
   const employee = new Employees({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
