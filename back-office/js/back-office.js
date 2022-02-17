@@ -67,7 +67,7 @@ function showHome() {
                 <button class="btn btn-dark btn-lg" id="noLogIn" onclick="$(\'nav\').show(); showInventory(); return false;">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
-                <form id="formEmployees" action="http://localhost:8000/API/login">\
+                <form id="formEmployees" action="/API/login">\
                   <div class="text-center">\
                     <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
                   </div>\
