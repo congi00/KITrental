@@ -902,8 +902,12 @@ function createRecord(col, id, el) {
       var toUpdateObject = {};
       toUpdateObject['avaiability'] = toCreateObject['avaiability'];
       toUpdateObject['state'] = toCreateObject['state'];
+      toUpdateObject['startD'] = toCreateObject['startD'];
+      toUpdateObject['endD'] = toCreateObject['endD'];
       delete toCreateObject.avaiability;
       delete toCreateObject.state;
+      delete toCreateObject.start_date;
+      delete toCreateObject.end_date;
       delete toCreateObject.product_id;
 
        // Update AJAX Request
@@ -941,6 +945,15 @@ function createRecord(col, id, el) {
                       xhr.setRequestHeader('auth', authToken)
                     },
                     success: res => {
+                      const rentalRes = res.rental;
+                      $.ajax({
+                        url: "API/inventory/" + updInventoryID,
+                        type: "PATCH",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({startD: rentalRes.start_date,endD: rentalRes.end_date}),
+                        success:{}
+                      });
                       const prod = res.rental.product_id;
                       $.ajax({
                         url: "API/clients/" + res.rental.client_id,
@@ -956,7 +969,7 @@ function createRecord(col, id, el) {
                               client_payment: res.client.payment,
                           }
                           $.ajax({
-                            url: "API/inventory/" + prod,
+                            url: "API/inventory/" + rentalRes.product_id,
                             type: "GET",
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)

@@ -35,6 +35,12 @@ const product = new Schema({
     type: Number,
     required: true,
   },
+  startD:{
+    type: Date
+  },
+  endD:{
+    type: Date
+  },
   quantity:{
     type: Number,
     required: true

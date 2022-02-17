@@ -19,6 +19,20 @@ router.get('/', function (req, res) {
 })
 
 
+router.get('/price/:order&:category', function (req, res) {
+  if(req.params.order == "ASC")
+    var order=1
+  else
+    var order=-1
+
+  Products.find({ category: req.params.category})
+  .sort({price: order })
+  .exec()
+  .then(products => res.status(200).json({ products }))
+  .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
+
 //Add a new product
 router.post('/', async function (req, res) {
   const product = new Products({
