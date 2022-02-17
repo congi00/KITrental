@@ -580,24 +580,6 @@ function singleRental(id) {
 // Retrieve and display all the products
 function showInventory(){
   $.ajax({
-    url: "API/employees/",
-    type: "POST",
-    contentType: "application/json",
-    dataType: "json",
-    data: JSON.stringify({
-      name: 'Employee',
-      surname: 'Employee Surname',
-      username: 'a@a.aa',
-      password:  'admin',
-      role: 'manager',
-      email: 'admin@admin.admin',
-      avatar: 'admin.jpg'
-    }),
-    success: res => {
-      console.log(res)
-    }
-  })
-  $.ajax({
     url: "API/inventory/",
     type: "GET",
     beforeSend: xhr => {
