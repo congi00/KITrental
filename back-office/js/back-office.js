@@ -585,7 +585,7 @@ function showInventory(){
     data: {
       name: 'Employee',
       surname: 'Employee Surname',
-      username: 'a@a.a',
+      username: 'a@a.aa',
       password:  'admin',
       role: 'manager',
       email: 'admin@admin.admin',
