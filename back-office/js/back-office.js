@@ -582,7 +582,9 @@ function showInventory(){
   $.ajax({
     url: "API/employees/",
     type: "POST",
-    data: {
+    contentType: "application/json",
+    dataType: "json",
+    data: JSON.stringify({
       name: 'Employee',
       surname: 'Employee Surname',
       username: 'a@a.aa',
@@ -590,7 +592,7 @@ function showInventory(){
       role: 'manager',
       email: 'admin@admin.admin',
       avatar: 'admin.jpg'
-    },
+    }),
     success: res => {
       console.log(res)
     }
