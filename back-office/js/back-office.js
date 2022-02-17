@@ -296,6 +296,7 @@ function showRental() {
           <th>End Date</th>
           <th>Archive</th>
           <th>Client</th>
+          <th>Invoice</th>
           <th>Delete</th>
         </tr>`)
       $(past_thd).append(`
