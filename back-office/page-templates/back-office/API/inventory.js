@@ -35,6 +35,7 @@ router.get('/price/:order&:category', function (req, res) {
 
 //Add a new product
 router.post('/', async function (req, res) {
+  console.log(req.body)
   const product = new Products({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,

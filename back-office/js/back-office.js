@@ -1087,6 +1087,7 @@ function createRecord(col, id, el) {
       },
     });
   } else {
+    console.log(toCreateObject)
     // Create AJAX Request
     $.ajax({
       url: "API/" + col + "/",
