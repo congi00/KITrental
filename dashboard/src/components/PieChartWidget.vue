@@ -5,11 +5,11 @@
         <div style="display: flex; justify-content: center">
           
         </div>
-        <LineChart ref="doughnutRef" :chartData="testData" :options="options" />
+        <PieChart ref="chartRef" :chartData="testData" :options="options" />
       </div>
       <div class="col">
         <div class="chart-form">
-          <Form ref="formRef" v-model="form" />
+          <Form ref="formRef" v-model="form" :col="col" />
           <button class="update-button" type="button" @click="updateData">Update Data</button>
           <h3  class="errorMsg" ref="errorMSG">Fields values missing!</h3>
         </div>
@@ -21,17 +21,19 @@
 <script lang='ts'>
 import { computed, ref } from "vue";
 import { shuffle } from "lodash";
-import { LineChart } from "vue-chart-3";
+import { PieChart } from "vue-chart-3";
 import Form from "./Form.vue";
 import { Chart, registerables } from 'chart.js'
 import moment from 'moment';
 import { defineComponent } from 'vue'
+import { useCookies } from "vue3-cookies";
 
 Chart.register(...registerables)
 
 export default defineComponent({
-  name: "Charts",
-  components: { LineChart, Form },
+  name: "PieChartWidget",
+  components: { PieChart, Form },
+  props: ['col'],
   data() {
     return {
       form: {}
@@ -40,9 +42,11 @@ export default defineComponent({
   mounted() {
   },
   setup() {
+    const { cookies } = useCookies();
+
     const dataChart = ref([30, 40, 60, 70, 5]);
     var labelsChart = [];
-    const doughnutRef = ref();
+    const chartRef = ref();
 
     const options = ref({
       responsive: true,
@@ -52,7 +56,7 @@ export default defineComponent({
         },
         title: {
           display: true,
-          text: 'Doughnut Chart',
+          text: 'Pie Chart',
         },
       },
     });
@@ -72,18 +76,17 @@ export default defineComponent({
       labelsChart = l
     }
 
-    return { testData, setData, doughnutRef, options };
+    return { testData, setData, chartRef, options, cookies };
   },
   methods: {
     updateData(e) {
       /* IMPORT FORM DATA from Form Sub-Component */
       const formData = this.form
-      var collection = formData.selected  // collection name
-      var col = collection === "clients" ? "rental" : '' // !!!HARD-CODED!!!
+      var colData = "rental" // !!!HARD-CODED!!!
       var record = formData.record        // id with format: {recordName} id={recordID}
       var rangeDate = formData.date
       var rangeDate = rangeDate.map(x => new Date(x))
-      if (!collection || !record || !rangeDate) {
+      if (!this.col || !record || !rangeDate) {
         this.$refs.errorMSG.style.display ="block";
         return;
       } else {
@@ -95,11 +98,16 @@ export default defineComponent({
       }
 
       /* QUERY FOR RETRIEVING DATA from the db */
-      var q = {"client_id" : record} // !!!HARD-CODED!!!
-      this.axios.get("api/" + col + "/", {params: q})
+      var q = {}
+      if (this.col === 'clients') {
+        q = {"client_id" : record}
+      } if (this.col === 'inventory') {
+        q = {"product_id" : record}
+      }
+      this.axios.get("api/" + colData + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
         .then((res) => {
             var rental = res.data.rental
-
+            console.log(rental)
             /* Only rental that fit within the picked date range (check based on *start_date*) */
             const resultObj = this.countPerMonth(rental, rangeDate)
             this.setData(resultObj.data, resultObj.labels)

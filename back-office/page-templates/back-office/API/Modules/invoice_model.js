@@ -18,6 +18,9 @@ const invoice = new Schema({
     type: Date,
     required: true,
   },
+  total: {
+    type: Number,
+  }
 });
 
 module.exports = mongoose.model("InvoiceModel", invoice, "invoice");

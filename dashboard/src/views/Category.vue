@@ -58,10 +58,10 @@ export default {
   <div>
     <sidebar-menu :menu="menu" collapsed/>
     <div class="home-dashboard">
-        <LineChartWidget col="clients" />
-        <BarChartWidget col="clients" />
-        <PieChartWidget col="clients" />
-        <DoughnutChartWidget col="clients" />
+        <LineChartWidget col="inventory/category" />
+        <BarChartWidget col="inventory/category" />
+        <PieChartWidget col="inventory/category" />
+        <DoughnutChartWidget col="inventory/category" />
     </div>
   </div>
 </template>

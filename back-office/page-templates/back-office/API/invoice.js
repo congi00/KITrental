@@ -134,7 +134,8 @@ router.post('/', async function (req, res) {
 })
 
 
-router.post('/pdf/', async (req, res) => { 
+router.post('/pdf/', async (req, res) => {
+  console.log(req.body)
     const infosPdf = {
         client_name : req.body.clientInfo.client_name,
         client_surname : req.body.clientInfo.client_surname,

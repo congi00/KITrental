@@ -377,10 +377,11 @@ function showRental() {
           <label for="productState" class="form-label">State</label>
           <select class="form-select" id="productState" aria-label="Select State" data-db-field="state">
             <option selected>Open this select menu</option>
-            <option value="new">New</option>
-            <option value="perfect">Perfect</option>
-            <option value="good">Good</option>
-            <option value="broken">Broken</option>
+            <option value="Pending">Pending</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Active">Active</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Closed">Closed</option>
           </select>
         </div>`
       $(content).append(createModal(body))
@@ -941,7 +942,7 @@ function createRecord(col, id, el) {
                       xhr.setRequestHeader('auth', authToken)
                     },
                     success: res => {
-                      const prod = res.rental.product_id;
+                      const rntl = res.rental;
                       $.ajax({
                         url: "API/clients/" + res.rental.client_id,
                         type: "GET",
@@ -949,6 +950,7 @@ function createRecord(col, id, el) {
                           xhr.setRequestHeader('auth', authToken)
                         },
                         success: res => {
+                          const clnt = res.client;
                           const clientInfo = {
                               client_name: res.client.name,
                               client_surname: res.client.surname,
@@ -956,18 +958,21 @@ function createRecord(col, id, el) {
                               client_payment: res.client.payment,
                           }
                           $.ajax({
-                            url: "API/inventory/" + prod,
+                            url: "API/inventory/" + rntl.product_id,
                             type: "GET",
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)
                             },
-                            success: res => {
+                            success: async res => {
+                              const finalPrice = await calcPrice(rntl.price, rntl.start_date, rntl.end_date,clnt._id)
+                              console.log(finalPrice)
                               const productInfo = {
                                 product_name: res.products.name,
                                 product_image: res.products.image,
                                 product_state: res.products.state,
                                 product_price: res.products.price,
                                 product_category: res.products.category,
+                                total: rntl.price
                               }
                             
                               $.ajax({
@@ -1038,25 +1043,50 @@ function createRecord(col, id, el) {
   }
   if (col === 'rental') {
     toCreateObject['state'] = 'Accepted';
+    $.ajax({
+      url: "API/inventory/" + toCreateObject['product_id'],
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
+      success: response => {
+        if (response) {
+          const diffInMs   = new Date(toCreateObject['end_date']) - new Date(toCreateObject['start_date'])
+          const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+          toCreateObject['price'] = (response.products.price * diffInDays).toString()
+          console.log(JSON.stringify(toCreateObject))
+          $.ajax({
+            url: "API/" + col + "/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(toCreateObject),
+            success: function (response) {
+              if (response) {
+              } else {
+                alert("There was an error.");
+              }
+            },
+          });
+        } else {
+          alert("There was an error.");
+        }
+      },
+    });
+  } else {
+    // Create AJAX Request
+    $.ajax({
+      url: "API/" + col + "/",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(toCreateObject),
+      success: function (response) {
+        if (response) {
+        } else {
+          alert("There was an error.");
+        }
+      },
+    });
   }
-  
-  // Create AJAX Request
-  $.ajax({
-    url: "API/" + col + "/",
-    type: "POST",
-    contentType: "application/json",
-    dataType: "json",
-    data: JSON.stringify(toCreateObject),
-    beforeSend: xhr => {
-      xhr.setRequestHeader('auth', authToken)
-    },
-    success: function (response) {
-      if (response) {
-      } else {
-        alert("There was an error.");
-      }
-    },
-  });
 }
 
 function updateRecordInfo(col, id, el) {
