@@ -1,7 +1,7 @@
 <script>
 import { SidebarMenu } from 'vue-sidebar-menu'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
-import Charts from "../components/Charts.vue";
+import Charts from "../components/LineChartWidget.vue";
 
 export default {
     components: {

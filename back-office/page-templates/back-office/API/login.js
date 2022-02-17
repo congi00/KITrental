@@ -84,7 +84,6 @@ const permissionRoleLevels = {
 async function verifyRightClient(req, res, next) {
     let client_id = req.validToken.id;
     let isClient = req.validToken.auth <= 1;
-    console.log(req.params.id)
     if(!isClient || isClient && req.params.id == client_id){
         next();
     }else{
@@ -107,7 +106,6 @@ function verifyPermission (basePermissionLevel){
             if(!err) {
                 let auth = verified.auth;
                 req.validToken = verified;
-                console.log(auth >= basePermissionLevel)
                 if(auth >= basePermissionLevel) next();
                 else return res.status(401).json({message: "Not sufficient permission level"});
             }

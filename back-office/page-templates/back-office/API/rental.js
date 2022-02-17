@@ -34,7 +34,7 @@ router.get('/client/:query', function (req, res) {
 })
 
 //Add a new rental
-router.post('/', async function (req, res) {
+router.post('/', function (req, res) {
   console.log(req.body)
   const rental = new Rental({
     _id: new mongoose.Types.ObjectId(),
@@ -42,7 +42,8 @@ router.post('/', async function (req, res) {
     product_id: req.body.product_id,
     start_date: req.body.start_date,
     end_date: req.body.end_date,
-    state: req.body.state
+    state: req.body.state,
+    price: req.body.price
   });
   rental
     .save()

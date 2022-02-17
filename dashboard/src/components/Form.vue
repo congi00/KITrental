@@ -2,11 +2,13 @@
     import { defineComponent, computed } from 'vue'
     import Datepicker from 'vue3-date-time-picker';
     import 'vue3-date-time-picker/dist/main.css'
+    import { useCookies } from "vue3-cookies";
 
     export default defineComponent({
         name: "Form",
         components: {Datepicker},
           props: {
+              col : '',
                 modelValue: {
                 type: Object,
                 default: () => {}
@@ -16,22 +18,29 @@
             emits: ['update:modelValue'],
 
             setup(props, { emit }) {
+                const { cookies } = useCookies();
                 const form = computed({
                 get: () => props.modelValue,
                 set: (value) => emit('update:modelValue', value),
                 });
 
                 return {
-                form,
+                form, cookies
                 };
             },
-
+        mounted () {
+            // Generate random ID
+            const randID = Date.now()
+                this.$refs.recordsList.setAttribute('id', randID)
+                this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
+        },
         data() {
             return {
                 form: {
                     selected: '',
                     record: '',
-                    date: null 
+                    date: null,
+                    id: null
                 }
             }
         },
@@ -39,12 +48,15 @@
         methods: {
             handleChange(e) {
                 // `event` implicitly has `any` type
-                const col = this.form.selected
-                const field = col === "clients" ? "username" : "name"
+                const coll = this.col
+                var field = coll === "clients" ? "username" : "name"
+                if (coll === 'inventory/category') console.log(coll)
                 var q = {[field] : e.target.value};
-                this.axios.get("api/" + col + "/", {params: q, headers: {'auth': sessionStorage}})
+                console.log(q)
+                this.axios.get("api/" + coll + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
                     .then((res) => {    
                         // Conversion from String to JSON object
+                        console.log(this.$refs.recordsList)
                         this.$refs.recordsList.innerHTML = ""
                         var option
                         res.data[Object.keys(res.data)[0]].forEach(el => {
@@ -66,13 +78,18 @@
 
 <template>
     <form>
-        <select v-model="form.selected" class="form-select" @change="selectChange">
+        <!-- <select v-model="form.selected" class="form-select" @change="selectChange">
             <option disabled value="">Please select one</option>
             <option value="clients">Client</option>
             <option value="inventory">Product</option>
             <option value="rental">Rental</option>
+        </select> -->
+        <select v-if="this.col === 'inventory/category'" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="form.record">
+            <option selected>Open this select menu</option>
+            <option value="Household">Household</option>
+            <option value="Professional">Professional</option>
         </select>
-        <input class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
+        <input v-if="this.col !== 'inventory/category'" class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
         <datalist ref="recordsList" id="recordList"></datalist>
         <!-- <input class="form-control" type="number" v-model="form.date" placeholder="Months" /> -->
         <Datepicker v-model="form.date" range :enableTimePicker="false" />

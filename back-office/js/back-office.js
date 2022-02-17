@@ -377,10 +377,11 @@ function showRental() {
           <label for="productState" class="form-label">State</label>
           <select class="form-select" id="productState" aria-label="Select State" data-db-field="state">
             <option selected>Open this select menu</option>
-            <option value="new">New</option>
-            <option value="perfect">Perfect</option>
-            <option value="good">Good</option>
-            <option value="broken">Broken</option>
+            <option value="Pending">Pending</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Active">Active</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Closed">Closed</option>
           </select>
         </div>`
       $(content).append(createModal(body))
@@ -945,23 +946,23 @@ function createRecord(col, id, el) {
                       xhr.setRequestHeader('auth', authToken)
                     },
                     success: res => {
-                      const rentalRes = res.rental;
+                      const rntl = res.rental;
                       $.ajax({
                         url: "API/inventory/" + updInventoryID,
                         type: "PATCH",
                         contentType: "application/json",
                         dataType: "json",
-                        data: JSON.stringify({startD: rentalRes.start_date,endD: rentalRes.end_date}),
+                        data: JSON.stringify({startD: rntl.start_date,endD: rntl.end_date}),
                         success:{}
                       });
-                      const prod = res.rental.product_id;
                       $.ajax({
-                        url: "API/clients/" + res.rental.client_id,
+                        url: "API/clients/" + rntl.client_id,
                         type: "GET",
                         beforeSend: xhr => {
                           xhr.setRequestHeader('auth', authToken)
                         },
                         success: res => {
+                          const clnt = res.client;
                           const clientInfo = {
                               client_name: res.client.name,
                               client_surname: res.client.surname,
@@ -969,18 +970,21 @@ function createRecord(col, id, el) {
                               client_payment: res.client.payment,
                           }
                           $.ajax({
-                            url: "API/inventory/" + rentalRes.product_id,
+                            url: "API/inventory/" + rntl.product_id,
                             type: "GET",
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)
                             },
-                            success: res => {
+                            success: async res => {
+                              const finalPrice = await calcPrice(rntl.price, new Date(rntl.start_date), new Date(rntl.end_date),clnt._id)
+                              console.log(finalPrice)
                               const productInfo = {
                                 product_name: res.products.name,
                                 product_image: res.products.image,
                                 product_state: res.products.state,
                                 product_price: res.products.price,
                                 product_category: res.products.category,
+                                total: rntl.price
                               }
                             
                               $.ajax({
@@ -1051,26 +1055,77 @@ function createRecord(col, id, el) {
   }
   if (col === 'rental') {
     toCreateObject['state'] = 'Accepted';
+    $.ajax({
+      url: "API/inventory/" + toCreateObject['product_id'],
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
+      success: response => {
+        if (response) {
+          const diffInMs   = new Date(toCreateObject['end_date']) - new Date(toCreateObject['start_date'])
+          const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+          toCreateObject['price'] = (response.products.price * diffInDays).toString()
+          console.log(JSON.stringify(toCreateObject))
+          $.ajax({
+            url: "API/" + col + "/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(toCreateObject),
+            success: function (response) {
+              if (response) {
+              } else {
+                alert("There was an error.");
+              }
+            },
+          });
+        } else {
+          alert("There was an error.");
+        }
+      },
+    });
+  } else {
+    // Create AJAX Request
+    $.ajax({
+      url: "API/" + col + "/",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(toCreateObject),
+      success: function (response) {
+        if (response) {
+        } else {
+          alert("There was an error.");
+        }
+      },
+    });
   }
-  
-  // Create AJAX Request
-  $.ajax({
-    url: "API/" + col + "/",
-    type: "POST",
-    contentType: "application/json",
-    dataType: "json",
-    data: JSON.stringify(toCreateObject),
+}
+
+/******** PRICE LOGIC *********/
+// Just promotions
+async function calcPrice(rental_price, rental_start_date, rental_end_date, client_id) {
+  console.log(rental_price)
+  let res = await $.ajax({
+    url: "API/promotions/",
+    type: "GET",
     beforeSend: xhr => {
-      xhr.setRequestHeader('auth', authToken)
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
     },
-    success: function (response) {
-      if (response) {
-      } else {
-        alert("There was an error.");
+    success: res => {
+      var proms = res.promotions
+      for (const [key, value] of Object.entries(proms)) {
+        var prom_start_date = new Date(value.start_date)
+        var prom_end_date = new Date(value.end_date)
+        if (rental_start_date >= prom_start_date && rental_end_date <= prom_end_date) {
+          var old_rental_price = rental_price 
+          rental_price = old_rental_price - ( old_rental_price / 100 * value.percentage )
+        }
       }
     },
   });
+  return rental_price
 }
+
 
 function updateRecordInfo(col, id, el) {
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
