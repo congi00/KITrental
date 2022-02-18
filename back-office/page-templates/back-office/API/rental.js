@@ -63,7 +63,6 @@ router.post('/', function (req, res) {
 
 // Get single rental
 router.get('/:id',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
-  console.log('hola ' + req.params.id)
     Rental.findOne({ _id: req.params.id})
   .exec()
   .then(rental => {
@@ -92,11 +91,10 @@ router.delete('/:id', function (req, res) {
 
 //Update rental
 router.patch('/:id', async function (req, res) {
-  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 16);
+  console.log(req.body)
   await Rental.findOneAndUpdate(
     { _id: req.params.id},
-    req.body,
-    { overwrite: true }
+    req.body
   )
   .exec()
   .then(result => {

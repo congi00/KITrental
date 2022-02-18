@@ -67,7 +67,7 @@ function showHome() {
                 <button class="btn btn-dark btn-lg" id="noLogIn" onclick="$(\'nav\').show(); showInventory(); return false;">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
-                <form id="formEmployees" action="http://localhost:8000/API/login">\
+                <form id="formEmployees" action="/API/login">\
                   <div class="text-center">\
                     <img src="/img/logos/KITrental-logos_black.png" alt="logo">\
                   </div>\
@@ -374,8 +374,8 @@ function showRental() {
             <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate">
         </div>
         <div class="mb-3">
-          <label for="productState" class="form-label">State</label>
-          <select class="form-select" id="productState" aria-label="Select State" data-db-field="state">
+          <label for="rentalState" class="form-label">State</label>
+          <select class="form-select" id="rentalState" aria-label="Select State" data-db-field="state">
             <option selected>Open this select menu</option>
             <option value="Pending">Pending</option>
             <option value="Accepted">Accepted</option>
@@ -410,12 +410,13 @@ function singleRental(id) {
     },
     success: async res => {
       var rental = res.rental;
+      console.log(rental)
       var content = document.getElementById("content");
       content.innerHTML = "";
       var rented_product = {};
       var renting_client = {};
 
-      await $.ajax({
+      let response = await $.ajax({
         url: "API/inventory/" + rental.product_id,
         type: "GET",
         beforeSend: xhr => {
@@ -423,24 +424,15 @@ function singleRental(id) {
         },
         success: async res => {
           rented_product = res.products
-          // await $.ajax({
-          //   url: "API/clients/" + rental.client_id,
-          //   type: "GET",
-          //   beforeSend: xhr => {
-          //     xhr.setRequestHeader('auth', authToken)
-          //   },
-          //   success: res => renting_client = res.client
-          // });
+          let response = await $.ajax({
+            url: "API/clients/" + rental.client_id,
+            type: "GET",
+            beforeSend: xhr => {
+              xhr.setRequestHeader('auth', authToken)
+            },
+            success: res => renting_client = res.client
+          });
         }
-      }).then(res => {
-        $.ajax({
-          url: "API/clients/" + rental.client_id,
-          type: "GET",
-          beforeSend: xhr => {
-            xhr.setRequestHeader('auth', authToken)
-          },
-          success: res => renting_client = res.client
-        });
       })
 
       console.log(rented_product)
@@ -476,6 +468,16 @@ function singleRental(id) {
                   <label for="rentalEndDate" class="form-label">Ending Date</label>
                   <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toISOString().slice(0,16)}" readonly>
 
+                  <div class="mb-3">
+                    <label for="rentalState" class="form-label">State</label>
+                    <select class="form-select" id="rentalState" aria-label="Select State" data-db-field="state" disabled>
+                      <option value="Pending" ${rental.state == "Pending" ? 'selected' : ''}>Pending</option>
+                      <option value="Accepted" ${rental.state == "Accepted" ? 'selected' : ''}>Accepted</option>
+                      <option value="Active" ${rental.state == "Active" ? 'selected' : ''}>Active</option>
+                      <option value="Confirmed" ${rental.state == "Confirmed" ? 'selected' : ''}>Confirmed</option>
+                      <option value="Closed" ${rental.state == "Closed" ? 'selected' : ''}>Closed</option>
+                    </select>
+                  </div>
                   <!-- If the end date is in the future, add a button to modify and update the rental data -->
                   ${(new Date() < new Date(rental.end_date)) ? '<button id="updateData" onclick="updateRecordInfo(\'rental\', \'' + rental._id + '\', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>' : ''}
               </form>
@@ -486,7 +488,7 @@ function singleRental(id) {
       $.ajax({
         url: "API/operations/",
         type: "GET",
-        data: {query: q},
+        data: q,
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
@@ -1085,6 +1087,7 @@ function createRecord(col, id, el) {
       },
     });
   } else {
+    console.log(toCreateObject)
     // Create AJAX Request
     $.ajax({
       url: "API/" + col + "/",
@@ -1104,7 +1107,6 @@ function createRecord(col, id, el) {
 /******** PRICE LOGIC *********/
 // Just promotions
 async function calcPrice(rental_price, rental_start_date, rental_end_date, client_id) {
-  console.log(rental_price)
   let res = await $.ajax({
     url: "API/promotions/",
     type: "GET",
@@ -1132,7 +1134,7 @@ function updateRecordInfo(col, id, el) {
   if (col === 'clients' || ( col === 'rental' && new Date(startDate) > new Date() ) || col === 'inventory' ) {
     if (boolUtil) {
       $(el).siblings("input, textarea").attr("readonly", false);
-      $(el).siblings("select").attr("disabled", false);
+      $("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
       boolUtil = false;
@@ -1163,7 +1165,7 @@ function updateRecordInfo(col, id, el) {
             // Put everything back to read-only
             $(el).html("Update Data");
             $(el).siblings("input, textarea").attr("readonly", true);
-            $(el).siblings("select").attr("disabled", true);
+            $("select").attr("disabled", true);
             boolUtil = true;
           } else {
             alert("There was an error.");

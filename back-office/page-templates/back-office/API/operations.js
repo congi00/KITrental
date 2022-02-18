@@ -12,7 +12,7 @@ router.get('/', function (req, res) {
   const reqQuery = req.query
   const query = {}
   if (reqQuery.rental_id) query.rental_id = reqQuery.rental_id
-  Operation.find()
+  Operation.find(query)
     .exec()
     .then(operations => res.status(200).json({ operations }))
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
