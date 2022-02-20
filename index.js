@@ -24,8 +24,8 @@ const mongoCredentials = {
 	site: process.env.DB_SITE
 }
 
-const hostedMongo = `mongodb://${mongoCredentials.user}:${mongoCredentials.pwd}@${mongoCredentials.site}?writeConcern=majority`
-//const hostedMongo = "mongodb://localhost:27017/KITrental";
+//const hostedMongo = `mongodb://${mongoCredentials.user}:${mongoCredentials.pwd}@${mongoCredentials.site}?writeConcern=majority`
+const hostedMongo = "mongodb://localhost:27017/KITrental";
 const port = process.env.PORT || 8000;
 const db = mongoose.connection;
 

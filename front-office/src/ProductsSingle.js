@@ -23,6 +23,7 @@ function ProductsSingle(){
   const [endDate, setEndDate] = React.useState(new Date());
   const param = searchParams.get("prdID");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+  const [Dates,setDates] = React.useState([new Date()]);
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/"+param)
@@ -31,7 +32,9 @@ function ProductsSingle(){
         (result) => {
           console.log(result.products);
           setProducts(result.products);
-          setCategoryP(products.category.toLowerCase());
+          //setCategoryP(result.products.category.toLowerCase());
+          setDates(getDates(new Date(result.products.startD), new Date(result.products.endD)));
+          console.log(Dates);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -40,6 +43,7 @@ function ProductsSingle(){
           console.log(error);
         }
       )
+      
   }, [])
 
   const onAdd = (product) =>{
@@ -65,6 +69,32 @@ function ProductsSingle(){
     setEndDate(end);
   };  
 
+  
+  const getDates = (startDate, endDate) => {
+    const dates = []
+    console.log("Start:" +startDate+"End"+endDate);
+    let currentDate = startDate
+    const addDays = function (days) {
+      const date = new Date(this.valueOf())
+      date.setDate(date.getDate() + days)
+      return date
+    }
+    
+    while (currentDate <= endDate) {
+      console.log("dddddd");
+      dates.push(currentDate)
+      currentDate = addDays.call(currentDate, 1)
+      console.log(currentDate);
+    }
+    
+    return dates;
+    
+  }
+
+
+
+
+
   const onRent = (products) =>{
     onAdd(products);
     navigate("/cart");
@@ -89,7 +119,7 @@ function ProductsSingle(){
               selected={startDate}
               startDate={startDate}
               endDate={endDate}
-              excludeDates={[new Date(products.startD),new Date(products.endD)]}
+              excludeDates={Dates}
               selectsRange
               selectsDisabledDaysInRange
               inline
