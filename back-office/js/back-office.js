@@ -729,6 +729,14 @@ function singleInventory(id) {
                     <option value="${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}">${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}</option>
                   </select><br>
 
+                  
+                  <label for="rentalStartDate" class="form-label">Unavailability Starting Date</label>
+                  <input required type="datetime-local" data-db-field="startD" class="form-control mb-3" id="productStartDate">
+      
+                  <label for="rentalEndDate" class="form-label">Unavailability Ending Date</label>
+                  <input required type="datetime-local" data-db-field="endD" class="form-control mb-3" id="productEndDate">
+                  
+
                   <label for="productPrice" class="form-label">Price</label>
                   <input type="number" data-db-field="price" class="form-control mb-3" id="productPrice" value="${product.price ? product.price : ''}" readonly>
 
