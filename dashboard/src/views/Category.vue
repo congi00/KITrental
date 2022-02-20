@@ -25,22 +25,22 @@ export default {
             hiddenOnCollapse: true
           },
           {
-            href: '/clients',
+            href: '/dashboard/clients',
             title: 'Clients',
             icon: 'fa fa-user'
           },
           {
-            href: '/rental',
+            href: '/dashboard/rental',
             title: 'Rental',
             icon: 'fa fa-chart-area',
           },
           {
-            href: '/inventory',
+            href: '/dashboard/inventory',
             title: 'Inventory',
             icon: 'fa fa-chart-area',
             child: [
                 {
-                    href: '/inventory/category',
+                    href: '/dashboard/inventory/category',
                     title: 'Category'
                 }
             ]
