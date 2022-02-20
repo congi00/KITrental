@@ -65,6 +65,9 @@ function AreaComponent(){
   }, [])
 
   // function 
+  function deleteRental(rentalId) {
+    console.log(rentalId)
+  }
 
   return(
     <div className="areaSection">
@@ -107,7 +110,8 @@ function AreaComponent(){
                               <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                               <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                             </ListGroup>
-                            <Button variant="primary" className='product-button'>See More</Button>
+                            <Button variant="primary" className='product-button'>Edit</Button>
+                            <Button variant="danger" className='product-remove-button'>Delete</Button>
                           </Card.Body>
                         </Card>
                         </SwiperSlide>
@@ -127,8 +131,8 @@ function AreaComponent(){
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
-                        <Button variant="primary" className='product-button'>See More</Button>
-                        <Button variant="danger" className='product-button' >See More</Button>
+                        <Button variant="primary" className='product-button'>Edit</Button>
+                        <Button variant="danger" className='product-remove-button' onClick={deleteRental(item._id)}>Delete</Button>
                       </Card.Body>
                     </Card>
                   ))}

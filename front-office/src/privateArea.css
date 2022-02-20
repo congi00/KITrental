@@ -72,7 +72,7 @@
 
 @media (min-width: 992px) {
     .areaSection {
-        background-color: cadetblue;
+        background-color: #7bd2d5;
         width: 100%;
         height: unset;
         min-height: 100vh;
@@ -140,5 +140,23 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .rental-wrapper .swiper {
+        display: none;
+    }
+    .product-remove-button {
+        background-color: transparent;
+        border-color: #dc3545;
+        color: #dc3545;
+        border: 2px solid #dc3545;
+        margin-left: 1rem;
+    }
+    .product-button, .product-remove-button {
+        margin-top: 1rem;
+    }
+    .product-button:active, .product-button:focus {
+        background-color: #06514c;
+        border-color: #06514c;
+        color: #fff;
     }
 }

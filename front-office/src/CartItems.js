@@ -75,7 +75,7 @@ function CartItems(){
   }
   return(
     cartItems ? (
-      <div className="cartSection">
+      <div className="cartSection container">
         <h1>CART</h1>
         <Form className="formCart">
           {cartItems.map(item => (
@@ -95,8 +95,10 @@ function CartItems(){
               </Card.Body>
             </Card>
             ))}
-            <h2 className="totalItems">Total:</h2>
-            <h2 className="totalItemsPrice">{totalPrice}$</h2>
+            <div className="total-price-wrapper">
+              <h2 className="totalItems">Total:</h2>
+              <h2 className="totalItemsPrice">{totalPrice}$</h2>
+            </div>
             <Button variant="danger"  onClick={handleClick}>
               Submit
             </Button>
