@@ -235,7 +235,7 @@ function singleClient(id) {
       $.ajax({
         url: "API/rental/",
         type: "GET",
-        data: {query: q},
+        data: q,
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
@@ -260,8 +260,8 @@ function singleClient(id) {
                 <div class="card" style="width: 18rem; cursor:pointer;" onclick="singleRental('${rental._id}');">
                   <img src="/img/products/${rented_product.image}" class="card-img-top" alt="Product Image">
                   <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h5 class="card-title">${rented_product.name ? rented_product.name : 'Product Name'}</h5>
+                    <p class="card-text">${rented_product.description ? rented_product.description : 'Product Description'}</p>
                   </div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
@@ -334,11 +334,12 @@ function showRental() {
               <td>${new Date(rental.end_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href=""><i class="bi bi-receipt" style="color: brown; cursor: pointer;"></i></a></td>
             </tr>`);
         } else {
           $(tbdy).append(`
             <tr class="table-light">
-              <td>${new Date(rental.start_date).toLocaleString()}</td>
+              <td data-id="start_date">${new Date(rental.start_date).toLocaleString()}</td>
               <td>${new Date(rental.end_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
@@ -408,81 +409,139 @@ function singleRental(id) {
     beforeSend: xhr => {
       xhr.setRequestHeader('auth', authToken)
     },
-    success: async res => {
+    success: res => {
       var rental = res.rental;
-      console.log(rental)
       var content = document.getElementById("content");
       content.innerHTML = "";
       var rented_product = {};
       var renting_client = {};
 
-      let response = await $.ajax({
+      $.ajax({
         url: "API/inventory/" + rental.product_id,
         type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
-        success: async res => {
+        success: res => {
           rented_product = res.products
-          let response = await $.ajax({
+          $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
             beforeSend: xhr => {
               xhr.setRequestHeader('auth', authToken)
             },
-            success: res => renting_client = res.client
+            success: res => {
+              renting_client = res.client
+
+              $(content).append(`
+                <div class="row">
+                  <div class="col-md-6 p-5">
+                      <!-- Display Rented Object -->
+                      <div class="row mb-4">
+                        
+                          <div class="col-md-6 d-flex colsRental">
+                          <a href="javascript:singleInventory('${rented_product._id}');">
+                            <h2>Rented Product</h2>
+                            <div class="thumbnail-wrapper">
+                              <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
+                            </div>
+                            <h2>${rented_product.name ? rented_product.name : ''}</h2>
+                            </a>
+                          </div>
+                          <div class="col-md-6 d-flex colsRental">
+                        <a href="javascript:singleClient('${renting_client._id}');">
+                          
+                            <h2>Renting Client</h2>
+                            <div class="thumbnail-wrapper">
+                              <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : 'profile-placeholder.png'}" alt="Rented Product photo">
+                            </div>
+                            <h2>${renting_client.username ? renting_client.username : ''}</h2>
+                          </a></div>
+                        
+                      </div>
+                  </div>
+
+                  <!-- Display Rental Data -->
+                  <div class="col-md-6 p-5" style="width: 50%;">
+                      <form action="">
+                          <label for="rentalStartDate" class="form-label">Starting Date</label>
+                          <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
+
+                          <label for="rentalEndDate" class="form-label">Ending Date</label>
+                          <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toISOString().slice(0,16)}" readonly>
+
+                          <div class="mb-3">
+                            <label for="rentalState" class="form-label">State</label>
+                            <select class="form-select" id="rentalState" aria-label="Select State" data-db-field="state" disabled>
+                              <option value="Pending" ${rental.state == "Pending" ? 'selected' : ''}>Pending</option>
+                              <option value="Accepted" ${rental.state == "Accepted" ? 'selected' : ''}>Accepted</option>
+                              <option value="Active" ${rental.state == "Active" ? 'selected' : ''}>Active</option>
+                              <option value="Confirmed" ${rental.state == "Confirmed" ? 'selected' : ''}>Confirmed</option>
+                              <option value="Closed" ${rental.state == "Closed" ? 'selected' : ''}>Closed</option>
+                            </select>
+                          </div>
+                          <!-- If the end date is in the future, add a button to modify and update the rental data -->
+                          ${(new Date() < new Date(rental.start_date)) ? `
+                            <button id="updateData" onclick="updateRecordInfo('rental', '${rental._id}', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>
+                            <button id="updateData" onclick="deleteRecord('rental', '${rental._id}', this); showRental();" type="button" class="btn btn-danger" data-collection="rental">Delete Rental</button>
+                            ` : ''}
+                      </form>
+                  </div>
+                </div>`)
+              
+              body = `
+                  <div class="mb-3">
+                    <label for="operationType" class="form-label">Type of Operation</label>
+                    <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
+                        <!-- <option value="rent_create">Create Rent</option>
+                        <option value="rent_update">Update Rent</option> -->
+                        <option value="rent_confirm">Rent Confirmation</option>
+                        <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
+                    </select>
+                  </div>
+      
+                  <!-- Possible fields to edit in case of a rental confirmation operation -->
+                  <div class="mb-3" id="rentConfirm">
+                    <label for="searchObjects" class="form-label">Object Rented</label>
+                    <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+                    <datalist id="objectsList"></datalist>
+                  </div>
+      
+                  <!-- Possible fields to edit in case of a rental closing operation -->
+                  <div class="mb-3" id="rentClose" style="display: none;">
+                    <div class="mb-3">
+                        <label for="productAvaiability" class="form-label">Avaiability</label>
+                        <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productState" class="form-label">State</label>
+                        <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_product.state}">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="operationNotes" class="form-label">Notes</label>
+                      <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
+                      </textarea>
+                </div>`
+
+              $(content).append(createModal(body))
+              $(document).off("click", "#createRecord")
+              $(document).on("click", "#createRecord", function(){
+                createRecord('operations', id, this)
+              });
+        
+              var myModalEl = document.getElementById('staticBackdrop')
+              myModalEl.addEventListener('hidden.bs.modal', function (event) {
+                singleRental(id);
+              })
+            }
           });
         }
       })
-
-      console.log(rented_product)
-      console.log(renting_client)
-      $(content).append(`
-        <div class="row">
-          <div class="col-md-6 p-5">
-              <!-- Display Rented Object -->
-              <div class="row mb-4">
-                <div class="col-md-6 d-flex colsRental">
-                  <h2>Rented Product</h2>
-                  <div class="thumbnail-wrapper">
-                    <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
-                  </div>
-                  <h2>${rented_product.name ? rented_product.name : ''}</h2>
-                </div>
-                <div class="col-md-6 d-flex colsRental">
-                  <h2>Renting Client</h2>
-                  <div class="thumbnail-wrapper">
-                    <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : 'profile-placeholder.png'}" alt="Rented Product photo">
-                  </div>
-                  <h2>${renting_client.username ? renting_client.username : ''}</h2>
-                </div>
-              </div>
-          </div>
-
-          <!-- Display Rental Data -->
-          <div class="col-md-6 p-5" style="width: 50%;">
-              <form action="">
-                  <label for="rentalStartDate" class="form-label">Starting Date</label>
-                  <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
-
-                  <label for="rentalEndDate" class="form-label">Ending Date</label>
-                  <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${new Date(rental.end_date).toISOString().slice(0,16)}" readonly>
-
-                  <div class="mb-3">
-                    <label for="rentalState" class="form-label">State</label>
-                    <select class="form-select" id="rentalState" aria-label="Select State" data-db-field="state" disabled>
-                      <option value="Pending" ${rental.state == "Pending" ? 'selected' : ''}>Pending</option>
-                      <option value="Accepted" ${rental.state == "Accepted" ? 'selected' : ''}>Accepted</option>
-                      <option value="Active" ${rental.state == "Active" ? 'selected' : ''}>Active</option>
-                      <option value="Confirmed" ${rental.state == "Confirmed" ? 'selected' : ''}>Confirmed</option>
-                      <option value="Closed" ${rental.state == "Closed" ? 'selected' : ''}>Closed</option>
-                    </select>
-                  </div>
-                  <!-- If the end date is in the future, add a button to modify and update the rental data -->
-                  ${(new Date() < new Date(rental.end_date)) ? '<button id="updateData" onclick="updateRecordInfo(\'rental\', \'' + rental._id + '\', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>' : ''}
-              </form>
-          </div>
-        </div>`)
+      
 
       var q = {'rental_id' : id}
       $.ajax({
@@ -512,67 +571,6 @@ function singleRental(id) {
           }
         },
       });
-
-      var body
-      $.ajax({
-        async: false,
-        url: "API/inventory/" + rental.product_id,
-        type: "GET",
-        beforeSend: xhr => {
-          xhr.setRequestHeader('auth', authToken)
-        },
-        success: res => {
-          rented_product = res.products
-          body = `
-            <div class="mb-3">
-              <label for="operationType" class="form-label">Type of Operation</label>
-              <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
-                  <!-- <option value="rent_create">Create Rent</option>
-                  <option value="rent_update">Update Rent</option> -->
-                  <option value="rent_confirm">Rent Confirmation</option>
-                  <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
-              </select>
-            </div>
-
-            <!-- Possible fields to edit in case of a rental confirmation operation -->
-            <div class="mb-3" id="rentConfirm">
-              <label for="searchObjects" class="form-label">Object Rented</label>
-              <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
-              <datalist id="objectsList"></datalist>
-            </div>
-
-            <!-- Possible fields to edit in case of a rental closing operation -->
-            <div class="mb-3" id="rentClose" style="display: none;">
-              <div class="mb-3">
-                  <label for="productAvaiability" class="form-label">Avaiability</label>
-                  <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
-                      <option value="available">Available</option>
-                      <option value="unavailable">Unavailable</option>
-                  </select>
-              </div>
-              <div class="mb-3">
-                  <label for="productState" class="form-label">State</label>
-                  <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_product.state}">
-              </div>
-            </div>
-            <div class="mb-3">
-                <label for="operationNotes" class="form-label">Notes</label>
-                <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
-                </textarea>
-            </div>`
-        }
-      });
-
-      $(content).append(createModal(body))
-      $(document).off("click", "#createRecord")
-      $(document).on("click", "#createRecord", function(){
-        createRecord('operations', id, this)
-      });
-
-      var myModalEl = document.getElementById('staticBackdrop')
-      myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        singleRental(id);
-      })
     },
   });
 }
@@ -592,9 +590,9 @@ function showInventory(){
       container.className = "container table-wrapper pt-5";
 
       $(container).append('\
-      <div class="container pb-5 mb-sm-1">\
-      <i class="bi bi-search" style="position:relative;left:29vw;top:5vh;"></i>\
-      <input id="livesearch" type="text" size="30" onkeyup="showResult(this.value.toLowerCase())" placeholder="Search products">\
+      <div class="container pb-3 mb-sm-1 inventory-search-wrapper">\
+        <i class="bi bi-search" style="margin-right: 0.5rem;"></i>\
+        <input id="livesearch" type="text" size="30" onkeyup="showResult(this.value.toLowerCase())" placeholder="Search products">\
       <div id="productsInventory" class="row"></div>');
 
       var tbl = document.createElement('table');
@@ -744,39 +742,6 @@ function singleInventory(id) {
               </form>
           </div>
         </div>`)
-
-      /*var q = {'product_id' : id}
-      $.ajax({
-        url: "API/rental/",
-        type: "GET",
-        data: {query: q},
-        success: res => {
-          if (res.rental.length) {
-            var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5";
-            $.each(res.rental, (i, rental) => {
-            $(divRow).append(`
-              <div class="card" style="width: 18rem;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">${rental.start_date ? rental.start_date : ''}</li>
-                  <li class="list-group-item">${rental.end_date ? rental.end_date : ''}</li>
-                  <li class="list-group-item">A third item</li>
-                </ul>
-                <div class="card-body">
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" onclick="singleRental(${rental._id}); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a>
-                </div>
-              </div>`);
-            });
-            content.appendChild(divRow);
-          }
-        },
-      });*/
     },
   });
 }
@@ -874,7 +839,7 @@ function createModal(body) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="createRecord" data-bs-dismiss="modal" class="btn btn-primary">Save Operation</button>
+                        <button type="button" id="createRecord" data-bs-dismiss="modal" class="btn btn-primary">Save Record</button>
                     </div>
                 </form>
             </div>
@@ -1208,9 +1173,10 @@ function deleteRecord(col, id, el) {
     });
 
     var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
-    if (new Date(startDate) > new Date()) {
+    console.log(startDate)
+    if (new Date(startDate) <= new Date()) {
       toDelete = false;
-      errMsg = "You can't delete past/active rental.";
+      errMsg = "You can't delete active rental.";
     }
   }
 
@@ -1220,12 +1186,12 @@ function deleteRecord(col, id, el) {
       async: false,
       url: "API/rental/",
       type: "GET",
-      data: {query: q},
+      data: q,
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', authToken)
       },
       success: function (response) {
-        if (response) {
+        if (response.rental.length) {
           toDelete = false;
           errMsg = "You can't delete clients with active/booked rental.";
         }
@@ -1236,7 +1202,8 @@ function deleteRecord(col, id, el) {
   
 
   if (toDelete) {
-    var confirmalert = confirm("Are you sure?");
+    var confirmalert = true
+    if (col !== 'invoice') confirmalert = confirm("Are you sure?");
     if (confirmalert == true) {
       // AJAX Request
       $.ajax({
@@ -1251,7 +1218,7 @@ function deleteRecord(col, id, el) {
             $(el).closest("tr").css("--bs-table-bg", "red");
             $(el)
               .closest("tr")
-              .fadeOut(800, function () {
+              .fadeOut(400, function () {
                 $(this).remove();
               });
           }else{
@@ -1286,7 +1253,7 @@ function getResults(val, col, field, dataList) {
   $.ajax({
     url: "API/" + col + "/",
     type: "GET",
-    data: {query: q},
+    data: q,
     beforeSend: xhr => {
       xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
     },

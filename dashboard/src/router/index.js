@@ -5,12 +5,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/dashboard',
       name: 'home',
       component: Home
     },
     {
-      path: '/about',
+      path: '/dashboard/home',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -18,7 +18,7 @@ const router = createRouter({
       component: () => import('../views/Dashboard.vue')
     },
     {
-      path: '/clients',
+      path: '/dashboard/clients',
       name: 'clients',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -26,7 +26,7 @@ const router = createRouter({
       component: () => import('../views/Clients.vue')
     },
     {
-      path: '/rental',
+      path: '/dashboard/rental',
       name: 'rental',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
@@ -34,7 +34,7 @@ const router = createRouter({
       component: () => import('../views/Rental.vue')
     },
     {
-      path: '/inventory',
+      path: '/dashboard/inventory',
       name: 'inventory',
       // route level code-splitting
       // this generates a separate chunk (bout.[hash].js) for this route
@@ -42,7 +42,7 @@ const router = createRouter({
       component: () => import('../views/Inventory.vue')
     },
     {
-      path: '/inventory/category',
+      path: '/dashboard/inventory/category',
       name: 'category',
       // route level code-splitting
       // this generates a separate chunk (bout.[hash].js) for this route

@@ -65,7 +65,7 @@
             if(response.data.password==true){
               this.cookies.set("user_session",response.data.id);
               this.cookies.set('auth', response.data.auth);
-              router.push("/about");
+              router.push("/dashboard/home");
             }else{
               this.$refs.errorMSG.style.display ="block";
             }    
