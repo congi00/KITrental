@@ -86,15 +86,15 @@ export default defineComponent({
       var record = formData.record        // id with format: {recordName} id={recordID}
       var rangeDate = formData.date
       var rangeDate = rangeDate.map(x => new Date(x))
-      if (!this.col || !record || !rangeDate) {
+      if (!this.col || (!record&& !(this.col == "rental")) || !rangeDate) {
         this.$refs.errorMSG.style.display ="block";
         return;
       } else {
         this.$refs.errorMSG.style.display ="none";
       }
-      if (record.includes('id=')) {
+      if (record && record.includes('id=')) {
         var index = record.indexOf("id=") + 3
-        record = record.substring(index)
+        record = record.substring(index);
       }
 
       /* QUERY FOR RETRIEVING DATA from the db */
@@ -104,7 +104,7 @@ export default defineComponent({
       } if (this.col === 'inventory') {
         q = {"product_id" : record}
       }
-      this.axios.get("api/" + colData + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
+      this.axios.get("/api/" + colData + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
         .then((res) => {
             var rental = res.data.rental
             console.log(rental)
@@ -141,15 +141,27 @@ export default defineComponent({
           'December'
         ];
 
+        var incoming = 0;
+
       /* The range is smaller than one month */
       if (end_date > range[1]) return rental.length 
 
       /* Count how many records per month within the given range */
       do {
+        
         const filteredByValue = Object.fromEntries(
-              Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
+            Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
 
-        counter.push(Object.keys(filteredByValue).length)
+        if(this.form.choice === "Incoming"){
+          const IncomeOption = Object.keys(filteredByValue).map(x => {
+            filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].price : console.log(filteredByValue[x].price);
+          })
+          console.log(incoming);
+          counter.push(incoming);
+        }else{
+          counter.push(Object.keys(filteredByValue).length)
+        }
+        
         months.push(MONTHS[start_date.getMonth()])
 
         /* Month Range Update */
