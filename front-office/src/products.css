@@ -101,10 +101,14 @@
   .product-wrapper {
     width: 100%;
     height: 100vh;
+    padding-top: 13vh;
   }
   .product-wrapper > div {
     display: flex;
     align-items: center;
+  }
+  .calendar {
+    position: unset;
   }
   .img-col {
     padding-right: 3vw;
@@ -120,13 +124,20 @@
     border: 2px solid white;
     border-radius: 50px;
   }
+  .productName, .priceTit {
+    display: inline-block;
+  }
+  .priceTit {
+    float: right;
+    transform: translate(0, 10px);
+  }
   .productDesc {
     width: unset;
     min-width: 30vw;
     height: unset;
     position: unset;
     padding-right: 0;
-    padding: 5vw;
+    padding: 2vw 2.5vw;
     border: 2px solid white;
     border-radius: 50px;
   }
@@ -134,11 +145,11 @@
   .btnCart, .btnBuy {
     position: unset;
     width: unset;
-    display: block;
+    display: inline-block;
   }
   .productDescription {
     white-space: pre-wrap;
   }
   .btnCart { margin-top: 1.5rem; }
-  .btnBuy { margin-top: 1rem; }
+  .btnBuy { margin-top: 1.5rem; margin-left: 1rem; }
 }

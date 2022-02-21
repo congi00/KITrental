@@ -243,31 +243,33 @@ function singleClient(id) {
           if (res.rental.length) {
             var divRow = document.createElement('div');
             divRow.className = "row rental-cards-group px-5 pb-5";
-            var rented_product = {};
+            var rented_products = {};
             $.each(res.rental, (i, rental) => {
               $.ajax({
                 async: false,
-                url: "API/inventory/" + rental.product_id,
+                url: "API/inventory/many/" + rental.products_id.toString(),
                 type: "GET",
                 beforeSend: xhr => {
                   xhr.setRequestHeader('auth', authToken)
                 },
                 success: res => {
-                  rented_product = res.products
+                  rented_products = res.products
+                  var rented_products_names = rented_products.map(prod => prod.name)
+                  rented_products_names.join(", ")
+                  $(divRow).append(`
+                  <div class="card" style="width: 18rem; cursor:pointer;" onclick="singleRental('${rental._id}');">
+                    <img src="/img/products/${rented_products[0].image}" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                      <h5 class="card-title">${rented_products_names ? rented_products_names : 'Products Names'}</h5>
+                      <p class="card-text">${rented_products[0].description ? rented_products[0].description : 'Product Description'}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
+                      <li class="list-group-item">End: ${rental.end_date ? new Date(rental.end_date).toLocaleString() : ''}</li>
+                    </ul>
+                  </div>`);
                 }
               });
-              $(divRow).append(`
-                <div class="card" style="width: 18rem; cursor:pointer;" onclick="singleRental('${rental._id}');">
-                  <img src="/img/products/${rented_product.image}" class="card-img-top" alt="Product Image">
-                  <div class="card-body">
-                    <h5 class="card-title">${rented_product.name ? rented_product.name : 'Product Name'}</h5>
-                    <p class="card-text">${rented_product.description ? rented_product.description : 'Product Description'}</p>
-                  </div>
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
-                    <li class="list-group-item">End: ${rental.end_date ? new Date(rental.end_date).toLocaleString() : ''}</li>
-                  </ul>
-                </div>`);
             });
             content.appendChild(divRow);
           }
@@ -361,6 +363,7 @@ function showRental() {
           <label for="searchObjects" class="form-label">Object Rented</label>
           <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
           <datalist id="objectsList"></datalist>
+          <button class="btn-add-product" onclick="addProductField(this)">+</button>
         </div>
         <div class="mb-3">
             <label for="searchClients" class="form-label">Client Renting</label>
@@ -413,17 +416,17 @@ function singleRental(id) {
       var rental = res.rental;
       var content = document.getElementById("content");
       content.innerHTML = "";
-      var rented_product = {};
+      var rented_products = {};
       var renting_client = {};
 
       $.ajax({
-        url: "API/inventory/" + rental.product_id,
+        url: "API/inventory/many/" + rental.products_id.toString(),
         type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', authToken)
         },
         success: res => {
-          rented_product = res.products
+          rented_products = res.products // [0] TO EDIT
           $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
@@ -432,37 +435,42 @@ function singleRental(id) {
             },
             success: res => {
               renting_client = res.client
+              var rented_productsHTML = ` `
+              console.log(rented_products)
+              rented_products.forEach(prod => {
+                rented_productsHTML += `
+                  <a href="javascript:singleInventory('${prod._id}');" style="max-width: calc(25% - 1rem);">
+                    <div class="prod-thumbnail-wrapper">
+                      <img class="img-fluid prod-img-thumbnail img-thumbnail" src="${prod.image ? '/img/products/' + prod.image : ''}" alt="Rented Product photo" />
+                    </div>
+                    <h2>${prod.name ? prod.name : ''}</h2>
+                    </a>`
+              })
+              console.log(rented_productsHTML)
 
               $(content).append(`
                 <div class="row">
                   <div class="col-md-6 p-5">
+                    <h2>Rented Products</h2>
+                    <div class="d-flex colsRental">
+                      ${rented_productsHTML}
+                    </div>
+                  </div>
+                  <div class="col-md-3 p-5">
                       <!-- Display Rented Object -->
-                      <div class="row mb-4">
-                        
-                          <div class="col-md-6 d-flex colsRental">
-                          <a href="javascript:singleInventory('${rented_product._id}');">
-                            <h2>Rented Product</h2>
-                            <div class="thumbnail-wrapper">
-                              <img class="img-fluid img-thumbnail" src="${rented_product.image ? '/img/products/' + rented_product.image : ''}" alt="Rented Product photo">
-                            </div>
-                            <h2>${rented_product.name ? rented_product.name : ''}</h2>
-                            </a>
-                          </div>
-                          <div class="col-md-6 d-flex colsRental">
-                        <a href="javascript:singleClient('${renting_client._id}');">
-                          
+                        <div class="d-flex colsRental">
+                          <a href="javascript:singleClient('${renting_client._id}');" class="client-wrapper">
                             <h2>Renting Client</h2>
                             <div class="thumbnail-wrapper">
                               <img class="img-fluid img-thumbnail" src="/img/${renting_client.image ? renting_client.image : 'profile-placeholder.png'}" alt="Rented Product photo">
                             </div>
                             <h2>${renting_client.username ? renting_client.username : ''}</h2>
-                          </a></div>
-                        
-                      </div>
+                          </a>
+                        </div>
                   </div>
 
                   <!-- Display Rental Data -->
-                  <div class="col-md-6 p-5" style="width: 50%;">
+                  <div class="col-md-3 p-5">
                       <form action="">
                           <label for="rentalStartDate" class="form-label">Starting Date</label>
                           <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
@@ -487,7 +495,8 @@ function singleRental(id) {
                             ` : ''}
                       </form>
                   </div>
-                </div>`)
+                </div>
+                `)
               
               body = `
                   <div class="mb-3">
@@ -503,7 +512,7 @@ function singleRental(id) {
                   <!-- Possible fields to edit in case of a rental confirmation operation -->
                   <div class="mb-3" id="rentConfirm">
                     <label for="searchObjects" class="form-label">Object Rented</label>
-                    <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_product.name} id=${rented_product._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+                    <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_products[0].name} id=${rented_products[0]._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
                     <datalist id="objectsList"></datalist>
                   </div>
       
@@ -518,7 +527,7 @@ function singleRental(id) {
                     </div>
                     <div class="mb-3">
                         <label for="productState" class="form-label">State</label>
-                        <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_product.state}">
+                        <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_products[0].state}">
                     </div>
                   </div>
                   <div class="mb-3">
@@ -811,6 +820,15 @@ function showPromotions() {
     },
   });
 }
+
+function addProductField(btn) {
+  var fieldHTML = `
+    <input required style="margin-top:0.5rem;" class="form-control" list="objectsList" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+    <datalist id="objectsList"></datalist>`
+    console.log(btn)
+  $(fieldHTML).insertBefore(btn)
+}
+
 function createModal(body) {
   return `
     <!-- Button trigger modal -->
@@ -845,6 +863,7 @@ function createRecord(col, id, el) {
 
   // JavaScript object to pass as data to update in the POST request
   var toCreateObject = {};
+  if (col === 'rental') toCreateObject['products_id'] = []
   fields.each(function() {
     // Turns an ID string in the BSON Object
     var val = $(this).val()
@@ -852,7 +871,11 @@ function createRecord(col, id, el) {
       var index = val.indexOf("id=") + 3
       val = val.substring(index)
     }
-    toCreateObject[$(this).data('db-field')] = val;
+    if (col === 'rental' && $(this).data('db-field') === 'product_id') {
+      toCreateObject['products_id'].push(val)
+    } else {
+      toCreateObject[$(this).data('db-field')] = val;
+    }
   });
 
   if (col === 'operations') {
@@ -1021,9 +1044,9 @@ function createRecord(col, id, el) {
     }
   }
   if (col === 'rental') {
-    toCreateObject['state'] = 'Accepted';
+    // toCreateObject['state'] = 'Accepted';
     $.ajax({
-      url: "API/inventory/" + toCreateObject['product_id'],
+      url: "API/inventory/many/" + toCreateObject['products_id'].toString(),
       type: "GET",
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', authToken)
@@ -1032,7 +1055,9 @@ function createRecord(col, id, el) {
         if (response) {
           const diffInMs   = new Date(toCreateObject['end_date']) - new Date(toCreateObject['start_date'])
           const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-          toCreateObject['price'] = (response.products.price * diffInDays).toString()
+          var prodsSumPrice = 0
+          response.products.forEach(prod => prodsSumPrice += prod.price) // Sum of products to multiply for rental days
+          toCreateObject['price'] = (prodsSumPrice * diffInDays).toString()
           console.log(JSON.stringify(toCreateObject))
           $.ajax({
             url: "API/" + col + "/",
