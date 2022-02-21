@@ -91,9 +91,10 @@
         </select>
         <input v-if="this.col !== 'inventory/category' && this.col !== 'rental'" class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
         <datalist ref="recordsList" id="recordList"></datalist>
-        <select v-if="this.col === 'rental'" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="form.choice">
+        <select v-if="this.col === 'rental' || this.col === 'inventory'" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="form.choice">
             <option selected value="Incoming">Incoming</option>
             <option value="Deals">Deals</option>
+            <option v-if="this.col === 'inventory'" value="Conditions">Conditions</option>
         </select>
         <!-- <input class="form-control" type="number" v-model="form.date" placeholder="Months" /> -->
         <Datepicker v-model="form.date" range :enableTimePicker="false" />

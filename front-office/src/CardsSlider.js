@@ -32,7 +32,7 @@ function CardsSlider(){
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
   React.useEffect(() => {
-    if(!price)
+    //if(!price)
       fetch("http://localhost:8000/API/inventory/category/"+ param)
       .then(res => res.json())
       .then(
@@ -49,7 +49,7 @@ function CardsSlider(){
           setError(error);
         }
       )
-    else
+    /*else
       fetch("http://localhost:8000/API/inventory/price/"+ price+"&" +param)
         .then(res => res.json())
         .then(
@@ -65,7 +65,7 @@ function CardsSlider(){
             setIsLoaded(true);
             setError(error);
           }
-        )
+        )*/
   }, [])
   
   const searchProduct = (e) =>{
