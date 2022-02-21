@@ -18,6 +18,17 @@ router.get('/', function (req, res) {
   .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+// Get the specified products
+router.get('/many/:ids', function (req, res) {
+  var ids = req.params.ids.split(','); // id,id,id...
+  var query = {'_id': { $in: ids}}
+
+  Products.find(query)
+  .exec()
+  .then(products => res.status(200).json({ products }))
+  .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
 
 router.get('/price/:order&:category', function (req, res) {
   if(req.params.order == "ASC")

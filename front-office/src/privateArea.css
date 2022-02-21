@@ -159,4 +159,15 @@
         border-color: #06514c;
         color: #fff;
     }
+    .edit-rental-data {
+        display: none;
+        padding: 1rem;
+    }
+    .edit-rental-data > form > * {
+        left: 0;
+        color: black;
+    }
+    .edit-rental-data input {
+        width: 100%;
+    }
 }

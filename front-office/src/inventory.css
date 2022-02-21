@@ -229,4 +229,27 @@ top: 30vh;}
     max-height: unset;
     object-fit: cover;
   }
+  .filter-search-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .filter-search-wrapper svg {
+    color: #222;
+    position: unset;
+  }
+  .filter-search-wrapper input {
+    width: 20vw;
+    position: unset;
+    left: 0;
+  }
+  .upper-section-wrapper {
+    text-align: center;
+  }
+  .upper-section-wrapper h2 {
+    margin-bottom: 2rem;
+  }
+  .modal-body .btnFormL {
+    color: #06514c;
+  }
 }
