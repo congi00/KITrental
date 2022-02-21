@@ -116,38 +116,6 @@ function CardsSlider(){
       <Link to="/cart">
         <FontAwesomeIcon className="cartIconP" icon={faShoppingCart} size="2x" />
       </Link>
-      <FontAwesomeIcon className={loggedIn ? "filterIconP dBlock": "dNone" } icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
-      <Form.Control className={loggedIn ? "searchBar dBlock" : "dNone"}  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
-      <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Filters</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-          <Form.Check 
-            type="radio"
-            label="Descendent price"
-            name="priceFilter"
-            onChange={onDesc}
-          />
-          <Form.Check 
-            type="radio"
-            label="Ascendent price"
-            name="priceFilter"
-            onChange={onAsc}
-          />
-          <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
-          <Form.Control type="date" name='startDate'  />
-          <Form.Label className="filterDate" for="endDate">To</Form.Label>
-          <Form.Control type="date" name='endDate'  />
-          <Button type = 'submit' className="btnFormL"
-          onClick={checkFilter}
-          > 
-            Submit
-          </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
       <div className='container'>
         <div className="hero-products-wrapper">
           <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
@@ -158,6 +126,44 @@ function CardsSlider(){
           </div>
         </div>
         <div className="titlesSection"></div>
+        <div className='upper-section-wrapper pt-5'>
+          <h2>Filter and/or Search</h2>
+          <div className='filter-search-wrapper'>
+          <FontAwesomeIcon className={loggedIn ? "filterIconP dBlock": "dNone" } icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
+            <Form.Control className={loggedIn ? "searchBar dBlock" : "dNone"}  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
+            <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Filters</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                <Form.Check 
+                  type="radio"
+                  label="Descendent price"
+                  name="priceFilter"
+                  onChange={onDesc}
+                />
+                <Form.Check 
+                  type="radio"
+                  label="Ascendent price"
+                  name="priceFilter"
+                  onChange={onAsc}
+                />
+                <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
+                <Form.Control type="date" name='startDate'  />
+                <Form.Label className="filterDate" for="endDate">To</Form.Label>
+                <Form.Control type="date" name='endDate'  />
+                <Button type = 'submit' className="btnFormL"
+                onClick={checkFilter}
+                > 
+                  Submit
+                </Button>
+                </Form>
+              </Modal.Body>
+            </Modal> 
+          </div>
+        </div>
+        
         {!isDesktop &&
           <React.Fragment>
             <Swiper modules={[Controller]} controller={{ control: controlledSwiper }} onSwiper={setControlledSwiper}
@@ -190,7 +196,8 @@ function CardsSlider(){
           <React.Fragment>
             <div className="products-wrapper" id='products'>
               {products.map(item => (
-                <Card style={{ width: '18rem', cursor: 'pointer' }} onClick={() => handleClick(item._id)} >
+                <Card style={{ width: '18rem', cursor: 'pointer' }} onClick={() => handleClick(item._id)} 
+                  className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"}>
                   <Card.Img variant="top" src={"img/products/" + item.image} />
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>

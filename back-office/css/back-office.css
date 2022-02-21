@@ -169,8 +169,6 @@ nav{
 
 /**** SINGLE RENTAL ***/
 .colsRental {
-  flex-wrap: wrap;
-  justify-content: center;
   gap: 1rem;
 }
 .colsRental a, .colsRental a:visited {
@@ -182,8 +180,25 @@ nav{
   max-height: 25vh;
   display: block;
   margin: auto;
+  height: 100%;
+  object-fit: cover;
+}
+.colsRental .prod-img-thumbnail {
+  height: 100%;
+  object-fit: cover;
+}
+
+.colsRental .client-wrapper {
+  width: fit-content;
+  display: block;
+  margin: auto;
 }
 .thumbnail-wrapper {
+  width: 100%;
+  margin: 1rem 0;
+}
+.prod-thumbnail-wrapper {
+  height: 75%;
   width: 100%;
   margin: 1rem 0;
 }
@@ -220,6 +235,13 @@ table {
 .btn-add-rental:hover, .btn-add-rental:active, .btn-add-rental:focus {
   background-color: #06514c;
   border-color: #06514c;
+}
+
+.btn-add-product {
+  background-color: #06514c;
+  color: white;
+  border-color: white;
+  margin-top: 0.25rem;
 }
 
 

@@ -12,11 +12,11 @@ const rental = new Schema({
     ref: "Clients",
     required : true,
   },
-  product_id:{
+  products_id:[{
     type: Schema.Types.ObjectId,
     ref: "Products",
     required : true,
-  },
+  }],
   invoice_id:{
     type: Schema.Types.ObjectId,
     ref: "Invoice",

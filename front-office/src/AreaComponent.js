@@ -24,7 +24,7 @@ function AreaComponent(){
   const auth_token = sessionStorage.getItem("auth")
   React.useEffect(() => {
     $.ajax({
-      url: "http://localhost:8000/API/clients/" + token,
+      url: "API/clients/" + token,
       type: "GET",
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', auth_token)
@@ -38,7 +38,7 @@ function AreaComponent(){
 
   React.useEffect(() => {
     async function fetchMyAPI() {
-      let response = await $.ajax({url: "http://localhost:8000/API/rental/client/" + token,
+      let response = await $.ajax({url: "API/rental/client/" + token,
         type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', auth_token)
@@ -48,13 +48,15 @@ function AreaComponent(){
 
       async function fetchMySubAPI() {
         clientRental.map(async (rntl) => {
-          let response = await $.ajax({url: "http://localhost:8000/API/inventory/" + rntl.product_id,
+          let response = await $.ajax({url: "API/inventory/many/" + rntl.products_id.toString(),
             type: "GET",
             beforeSend: xhr => {
               xhr.setRequestHeader('auth', auth_token)
             }})
-          var rentalProd = response.products
-          setProducts(products => ({ ...products, [rentalProd._id] : {'img': rentalProd.image, 'name': rentalProd.name}}))
+          var rentalProds = response.products
+          rentalProds.forEach(prod => {
+            setProducts(products => ({ ...products, [prod._id] : {'img': prod.image, 'name': prod.name}}))
+          })
         })
       }
 
@@ -65,8 +67,55 @@ function AreaComponent(){
   }, [])
 
   // function 
-  function deleteRental(rentalId) {
-    console.log(rentalId)
+  const deleteRental = (rentalId, el) => {
+    var confirmalert = true
+    confirmalert = window.confirm("Are you sure?");
+    if (confirmalert == true) {
+      $.ajax({
+        url: "API/rental/" + rentalId,
+        type: "DELETE",
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', auth_token)
+        },
+        success: res => {
+          $(el).closest(".card").css("--bs-table-bg", "red");
+          $(el)
+            .closest(".card")
+            .fadeOut(400, function () {
+              $(this).remove();
+            });
+        },
+        error: err => console.log(err)
+      });
+    }
+  }
+
+  const updateRental = (rentalId, el) => {
+    var editBody = el.closest('.card').querySelector('.edit-rental-data')
+    var cardBody = el.closest('.card-body')
+    cardBody.style.display = 'none'
+    editBody.style.display = 'block'
+  }
+
+  const sendRentalData = (rentalId, el) => {
+    var editData = el.closest('.edit-rental-data')
+    console.log(editData.querySelector('#rentalStartDate').value)
+    var objtosend = {start_date: editData.querySelector('#rentalStartDate').value, end_date: editData.querySelector('#rentalEndDate').value}
+    console.log(objtosend)
+    $.ajax({
+      url: "API/rental/" + rentalId,
+      type: "PATCH",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({start_date: editData.querySelector('#rentalStartDate').value, end_date: editData.querySelector('#rentalEndDate').value}),
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', auth_token)
+      },
+      success: res => {
+        window.location.reload()
+      },
+      error: err => console.log(err)
+    });
   }
 
   return(
@@ -120,9 +169,17 @@ function AreaComponent(){
                   {rental.map(item => (item.state !== 'Closed' &&
                     isDesktop &&
                     <Card style={{ width: '18rem' }} >
-                      <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
                       <Card.Body>
-                        <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                      <Card.Title>
+                        {item.products_id.map((prod, i, prods) => {
+                          if (prods.length - 1 === i) {
+                            return products?.[prod] ? products[prod].name : ''
+                          } else {
+                            return products?.[prod] ? products[prod].name + ', ' : ''
+                          }
+                        })}
+                        </Card.Title>
                         <Card.Text>
                           {/* {item.desc} */}
                         </Card.Text>
@@ -131,9 +188,21 @@ function AreaComponent(){
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
-                        <Button variant="primary" className='product-button'>Edit</Button>
-                        <Button variant="danger" className='product-remove-button' onClick={deleteRental(item._id)}>Delete</Button>
+                        {new Date() < new Date(item.start_date) && <>
+                          <Button variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Edit</Button>
+                          <Button variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button> </>}
+
                       </Card.Body>
+                      <div className='edit-rental-data'>
+                        <form action="">
+                          <label for="rentalStartDate" class="form-label">Starting Date</label>
+                          <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" defaultValue={new Date(item.start_date).toISOString().slice(0,16)} readonly />
+
+                          <label for="rentalEndDate" class="form-label">Ending Date</label>
+                          <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" defaultValue={new Date(item.end_date).toISOString().slice(0,16)} readonly />
+                          <Button variant="primary" className='product-button' onClick={(e) => sendRentalData(item._id, e.target)}>Update</Button>
+                        </form>
+                      </div>
                     </Card>
                   ))}
                 </div>
