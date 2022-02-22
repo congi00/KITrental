@@ -96,15 +96,11 @@ function NavB(){
                   <h3>Home</h3>
                 </Link>
               </Nav.Item>
-              <Nav.Item>
-                <Link to="/catalog?category=professional">
+              <Nav.Item onClick={() => {window.location.href="/catalog?category=professional"}}>
                   <h3>Professional utilities</h3>
-                </Link>
               </Nav.Item>
-              <Nav.Item>
-                <Link to="/catalog?category=household">
+              <Nav.Item onClick={() => {window.location.href="/catalog?category=household"}}>
                   <h3>Household products</h3>
-                </Link>
               </Nav.Item>
               {!token &&
                 <Nav.Item>

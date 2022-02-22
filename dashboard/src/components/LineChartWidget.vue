@@ -158,6 +158,18 @@ export default defineComponent({
           })
           console.log(incoming);
           counter.push(incoming);
+        }else if(this.form.choice === "Conditions"){
+          this.axios.get("../api/inventory/", {params: {"product_id" : this.form.record}, headers: {'auth': this.cookies.get('auth')}})
+          .then((res) => {
+              var rental = res.data.rental
+              console.log(rental)
+              /* Only rental that fit within the picked date range (check based on *start_date*) */
+              const resultObj = this.countPerMonth(rental, rangeDate)
+              this.setData(resultObj.data, resultObj.labels)
+          })    
+          .catch((errors) => {
+              console.log(errors);
+          })
         }else{
           counter.push(Object.keys(filteredByValue).length)
         }
