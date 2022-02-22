@@ -1,6 +1,4 @@
 <script>
-import { SidebarMenu } from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import LineChartWidget from "../components/LineChartWidget.vue";
 import BarChartWidget from "../components/BarChartWidget.vue";
 import PieChartWidget from "../components/PieChartWidget.vue";
@@ -8,7 +6,7 @@ import DoughnutChartWidget from "../components/DoughnutChartWidget.vue";
 
 export default {
     components: {
-        SidebarMenu, LineChartWidget, BarChartWidget, PieChartWidget, DoughnutChartWidget
+        LineChartWidget, BarChartWidget, PieChartWidget, DoughnutChartWidget
     },
     data() {
       return {
@@ -19,33 +17,6 @@ export default {
                 value: {}
             }
         ],
-        menu: [
-          {
-            header: 'Main Navigation',
-            hiddenOnCollapse: true
-          },
-          {
-            href: '/dashboard/clients',
-            title: 'Clients',
-            icon: 'fa fa-user'
-          },
-          {
-            href: '/dashboard/rental',
-            title: 'Rental',
-            icon: 'fa fa-chart-area',
-          },
-          {
-            href: '/dashboard/inventory',
-            title: 'Inventory',
-            icon: 'fa fa-chart-area',
-            child: [
-                {
-                    href: '/dashboard/inventory/category',
-                    title: 'Category'
-                }
-            ]
-          },
-        ]
       }
     },
     setup() {
@@ -55,14 +26,11 @@ export default {
 </script>
 
 <template>
-  <div>
-    <sidebar-menu :menu="menu" collapsed/>
-    <div class="home-dashboard">
-        <LineChartWidget col="inventory" />
-        <BarChartWidget col="inventory" />
-        <PieChartWidget col="inventory" />
-        <DoughnutChartWidget col="inventory" />
-    </div>
+  <div class="dashboard-wrapper">
+    <LineChartWidget col="inventory" />
+    <BarChartWidget col="inventory" />
+    <PieChartWidget col="inventory" />
+    <DoughnutChartWidget col="inventory" />
   </div>
 </template>
 
@@ -72,18 +40,20 @@ export default {
   padding: 2rem;
   background: #031f1c;
   color: white;
+  .dashboard-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-  h1 {
-    font-size: 2.5vw;
-    margin-bottom: 2rem;
-  }
-  p {
-    font-size: 1.5vw;
-    margin-bottom: 1rem;
-  }
-  h1, p {
-    display: block;
+    h1 {
+      font-size: 2.5vw;
+      margin-bottom: 2rem;
+    }
+    p {
+      font-size: 1.5vw;
+      margin-bottom: 1rem;
+    }
+    h1, p {
+      display: block;
+    }
   }
 }
 .charts-wrapper {

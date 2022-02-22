@@ -1,22 +1,103 @@
 <template>
-  <RouterView />
+  <div>
+    <div v-if="!isLogin">
+      <sidebar-menu :menu="menu" collapsed @update:collapsed="onToggleCollapse"/>
+    </div>
+    <div class="home-dashboard">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <script>
+  import { SidebarMenu } from 'vue-sidebar-menu'
+  import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+
   export default {
     name: 'app',
-    components: {},
+    components: {
+        SidebarMenu
+    },
     data(){
       return{
         username: '',
         password: '',
+        menu: [
+          {
+            header: 'Main Navigation',
+            hiddenOnCollapse: true
+          },
+          {
+            href: '/dashboard/clients',
+            title: 'Clients',
+            icon: {
+              element: 'font-awesome-icon',
+              attributes: {
+                icon: 'users'
+              }
+            }
+          },
+          {
+            href: '/dashboard/rental',
+            title: 'Rental',
+            icon: {
+              element: 'font-awesome-icon',
+              attributes: {
+                icon: 'file-invoice-dollar'
+              }
+            }
+          },
+          {
+            href: '/dashboard/inventory',
+            title: 'Inventory',
+            icon: {
+              element: 'font-awesome-icon',
+              attributes: {
+                icon: 'blender'
+              }
+            },
+            child: [
+                {
+                    href: '/dashboard/inventory/category',
+                    title: 'Category',
+                    icon: {
+                      element: 'font-awesome-icon',
+                      attributes: {
+                        icon: 'boxes-stacked'
+                      }
+                    },
+                }
+            ]
+          },
+        ]
       }
     },
-    methods: {},
+    methods: {
+      onToggleCollapse(collapsed) {
+        if (collapsed) {
+          document.getElementsByClassName('home-dashboard')[0].style.paddingLeft = '65px';
+        } else {
+          document.getElementsByClassName('home-dashboard')[0].style.paddingLeft = '290px';
+        }
+      }
+    },
+    computed: {
+      isLogin() {
+          return this.$route.name == 'login'
+      }
+    }
   };
 </script>
 
 <style>
 @import '@/assets/base.css';
 
+.vsm--scroll-overflow, .vsm--scroll {
+  position: unset!important;
+}
+.home-dashboard {
+  transition: padding-left 0.3s ease;
+  min-height: 100vh;
+  padding-left: 65px;
+}
 </style>

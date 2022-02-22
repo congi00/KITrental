@@ -1,53 +1,75 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import { useCookies } from "vue3-cookies";
+
+const guard = function(to, from, next) {
+  const { cookies } = useCookies();
+  if(cookies.get('auth')) {
+    next();
+  } else {
+    window.location.href = "/dashboard";
+  }
+};
+
+const logged = function(to, from, next) {
+  const { cookies } = useCookies();
+  if(cookies.get('auth')) {
+    window.location.href = "/dashboard/home";
+  } else {
+    next();
+  }
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/dashboard',
-      name: 'home',
-      component: Home
+      name: 'login',
+      component: Home,
+      beforeEnter: (to, from, next) => {
+        logged(to, from, next);
+      }
     },
     {
       path: '/dashboard/home',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Dashboard.vue')
+      name: 'home',
+      component: () => import('../views/Dashboard.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
     },
     {
       path: '/dashboard/clients',
       name: 'clients',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Clients.vue')
+      component: () => import('../views/Clients.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
     },
     {
       path: '/dashboard/rental',
       name: 'rental',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Rental.vue')
+      component: () => import('../views/Rental.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
     },
     {
       path: '/dashboard/inventory',
       name: 'inventory',
-      // route level code-splitting
-      // this generates a separate chunk (bout.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Inventory.vue')
+      component: () => import('../views/Inventory.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
     },
     {
       path: '/dashboard/inventory/category',
       name: 'category',
-      // route level code-splitting
-      // this generates a separate chunk (bout.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Category.vue')
+      component: () => import('../views/Category.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
     }
   ],
 })

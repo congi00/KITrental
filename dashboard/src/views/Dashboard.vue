@@ -1,50 +1,13 @@
 <script>
-import { SidebarMenu } from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
-import Charts from "../components/LineChartWidget.vue";
 
 export default {
-    components: {
-        SidebarMenu, Charts
-    },
-    data() {
-      return {
-        menu: [
-          {
-            header: 'Main Navigation',
-            hiddenOnCollapse: true
-          },
-          {
-            href: '/dashboard/clients',
-            title: 'Clients',
-            icon: 'fa fa-user'
-          },
-          {
-            href: '/dashboard/rental',
-            title: 'Rental',
-            icon: 'fa fa-chart-area',
-          },
-          {
-            href: '/dashboard/inventory',
-            title: 'Inventory',
-            icon: 'fa fa-chart-area',
-          },
-        ]
-      }
-    },
     setup() {
-
     },
 }
 </script>
 
 <template>
-  <div>
-    <sidebar-menu :menu="menu" />
-    <div class="home-dashboard">
-      <h1>Clients</h1>
-    </div>
-  </div>
+  <h1>Clients</h1>
 </template>
 
 <style lang="scss" scoped>
@@ -65,5 +28,8 @@ export default {
   h1, p {
     display: block;
   }
+}
+.vsm--scroll-overflow, .vsm--scroll {
+  position: unset!important;
 }
 </style>
