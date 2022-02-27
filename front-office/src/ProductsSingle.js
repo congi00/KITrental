@@ -33,7 +33,12 @@ function ProductsSingle(){
           console.log(result.products);
           setProducts(result.products);
           //setCategoryP(result.products.category.toLowerCase());
-          setDates(getDates(new Date(result.products.startD), new Date(result.products.endD)));
+          result.products.indisponibilityDates.forEach(element => {
+            setDates([...Dates,getDates(new Date(element.startD), new Date(element.endD))]); 
+            console.log("CIAOOOOOOOO");
+            console.log(Dates);
+            console.log("CIAOOOOOOOO");           
+          });
           console.log(Dates);
         },
         // Note: it's important to handle errors here
@@ -71,6 +76,8 @@ function ProductsSingle(){
 
   
   const getDates = (startDate, endDate) => {
+
+  
     const dates = []
     console.log("Start:" +startDate+"End"+endDate);
     let currentDate = startDate
@@ -81,18 +88,17 @@ function ProductsSingle(){
     }
     
     while (currentDate <= endDate) {
-      console.log("dddddd");
       dates.push(currentDate)
       currentDate = addDays.call(currentDate, 1)
-      console.log(currentDate);
     }
     
+    console.log(dates)
     return dates;
     
   }
 
 
-
+  const loggedIn = sessionStorage.getItem('token');
 
 
   const onRent = (products) =>{
@@ -115,6 +121,7 @@ function ProductsSingle(){
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
             <div className='calendar'>
+            {loggedIn ? (
             <DatePicker
               selected={startDate}
               startDate={startDate}
@@ -125,6 +132,15 @@ function ProductsSingle(){
               inline
               onChange={onSelectDate}
             />
+            ):(<DatePicker
+              selected={startDate}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              selectsDisabledDaysInRange
+              inline
+              onChange={onSelectDate}
+            />)}
             </div>
             <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
             <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
