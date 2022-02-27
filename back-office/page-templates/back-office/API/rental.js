@@ -33,6 +33,18 @@ router.get('/client/:query', function (req, res) {
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+// Get every rental from frontoffice
+router.get('/rentalByProductId/:id', function (req, res) {
+  const prod = req.params.id
+  const query = {}
+  query.products_id = prod
+
+  Rental.find(query)
+    .exec()
+    .then(rental => res.status(200).json({ rental }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
 //Add a new rental
 router.post('/', function (req, res) {
   const rental = new Rental({
