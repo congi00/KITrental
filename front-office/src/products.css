@@ -90,6 +90,17 @@
   left:20vw;
 }
 
+.swiperP{
+  text-align: right;
+  font-size: 10vw;
+  padding-top: 55%;
+  padding-right: 5%;
+  font-weight: bold;
+  color: #935a14;
+  text-shadow: 2px 2px 5px #fff;
+}
+
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {
