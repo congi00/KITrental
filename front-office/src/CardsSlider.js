@@ -185,9 +185,9 @@ function CardsSlider(){
               }}
               >
                 {products.map(item => (item.avaiability == "unavailable" && ! loggedIn)? "":(
-                    <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"} style={{backgroundImage:'url(img/products/'+item.image+')'}} 
+                    <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "swiperP dBlock" : "swiperP dNone"} style={{backgroundImage:'url(img/products/'+item.image+')'}} 
                     onClick={() => handleClick(item._id)}
-                    ></SwiperSlide>
+                    > {item.price}$</SwiperSlide>
                 ))}
             </Swiper>
           </React.Fragment>
