@@ -133,6 +133,7 @@
     margin-left: 10vw;
   }
   .landSubTitle{
+    margin: 0;
     width: fit-content;
     font-size: 6rem;
     background: none;

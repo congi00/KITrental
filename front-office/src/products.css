@@ -95,7 +95,7 @@
 @media (min-width: 992px) {
   .arrowIcon {
     font-size: 4vw;
-    top: 50vh;
+    top: calc(13vh + 87vh/2);
     transform: translate(0, -50%);
   }
   .product-wrapper {

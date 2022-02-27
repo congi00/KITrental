@@ -136,9 +136,10 @@
     gap: 40px;
     color: white;
   }
-  .menuToggle .nav-item a {
+  .menuToggle .nav-item a, .menuToggle .nav-item h3 {
     text-decoration: none;
     color: white;
+    text-shadow: 3px 3px 4px #222;
   }
   .displayNone {
     width: unset;
@@ -161,7 +162,8 @@
     background-color: white;
     box-shadow: 0 10px 3px 0 rgba(0,0,0,.2);
   }
-  .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > svg {
+  .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > h3, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > svg, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > h3 {
     color: black;
+    text-shadow: none;
   }
 }

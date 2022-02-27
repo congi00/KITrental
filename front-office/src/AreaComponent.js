@@ -188,9 +188,8 @@ function AreaComponent(){
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
-                        {new Date() < new Date(item.start_date) && <>
-                          <Button variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Edit</Button>
-                          <Button variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button> </>}
+                        <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Edit</Button>
+                        <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
 
                       </Card.Body>
                       <div className='edit-rental-data'>
@@ -229,9 +228,9 @@ function AreaComponent(){
                     ! isDesktop &&
                         <SwiperSlide>
                           <Card style={{ width: '12rem', height: "50vh" }} >
-                            <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                            <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
                             <Card.Body>
-                              <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                              <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
                               <Card.Text>
                                 {/* {item.desc} */}
                               </Card.Text>
@@ -240,7 +239,7 @@ function AreaComponent(){
                                 <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                                 <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                               </ListGroup>
-                              <Button variant="primary" className='product-button'>See More</Button>
+                              <Button variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Invoice</Button>
                             </Card.Body>
                           </Card>
                         </SwiperSlide>
@@ -257,9 +256,9 @@ function AreaComponent(){
                   {rental.map(item => (item.state === 'Closed' &&
                   isDesktop &&
                     <Card style={{ width: '18rem' }} >
-                      <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
                       <Card.Body>
-                        <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
+                        <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
                         <Card.Text>
                           {/* {item.desc} */}
                         </Card.Text>
@@ -268,7 +267,7 @@ function AreaComponent(){
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                         </ListGroup>
-                        <Button variant="primary" className='product-button'>See More</Button>
+                        <Button variant="primary" className='invoice-button' onClick={() => navigate('/invoices/' + item._id + '.pdf')}>Invoice</Button>
                       </Card.Body>
                     </Card>
                   ))}
