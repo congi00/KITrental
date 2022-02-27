@@ -29,6 +29,17 @@ router.get('/many/:ids', function (req, res) {
   .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
+// Get products by category name
+router.get('/productsByCategoryName/:category', function (req, res) {
+  var category = req.params.category
+  var query = {'category': category}
+
+  Products.find(query)
+  .exec()
+  .then(products => res.status(200).json({ products }))
+  .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
 
 router.get('/price/:order&:category', function (req, res) {
   if(req.params.order == "ASC")
@@ -57,6 +68,7 @@ router.post('/', async function (req, res) {
       category: req.body.category,
       price: req.body.price,
       quantity: req.body.quantity,
+      creation_date: req.body.creation_date
     });
     product
       .save()

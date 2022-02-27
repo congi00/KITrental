@@ -41,6 +41,10 @@ const product = new Schema({
   endD:{
     type: Date
   },
+  creation_date:{
+    type: Date,
+    required: true
+  },
   quantity:{
     type: Number,
     required: true

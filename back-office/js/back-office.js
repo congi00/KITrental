@@ -926,8 +926,12 @@ function createRecord(col, id, el) {
     }
   });
 
+  if (col === 'inventory') {
+    toCreateObject['creation_date'] = new Date();
+  }
+
   if (col === 'operations') {
-    //creation of operetion closed etc.
+    //creation of operation closed etc.
     toCreateObject['rental_id'] = id;
     toCreateObject['employee_id'] = sessionStorage.getItem("usr_id");
 
