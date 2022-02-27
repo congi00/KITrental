@@ -126,43 +126,45 @@ function CardsSlider(){
           </div>
         </div>
         <div className="titlesSection"></div>
-        <div className='upper-section-wrapper pt-5'>
-          <h2>Filter and/or Search</h2>
-          <div className='filter-search-wrapper'>
-          <FontAwesomeIcon className={loggedIn ? "filterIconP dBlock": "dNone" } icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
-            <Form.Control className={loggedIn ? "searchBar dBlock" : "dNone"}  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
-            <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Filters</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form>
-                <Form.Check 
-                  type="radio"
-                  label="Descendent price"
-                  name="priceFilter"
-                  onChange={onDesc}
-                />
-                <Form.Check 
-                  type="radio"
-                  label="Ascendent price"
-                  name="priceFilter"
-                  onChange={onAsc}
-                />
-                <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
-                <Form.Control type="date" name='startDate'  />
-                <Form.Label className="filterDate" for="endDate">To</Form.Label>
-                <Form.Control type="date" name='endDate'  />
-                <Button type = 'submit' className="btnFormL"
-                onClick={checkFilter}
-                > 
-                  Submit
-                </Button>
-                </Form>
-              </Modal.Body>
-            </Modal> 
+        {loggedIn && 
+          <div className="upper-section-wrapper pt-5">
+            <h2>Filter and/or Search</h2>
+            <div className="filter-search-wrapper">
+            <FontAwesomeIcon className="filterIconP dBlock" icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
+              <Form.Control className="searchBar dBlock"  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
+              <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Filters</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                  <Form.Check 
+                    type="radio"
+                    label="Descendent price"
+                    name="priceFilter"
+                    onChange={onDesc}
+                  />
+                  <Form.Check 
+                    type="radio"
+                    label="Ascendent price"
+                    name="priceFilter"
+                    onChange={onAsc}
+                  />
+                  <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
+                  <Form.Control type="date" name='startDate'  />
+                  <Form.Label className="filterDate" for="endDate">To</Form.Label>
+                  <Form.Control type="date" name='endDate'  />
+                  <Button type = 'submit' className="btnFormL"
+                  onClick={checkFilter}
+                  > 
+                    Submit
+                  </Button>
+                  </Form>
+                </Modal.Body>
+              </Modal> 
+            </div>
           </div>
-        </div>
+        }
         
         {!isDesktop &&
           <React.Fragment>

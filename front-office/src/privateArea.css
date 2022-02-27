@@ -53,6 +53,8 @@
 .list-group-flush .list-group-item{
     height: 4vh;
     overflow: hidden;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .swiperAreaFuture,.swiperAreaPast{
@@ -80,6 +82,9 @@
     .personalTitle {
         position: unset;
     }
+    .personalTitle:nth-child(3) {
+        margin-top: 0!important;
+    }
     .imgPersonalArea {
         position: unset;
         max-height: 8vh;
@@ -88,12 +93,12 @@
     }
     .Infos {
         position: unset;
-        color: black;
+        color: #222;
        font-size: 2vw; 
        margin-left: 1.5vw;
     }
     .desktop-fixed-client-wrapper > .personalTitle {
-        color: black;
+        color: #222;
         font-size: 2.5vw;
     }
     .desktop-fixed-client-wrapper {
@@ -116,13 +121,14 @@
     }
     .desktop-rental-wrapper > .personalTitle {
         font-size: 5vw;
+        text-shadow: 5px 5px 4px #222;
     }
     .rental-wrapper {
         display: grid;
         grid-template-columns: repeat(auto-fill, 18rem);
         grid-gap: 3rem;
         justify-content: space-between;
-        padding: 2rem 0 2rem 0;
+        padding: 3rem 0 3rem 0;
         min-height: 50vh;
     }
     .btnChangeInfo {
@@ -146,18 +152,44 @@
     }
     .product-remove-button {
         background-color: transparent;
-        border-color: #dc3545;
-        color: #dc3545;
-        border: 2px solid #dc3545;
+        border-color: #BF0603;
+        color: #BF0603;
+        border: 2px solid #BF0603;
         margin-left: 1rem;
     }
-    .product-button, .product-remove-button {
-        margin-top: 1rem;
+    .product-button, .product-remove-button, .invoice-button {
+        margin-top: 0.5rem;
     }
-    .product-button:active, .product-button:focus {
-        background-color: #06514c;
-        border-color: #06514c;
-        color: #fff;
+    .product-button, .product-button:active, .product-button:focus, .product-button:hover, .product-button:disabled {
+        background: #06514c;
+        box-shadow: #06514c 0 10px 20px -10px;
+    }
+    .product-remove-button, .product-remove-button:active, .product-remove-button:focus, .product-remove-button:hover, .product-remove-button:disabled {
+        background: #BF0603;
+        box-shadow: #BF0603 0 10px 20px -10px;
+    }
+    .invoice-button, .invoice-button:active, .invoice-button:focus, .invoice-button:hover, .invoice-button:disabled {
+        background: #352208;
+        box-shadow: #352208 0 10px 20px -10px;
+    }
+    .product-button, .invoice-button, .product-remove-button {
+        border-radius: 999px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        font-family: Inter,sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+        opacity: 1;
+        outline: 0 solid transparent;
+        padding: 8px 18px;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: fit-content;
+        word-break: break-word;
+        border: 0;
     }
     .edit-rental-data {
         display: none;
@@ -165,7 +197,9 @@
     }
     .edit-rental-data > form > * {
         left: 0;
-        color: black;
+    }
+    .edit-rental-data label {
+        color: #222;
     }
     .edit-rental-data input {
         width: 100%;

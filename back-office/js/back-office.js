@@ -190,6 +190,58 @@ function showClients() {
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
       content.appendChild(container).appendChild(tbl);
+      var body = `
+        <div class="mb-3">
+          <label for="clientUsername" class="form-label">Client's Username</label>
+          <input required id="clientUsername" class="form-control" data-db-field="username" placeholder="mariorossi">
+        </div>
+        <div class="mb-3">
+          <label for="clientPassword" class="form-label">Client's Password</label>
+          <input required id="clientPassword" class="form-control" data-db-field="password" placeholder="password">
+        </div>
+        <div class="mb-3">
+            <label for="clientName" class="form-label">Client's Name</label>
+            <input required id="clientName" class="form-control" data-db-field="name" placeholder="Mario">
+        </div>
+        <div class="mb-3">
+            <label for="clientSurname" class="form-label">Client's Surname</label>
+            <input required id="clientSurname" class="form-control" data-db-field="surname" placeholder="Rossi">
+        </div>
+        <div class="mb-3">
+            <label for="clientAddress" class="form-label">Client's Address</label>
+            <input required id="clientAddress" class="form-control" data-db-field="address" placeholder="Piazza Roma">
+        </div>
+        <div class="mb-3">
+            <label for="clientMail" class="form-label">Client's Mail</label>
+            <input required id="clientMail" class="form-control" data-db-field="email" placeholder="mariorossi@gmail.com">
+        </div>
+        <div class="mb-3">
+          <label for="clientInterests" class="form-label">Client's Interests</label>
+          <select class="form-select" id="clientInterests" aria-label="Select State" data-db-field="interests">
+            <option selected>Open this select menu</option>
+            <option value="Professional">Professional</option>
+            <option value="Household">Household</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="clientPayment" class="form-label">Client's Payment</label>
+          <select class="form-select" id="clientPayment" aria-label="Select State" data-db-field="payment">
+            <option selected>Open this select menu</option>
+            <option value="Cash">Cash</option>
+            <option value="Credit">Credit</option>
+          </select>
+        </div>
+        <div class="mb-3">
+            <label for="clientNotes" class="form-label">Client's Notes</label>
+            <textarea required id="clientNotes" class="form-control" data-db-field="notes" placeholder="Insert notes here..."></textarea>
+        </div>`
+      $(content).append(createModal(body))
+    
+      // Event listeners
+      $(document).off("click", "#createRecord")
+      $(document).on("click", "#createRecord", function createClient(){
+        createRecord('clients', '', this)
+      });
     },
   });
 }
@@ -395,10 +447,6 @@ function showRental() {
       $(document).on("click", "#createRecord", function createRental(){
         createRecord('rental', '', this)
       });
-      var myModalEl = document.getElementById('staticBackdrop')
-      myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        showRental();
-      })
     },
   });
 }
@@ -694,10 +742,6 @@ function showInventory(){
       $(document).on("click", "#createRecord", function(){
         createRecord('inventory', '', this)
       });
-      var myModalEl = document.getElementById('staticBackdrop')
-      myModalEl.addEventListener('hidden.bs.modal', function (event) {
-        showInventory();
-      })
     },
   });
 }
@@ -814,17 +858,13 @@ function showPromotions() {
         <input type="text" class="form-control" id="salePercentage" aria-label="Sale Percentage" data-db-field="percentage">
         </div>
       </div>`
-    $(content).append(createModal(body))
-  
-    // Event listeners
-    $(document).off("click", "#createRecord")
-    $(document).on("click", "#createRecord", function(){
-      createRecord('promotions', '', this)
-    });
-    var myModalEl = document.getElementById('staticBackdrop')
-    myModalEl.addEventListener('hidden.bs.modal', function (event) {
-      showPromotions();
-    })
+      $(content).append(createModal(body))
+    
+      // Event listeners
+      $(document).off("click", "#createRecord")
+      $(document).on("click", "#createRecord", function(){
+        createRecord('promotions', '', this)
+      });
     },
   });
 }
@@ -1076,6 +1116,7 @@ function createRecord(col, id, el) {
             data: JSON.stringify(toCreateObject),
             success: function (response) {
               if (response) {
+                showRental();
               } else {
                 alert("There was an error.");
               }
@@ -1096,6 +1137,11 @@ function createRecord(col, id, el) {
       data: JSON.stringify(toCreateObject),
       success: function (response) {
         if (response) {
+          switch (col) {
+            case 'clients' : showClients(); break;
+            case 'inventory' : showInventory(); break;
+            case 'promotions' : showPromotions(); break;
+          }
         } else {
           alert("There was an error.");
         }
@@ -1182,15 +1228,14 @@ function updateRecordInfo(col, id, el) {
   }
 }
 
-function deleteRecord(col, id, el) {
+async function deleteRecord(col, id, el) {
   var authToken = sessionStorage.getItem('auth')
 
   // Delete operation validation (client only if got no rentals, rental only active or future)
   var errMsg = "";
   var toDelete = true;
   if (col === 'rental') {
-    $.ajax({
-      async: false,
+    await $.ajax({
       url: "API/rental/",
       type: "GET",
       beforeSend: xhr => {
@@ -1212,16 +1257,14 @@ function deleteRecord(col, id, el) {
   }
 
   if (col === 'clients') {
-    var q = {'client_id' : id}
-    $.ajax({
-      async: false,
-      url: "API/rental/",
+    await $.ajax({
+      url: "API/rental/client/" + id,
       type: "GET",
-      data: q,
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', authToken)
       },
       success: function (response) {
+        console.log('clients rental retrieved')
         if (response.rental.length) {
           toDelete = false;
           errMsg = "You can't delete clients with active/booked rental.";
@@ -1230,7 +1273,23 @@ function deleteRecord(col, id, el) {
     });
   }
 
-  
+  console.log('clients rental retrieved outside if block')
+
+  if (col === 'inventory') {
+    await $.ajax({
+      url: "API/rental/rentalByProductId/" + id,
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
+      success: function (response) {
+        if (response.rental.length) {
+          toDelete = false;
+          errMsg = "You can't delete rented products but you can make them unavailable.";
+        }
+      },
+    });
+  }
 
   if (toDelete) {
     var confirmalert = true
