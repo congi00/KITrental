@@ -45,16 +45,47 @@ function CartItems(){
   }
 
 
-  const handleClick = (e) => {
+  const getDates = (startDate, endDate) => {
+    let dates = 0  
+      const addDays = function (days) {
+        const date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days)
+        return date
+      }
+
+      var currentDate = startDate
+      while (currentDate <= endDate) {
+        dates ++
+        currentDate = addDays.call(currentDate, 1)
+      }
+      
+    return dates;
     
+  }
+
+
+  const handleClick = (e) => {
+    /*client_id: req.body.client_id,
+    products_id: req.body.products_id,
+    start_date: req.body.start_date,
+    end_date: req.body.end_date,
+    state: req.body.state,
+    price: req.body.price*/
     e.preventDefault();
+    cartItems.map(item => (
+      console.log(item.startD),
+      console.log(item.endD),
+      console.log(getDates(item.startD,item.endD)),
+      console.log(item.price * item.qty * getDates(item.startD,item.endD))
+    ));
+    
     $.ajax({
       url: "http://localhost:8000/API/rental/",
       type: "POST",
-      body: JSON.stringify({ client_id: "id",
-        product_id: "id",
-        start_date: "dara",
-        end_date: "ss"}),
+      body: JSON.stringify({ client_id: "c",
+        product_id: "c",
+        start_date: new Date(),
+        end_date: new Date()}),
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', auth_token)
       },
