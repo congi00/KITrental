@@ -35,16 +35,18 @@ const product = new Schema({
     type: Number,
     required: true,
   },
-  startD:{
-    type: Date
-  },
-  endD:{
-    type: Date
-  },
   creation_date:{
     type: Date,
     required: true
   },
+  indisponibilityDates:[{
+    startD:{
+      type: Date
+    },
+    endD:{
+      type: Date
+    },
+  }],
   quantity:{
     type: Number,
     required: true

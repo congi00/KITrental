@@ -944,6 +944,8 @@ function createRecord(col, id, el) {
       var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
       toUpdateObject['avaiability'] = toCreateObject['avaiability'];
+      
+      toUpdateObject['indisponibilityDates'] = [...{startD : toCreateObject['startD'],startD : toCreateObject['endD']}];
       toUpdateObject['state'] = toCreateObject['state'];
       toUpdateObject['startD'] = toCreateObject['startD'];
       toUpdateObject['endD'] = toCreateObject['endD'];
@@ -994,7 +996,7 @@ function createRecord(col, id, el) {
                         type: "PATCH",
                         contentType: "application/json",
                         dataType: "json",
-                        data: JSON.stringify({startD: rntl.start_date,endD: rntl.end_date}),
+                        data: JSON.stringify({indisponibilityDates : [...{startD: rntl.start_date,endD: rntl.end_date}]}),
                         success:{}
                       });
                       $.ajax({
@@ -1195,8 +1197,12 @@ function updateRecordInfo(col, id, el) {
       var toUpdateObject = {};
       fields.each(function() {
         toUpdateObject[$(this).data('db-field')] = $(this).val();
+        if(toUpdateObject["startD"]&& toUpdateObject["endD"] && !toUpdateObject["indisponibilityDates"])
+          toUpdateObject["indisponibilityDates"] = [ {startD : toUpdateObject["startD"] ,endD : toUpdateObject["endD"]}]
       });
 
+      
+      console.log(toUpdateObject)
       // Update AJAX Request
       $.ajax({
         url: "API/" + col + "/" + id,

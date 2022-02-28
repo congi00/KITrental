@@ -92,7 +92,7 @@
 
 .swiperP{
   text-align: right;
-  font-size: 10vw;
+  font-size: 10vw !important;
   padding-top: 55%;
   padding-right: 5%;
   font-weight: bold;

@@ -23,7 +23,7 @@ function ProductsSingle(){
   const [endDate, setEndDate] = React.useState(new Date());
   const param = searchParams.get("prdID");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
-  const [Dates,setDates] = React.useState([new Date()]);
+  const [Dates,setDates] = React.useState([]);
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/"+param)
@@ -33,7 +33,7 @@ function ProductsSingle(){
           console.log(result.products);
           setProducts(result.products);
           //setCategoryP(result.products.category.toLowerCase());
-          setDates(getDates(new Date(result.products.startD), new Date(result.products.endD)));
+          getDates(result.products.indisponibilityDates, result.products.indisponibilityDates);
           console.log(Dates);
         },
         // Note: it's important to handle errors here
@@ -72,27 +72,37 @@ function ProductsSingle(){
   
   const getDates = (startDate, endDate) => {
     const dates = []
-    console.log("Start:" +startDate+"End"+endDate);
-    let currentDate = startDate
-    const addDays = function (days) {
-      const date = new Date(this.valueOf())
-      date.setDate(date.getDate() + days)
-      return date
-    }
-    
-    while (currentDate <= endDate) {
-      console.log("dddddd");
-      dates.push(currentDate)
-      currentDate = addDays.call(currentDate, 1)
-      console.log(currentDate);
-    }
-    
+    const invDates = startDate;
+      
+      const addDays = function (days) {
+        const date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days)
+        return date
+      }
+
+      
+      
+    invDates.forEach(element => {
+      startDate = new Date(element.startD)
+      var currentDate = startDate
+      endDate= new Date(element.endD)
+      console.log("Start:" +currentDate+"End"+element.endD);
+      while (currentDate <= endDate) {
+        console.log("dddddd");
+        dates.push(currentDate)
+        currentDate = addDays.call(currentDate, 1)
+      }
+    });
+    console.log(dates);
+    setDates(dates);  
+      
+      
     return dates;
     
   }
 
 
-
+  const loggedIn = sessionStorage.getItem('token');
 
 
   const onRent = (products) =>{
@@ -115,6 +125,7 @@ function ProductsSingle(){
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
             <div className='calendar'>
+            {loggedIn ? (
             <DatePicker
               selected={startDate}
               startDate={startDate}
@@ -125,6 +136,15 @@ function ProductsSingle(){
               inline
               onChange={onSelectDate}
             />
+            ):(<DatePicker
+              selected={startDate}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              selectsDisabledDaysInRange
+              inline
+              onChange={onSelectDate}
+            />)}
             </div>
             <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
             <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
