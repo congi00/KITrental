@@ -23,7 +23,7 @@ function ProductsSingle(){
   const [endDate, setEndDate] = React.useState(new Date());
   const param = searchParams.get("prdID");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
-  const [Dates,setDates] = React.useState([new Date()]);
+  const [Dates,setDates] = React.useState([]);
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/"+param)
@@ -33,12 +33,7 @@ function ProductsSingle(){
           console.log(result.products);
           setProducts(result.products);
           //setCategoryP(result.products.category.toLowerCase());
-          result.products.indisponibilityDates.forEach(element => {
-            setDates([...Dates,getDates(new Date(element.startD), new Date(element.endD))]); 
-            console.log("CIAOOOOOOOO");
-            console.log(Dates);
-            console.log("CIAOOOOOOOO");           
-          });
+          getDates(result.products.indisponibilityDates, result.products.indisponibilityDates);
           console.log(Dates);
         },
         // Note: it's important to handle errors here
@@ -76,23 +71,32 @@ function ProductsSingle(){
 
   
   const getDates = (startDate, endDate) => {
-
-  
     const dates = []
-    console.log("Start:" +startDate+"End"+endDate);
-    let currentDate = startDate
-    const addDays = function (days) {
-      const date = new Date(this.valueOf())
-      date.setDate(date.getDate() + days)
-      return date
-    }
-    
-    while (currentDate <= endDate) {
-      dates.push(currentDate)
-      currentDate = addDays.call(currentDate, 1)
-    }
-    
-    console.log(dates)
+    const invDates = startDate;
+      
+      const addDays = function (days) {
+        const date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days)
+        return date
+      }
+
+      
+      
+    invDates.forEach(element => {
+      startDate = new Date(element.startD)
+      var currentDate = startDate
+      endDate= new Date(element.endD)
+      console.log("Start:" +currentDate+"End"+element.endD);
+      while (currentDate <= endDate) {
+        console.log("dddddd");
+        dates.push(currentDate)
+        currentDate = addDays.call(currentDate, 1)
+      }
+    });
+    console.log(dates);
+    setDates(dates);  
+      
+      
     return dates;
     
   }
