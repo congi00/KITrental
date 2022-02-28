@@ -475,7 +475,6 @@ function singleRental(id) {
         },
         success: res => {
           rented_products = res.products
-          console.log(rented_products)
           $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
@@ -485,8 +484,11 @@ function singleRental(id) {
             success: res => {
               renting_client = res.client
               var rented_productsHTML = ` `
-              console.log(rented_products)
-              rented_products.forEach(prod => {
+              var rented_productsHTML_confirm = ` `
+              var rented_productsArr = []
+              rented_products.forEach((prod, i) => {
+                rented_productsArr.push(`${rented_products[i].name} id=${rented_products[i]._id}`)
+                // Generate HTML for displaying rented products in single rental
                 rented_productsHTML += `
                   <a href="javascript:singleInventory('${prod._id}');" style="max-width: calc(25% - 1rem);">
                     <div class="prod-thumbnail-wrapper">
@@ -494,6 +496,12 @@ function singleRental(id) {
                     </div>
                     <h2>${prod.name ? prod.name : ''}</h2>
                     </a>`
+                
+                // Generate HTML for displaying rented products in rental confirm operation
+                rented_productsHTML_confirm += `
+                <label for="${rented_products[i].name}" class="form-label">Product ${i+1}</label>
+                    <input required class="form-control" list="objectsList" id="${rented_products[i].name}" onkeyup="typingLogic(this)" value="${rented_productsArr[i]}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+                    <datalist id="objectsList"></datalist>`
               })
               console.log(rented_productsHTML)
 
@@ -546,7 +554,7 @@ function singleRental(id) {
                   </div>
                 </div>
                 `)
-              
+                
               body = `
                   <div class="mb-3">
                     <label for="operationType" class="form-label">Type of Operation</label>
@@ -559,25 +567,11 @@ function singleRental(id) {
                   </div>
       
                   <!-- Possible fields to edit in case of a rental confirmation operation -->
-                  <div class="mb-3" id="rentConfirm">
-                    <label for="searchObjects" class="form-label">Object Rented</label>
-                    <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_products[0].name} id=${rented_products[0]._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
-                    <datalist id="objectsList"></datalist>
+                  <div class="mb-3">
+                    ${rented_productsHTML_confirm}
                   </div>
-      
-                  <!-- Possible fields to edit in case of a rental closing operation -->
-                  <div class="mb-3" id="rentClose" style="display: none;">
-                    <div class="mb-3">
-                        <label for="productAvaiability" class="form-label">Avaiability</label>
-                        <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="productState" class="form-label">State</label>
-                        <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_products[0].state}">
-                    </div>
+                  <div class="mb-3" id="rentPenalty" style="display:none;">
+                    <button type="button" onclick='addPenalty(this, ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
                   </div>
                   <div class="mb-3">
                       <label for="operationNotes" class="form-label">Notes</label>
@@ -912,7 +906,11 @@ function createRecord(col, id, el) {
 
   // JavaScript object to pass as data to update in the POST request
   var toCreateObject = {};
-  if (col === 'rental') toCreateObject['products_id'] = []
+  if (col === 'rental' || col === 'operations') toCreateObject['products_id'] = []
+  if (col === 'operations') {
+    toCreateObject['penalties_prods'] = []
+    toCreateObject['penalties_days'] = []
+  }
   fields.each(function() {
     // Turns an ID string in the BSON Object
     var val = $(this).val()
@@ -920,8 +918,16 @@ function createRecord(col, id, el) {
       var index = val.indexOf("id=") + 3
       val = val.substring(index)
     }
-    if (col === 'rental' && $(this).data('db-field') === 'product_id') {
+    if (col === 'rental' && col === 'operations' && $(this).data('db-field') === 'product_id') {
       toCreateObject['products_id'].push(val)
+    } else if (col === 'operations' && toCreateObject['type'] === 'rent_close') {
+
+      // Collecting penalties data 
+      if ($(this).data('db-field') === 'penalty_prod')
+        toCreateObject['penalties_prods'].push(val)
+      else if ($(this).data('db-field') === 'penalty_days')
+        toCreateObject['penalties_days'].push(val)
+
     } else {
       toCreateObject[$(this).data('db-field')] = val;
     }
@@ -940,17 +946,17 @@ function createRecord(col, id, el) {
     if (toCreateObject['type'] === 'rent_confirm') {
       // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
     } else if (toCreateObject['type'] === 'rent_close') {
+      console.log(toCreateObject)
       var updInventoryID = toCreateObject['product_id'];
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
-      var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
-      toUpdateObject['avaiability'] = toCreateObject['avaiability'];
+      // toUpdateObject['avaiability'] = toCreateObject['avaiability'];
       
       toUpdateObject['indisponibilityDates'] = [...{startD : toCreateObject['startD'],startD : toCreateObject['endD']}];
       toUpdateObject['state'] = toCreateObject['state'];
       toUpdateObject['startD'] = toCreateObject['startD'];
       toUpdateObject['endD'] = toCreateObject['endD'];
-      delete toCreateObject.avaiability;
+      // delete toCreateObject.avaiability;
       delete toCreateObject.state;
       delete toCreateObject.start_date;
       delete toCreateObject.end_date;
@@ -1364,11 +1370,35 @@ function getResults(val, col, field, dataList) {
 
 function displayEdits(sel) {
   if (sel.value == "rent_confirm") {
-    $("#rentClose").hide();
-    $("#rentConfirm").show();
+    $("#rentPenalty").hide();
   } else if(sel.value == "rent_close") {
-    $("#rentConfirm").hide();
-    $("#rentClose").show();
+    $("#rentPenalty").show();
+  }
+}
+
+function addPenalty(btn, rented_productsArr) {
+  var count = $(btn).data("count")
+  if (count < rented_productsArr.length) {
+   var selOptions = ``
+    rented_productsArr.forEach(prod => {
+      selOptions += `
+        <option value="${prod}">${prod}</option>
+      `
+    })
+    var fieldHTML = `
+      <div class="mb-3">
+        <label for="penaltyProd${count+1}" class="form-label">Penalty Product</label>
+        <select required id="penaltyProd${count+1}" class="form-select mb-2" data-db-field="penalty_prod">
+          ${selOptions}
+        </select>
+        <label for="penaltyDays${count+1}" class="form-label">Penalty Days</label>
+        <input type="number" class="form-control" id="penaltyDays${count+1}" min="1" max="7" data-db-field="penalty_days">
+      </div>`
+      console.log(btn)
+    $(fieldHTML).insertBefore(btn)
+    count++
+    $(btn).data("count", count)
+    if (count == rented_productsArr.length) btn.style.display = "none"
   }
 }
 
