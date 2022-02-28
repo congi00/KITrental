@@ -98,6 +98,9 @@
 .home-dashboard {
   transition: padding-left 0.3s ease;
   min-height: 100vh;
-  padding-left: 65px;
+  padding: 2rem 0 2rem 65px;
+  width: 100%;
+  background: #031f1c;
+  color: white;
 }
 </style>

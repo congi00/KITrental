@@ -7,7 +7,7 @@
         </div>
         <LineChart ref="chartRef" :chartData="testData" :options="options" />
       </div>
-      <div class="col">
+      <div class="col col-chart">
         <div class="chart-form">
           <Form ref="formRef" v-model="form" :col="col" />
           <button class="update-button" type="button" @click="updateData">Update Data</button>
@@ -79,14 +79,15 @@ export default defineComponent({
     return { testData, setData, chartRef, options, cookies };
   },
   methods: {
-    updateData(e) {
+    async updateData(e) {
       /* IMPORT FORM DATA from Form Sub-Component */
       const formData = this.form
+      var queryType = this.form.choice
       var colData = "rental" // !!!HARD-CODED!!!
       var record = formData.record        // id with format: {recordName} id={recordID}
       var rangeDate = formData.date
       var rangeDate = rangeDate.map(x => new Date(x))
-      if (!this.col || (!record&& !(this.col == "rental")) || !rangeDate) {
+      if (!this.col || (!record&& !(this.col == "rental" || this.col == 'inventory/category')) || !rangeDate || !queryType) {
         this.$refs.errorMSG.style.display ="block";
         return;
       } else {
@@ -98,27 +99,55 @@ export default defineComponent({
       }
 
       /* QUERY FOR RETRIEVING DATA from the db */
-      var q = {}
+      var _params = record
+      var endpoint = ""
       if (this.col === 'clients') {
-        q = {"client_id" : record}
+        endpoint = "/api/rental/client/"
+      } if (this.col === 'rental') {
+        endpoint = "/api/rental/"
       } if (this.col === 'inventory') {
-        q = {"product_id" : record}
+        endpoint = "/api/rental/rentalByProductId/"
+      } if (this.col === 'inventory/category') {
+        endpoint = "/api/rental/rentalByProductsIds/"
+        await this.axios.get("/api/inventory/productsByCategoryName/" + formData.category)
+                .then((res) => {
+                    var products = res.data.products
+                    console.log(products)
+                    if (formData.choice !== 'products') {
+                      var prodsId = []
+                      products.forEach(prod => {
+                        prodsId.push(prod._id)
+                      })
+                      _params = prodsId.toString()
+                      console.log('params: ' + _params)
+                    } else {
+                      const resultObj = this.countPerMonth(products, rangeDate, {colToCount: 'products'})
+                      this.setData(resultObj.data, resultObj.labels)
+                    }
+                    
+                })    
+                .catch((errors) => {
+                    console.log(errors);
+                })  
       }
-      this.axios.get("/api/" + colData + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
-        .then((res) => {
-            var rental = res.data.rental
-            console.log(rental)
-            /* Only rental that fit within the picked date range (check based on *start_date*) */
-            const resultObj = this.countPerMonth(rental, rangeDate)
-            this.setData(resultObj.data, resultObj.labels)
-        })    
-        .catch((errors) => {
-            console.log(errors);
-        })  
-      // var data = [0, 0, 1, 2, 3]
-      // this.setData(data)
+      
+      if (formData.choice !== 'products') {
+
+        // Retrieve rental
+        this.axios.get(endpoint + _params, {headers: {'auth': this.cookies.get('auth')}})
+          .then((res) => {
+              var rental = res.data.rental
+              console.log(rental)
+              /* Only rental that fit within the picked date range (check based on *start_date*) */
+              const resultObj = this.countPerMonth(rental, rangeDate, {fieldToCountOn: this.form.choice})
+              this.setData(resultObj.data, resultObj.labels)
+          })    
+          .catch((errors) => {
+              console.log(errors);
+          })  
+      }        
     },
-    countPerMonth(rental, range) {
+    countPerMonth(rental, range, config) {
       /* Initialization first sub range (month) */
       var start_date = range[0]
       var end_date = new Date(range[0].getFullYear(), start_date.getMonth() + 1, 0); // This way you get the last day of the previous month
@@ -141,24 +170,29 @@ export default defineComponent({
           'December'
         ];
 
-        var incoming = 0;
+        var incoming, filteredByValue;
 
       /* The range is smaller than one month */
       if (end_date > range[1]) return rental.length 
 
       /* Count how many records per month within the given range */
       do {
-        
-        const filteredByValue = Object.fromEntries(
+        incoming = 0;
+        if (config.colToCount === 'products') {
+          filteredByValue = Object.fromEntries(
+            Object.entries(rental).filter(([key, value]) => new Date(value.creation_date) >= start_date && new Date(value.creation_date) <= end_date ) )
+        } else {
+          filteredByValue = Object.fromEntries(
             Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
+        }
 
-        if(this.form.choice === "Incoming"){
+        if(config.fieldToCountOn === "Incoming"){
           const IncomeOption = Object.keys(filteredByValue).map(x => {
             filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].price : console.log(filteredByValue[x].price);
           })
           console.log(incoming);
           counter.push(incoming);
-        }else if(this.form.choice === "Conditions"){
+        }else if(config.fieldToCountOn === "Conditions"){
           this.axios.get("../api/inventory/", {params: {"product_id" : this.form.record}, headers: {'auth': this.cookies.get('auth')}})
           .then((res) => {
               var rental = res.data.rental
@@ -171,6 +205,7 @@ export default defineComponent({
               console.log(errors);
           })
         }else{
+          // Standard counting by number of rental per month
           counter.push(Object.keys(filteredByValue).length)
         }
         
@@ -199,5 +234,11 @@ export default defineComponent({
 
 .dp__month_year_row {
     position: unset; // CSS fix for vue3-date-time-picker overlay
+}
+
+.col-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
