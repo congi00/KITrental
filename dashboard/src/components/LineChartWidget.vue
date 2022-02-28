@@ -119,7 +119,6 @@ export default defineComponent({
                         prodsId.push(prod._id)
                       })
                       _params = prodsId.toString()
-                      console.log('params: ' + _params)
                     } else {
                       const resultObj = this.countPerMonth(products, rangeDate, {colToCount: 'products'})
                       this.setData(resultObj.data, resultObj.labels)

@@ -48,22 +48,9 @@ router.get('/rentalByProductId/:id', function (req, res) {
 // Get every rental matching array of products ids
 router.get('/rentalByProductsIds/:ids', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   var ids = req.params.ids.split(','); // id,id,id...
-  console.log(ids)
   var query = {'products_id': { $in: ids}}
-  var query2 = {
-    $filter: {
-      input: "$products_id",
-      cond: {
-        $in: [
-          "$$this",
-          ids
-        ]
-      }
-    }
-  }
-  console.log(query2)
 
-  Rental.find(query2)
+  Rental.find(query)
     .exec()
     .then(rental => res.status(200).json({ rental }))
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));

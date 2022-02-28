@@ -474,7 +474,8 @@ function singleRental(id) {
           xhr.setRequestHeader('auth', authToken)
         },
         success: res => {
-          rented_products = res.products // [0] TO EDIT
+          rented_products = res.products
+          console.log(rented_products)
           $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
