@@ -52,7 +52,7 @@ function ProductsSingle(){
       const exist = cartItems.find(x => x._id === product._id);
       console.log(exist);
       if(exist)
-        cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: exist.qty +1, startD : startDate, endD: endDate } : x), { path: '/' });
+        cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: exist.qty , startD : startDate, endD: endDate } : x), { path: '/' });
       else
         //... notation = array concatenation
         cookies.set('myCart', [...cartItems, { ...product, qty:1 , startD : startDate, endD: endDate}], { path: '/' });
