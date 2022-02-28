@@ -655,6 +655,8 @@ function showInventory(){
         <tr class="table-light ">
           <th>Name</th>
           <th>Image</th>
+          <th>Category</th>
+          <th>Sub category</th>
           <th>Avaiability</th>
           <th>State</th>
           <th>Price</th>
@@ -667,6 +669,8 @@ function showInventory(){
           <tr class="table-light prods" >
             <td class="filterProd">${product.name}</td>
             <td><img src="../img/products/${product.image}" width="30vw"></td>
+            <td>${product.category}</td>
+            <td>${product.subCategory}</td>
             <td>${product.avaiability}</td>
             <td>${product.state}</td>
             <td>${product.price}</td>
@@ -706,6 +710,16 @@ function showInventory(){
           </select>
         </div>
         <div class="mb-3">
+          <label for="subCategory" class="form-label">Sub Category</label>
+          <select class="form-select" id="subCategory" aria-label="Select Sub Category" data-db-field="subCategory">
+            <option selected>Open this select menu</option>
+            <option value="Blender">Blender</option>
+            <option value="Torch">Torch</option>
+            <option value="Kneader">Kneader</option>
+            <option value="Barbeque">Barbeque</option>
+          </select>
+        </div>
+        <div class="mb-3">
           <label for="productDesc" class="form-label">Description</label>
           <textarea class="form-control" id="productDesc" rows="3" data-db-field="description"></textarea>
         </div>
@@ -722,12 +736,6 @@ function showInventory(){
           <div class="input-group">
           <span class="input-group-text">$</span>
           <input type="text" class="form-control" id="productPrice" aria-label="Price in dollars" data-db-field="price">
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="productQty" class="form-label">Quantity</label>
-          <div class="input-group">
-          <input type="number" class="form-control" id="productQty" aria-label="Product Quantity" data-db-field="quantity">
           </div>
         </div>`
       if (loggedin) $(content).append(createModal(body))

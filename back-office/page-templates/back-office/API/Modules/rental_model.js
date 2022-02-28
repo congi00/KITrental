@@ -17,6 +17,14 @@ const rental = new Schema({
     ref: "Products",
     required : true,
   }],
+  datesProducts:[{
+    startDate: {
+      type: Date
+    },
+    endDate:{
+      type: Date
+    }
+  }],
   invoice_id:{
     type: Schema.Types.ObjectId,
     ref: "Invoice",

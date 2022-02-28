@@ -30,6 +30,8 @@ function CardsSlider(){
   const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
   const price = searchParams.get("price");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+  const loggedIn = sessionStorage.getItem("token");
+
 
   React.useEffect(() => {
     //if(!price)
@@ -39,6 +41,13 @@ function CardsSlider(){
         (result) => {
           console.log(result.products);
           setIsLoaded(true);
+          if(!loggedIn){
+            result.products = result.products.filter((value, index, self) =>
+              index === self.findIndex((t) => (
+                t.subCategory === value.subCategory
+              ))
+            )
+          }
           setProducts(result.products);
         },
         // Note: it's important to handle errors here
@@ -74,7 +83,6 @@ function CardsSlider(){
   }
   
   const [show, setShow] = React.useState(false);
-  const loggedIn = sessionStorage.getItem("token");
 
   const handleClick = (e) => {
     

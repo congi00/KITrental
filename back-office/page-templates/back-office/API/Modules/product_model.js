@@ -31,6 +31,11 @@ const product = new Schema({
     enum: ["Professional","Household"],
     required: true,
   },
+  subCategory:{
+    type: String,
+    enum: ["Blender","Torch","Barbeque","Kneader"],
+    required: true,
+  },
   price:{
     type: Number,
     required: true,
@@ -46,11 +51,7 @@ const product = new Schema({
     endD:{
       type: Date
     },
-  }],
-  quantity:{
-    type: Number,
-    required: true
-  }
+  }]
 });
 
 module.exports = mongoose.model("ProductModel", product, "inventory");

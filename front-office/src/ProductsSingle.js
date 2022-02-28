@@ -16,6 +16,7 @@ import addDays from "date-fns/addDays";
 function ProductsSingle(){
   const cookies = new Cookies();
   const navigate = useNavigate();
+  const [BTNDisabled, setBTNDisabled] = React.useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const [categoryP, setCategoryP] = useSearchParams();
   const [products, setProducts] = React.useState([]);
@@ -33,8 +34,7 @@ function ProductsSingle(){
           console.log(result.products);
           setProducts(result.products);
           //setCategoryP(result.products.category.toLowerCase());
-          getDates(result.products.indisponibilityDates, result.products.indisponibilityDates);
-          console.log(Dates);
+          setDates(getDates(result.products.indisponibilityDates, result.products.indisponibilityDates));
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -52,21 +52,30 @@ function ProductsSingle(){
       const exist = cartItems.find(x => x._id === product._id);
       console.log(exist);
       if(exist)
-        cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: exist.qty +1 } : x), { path: '/' });
+        cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: exist.qty , startD : startDate, endD: endDate } : x), { path: '/' });
       else
         //... notation = array concatenation
-        cookies.set('myCart', [...cartItems, { ...product, qty:1}], { path: '/' });
+        cookies.set('myCart', [...cartItems, { ...product, qty:1 , startD : startDate, endD: endDate}], { path: '/' });
     }else{
-      cookies.set('myCart', [{ ...product, qty:1}], { path: '/' });
+      cookies.set('myCart', [{ ...product, qty:1, startD : startDate, endD: endDate}], { path: '/' });
     }
       console.log(cookies.get('myCart'));
   }
 
 
   const onSelectDate = (dates) => {
-    const [start, end] = dates;
+    const [start, end] = dates; 
+    setBTNDisabled(false);
+    Dates.forEach(element => {
+      console.log(start)
+      console.log(element)
+      console.log(element >= start && element <= end);
+      if(element >= start && element <= end)
+        setBTNDisabled(true);
+    })
     setStartDate(start);
     setEndDate(end);
+    console.log("Exit")
   };  
 
   
@@ -86,16 +95,11 @@ function ProductsSingle(){
       startDate = new Date(element.startD)
       var currentDate = startDate
       endDate= new Date(element.endD)
-      console.log("Start:" +currentDate+"End"+element.endD);
       while (currentDate <= endDate) {
-        console.log("dddddd");
         dates.push(currentDate)
         currentDate = addDays.call(currentDate, 1)
       }
     });
-    console.log(dates);
-    setDates(dates);  
-      
       
     return dates;
     
@@ -146,8 +150,8 @@ function ProductsSingle(){
               onChange={onSelectDate}
             />)}
             </div>
-            <Button onClick={() => onAdd(products)} className="btnCart" size="lg">Add to cart</Button>
-            <Button  className="btnBuy" size="lg" onClick={() => onRent(products)}>Rent now</Button>
+            <Button onClick={() => onAdd(products)} className="btnCart" size="lg" disabled={BTNDisabled}>Add to cart</Button>
+            <Button  className="btnBuy" size="lg" onClick={() => onRent(products)} disabled={BTNDisabled}>Rent now</Button>
           </div>
         </div>
       </div>

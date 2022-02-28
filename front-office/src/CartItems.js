@@ -13,10 +13,12 @@ function CartItems(){
   const cookies = new Cookies();
   const cartItems = cookies.get('myCart');
   const [totalPrice,setTotalPrice] = React.useState(0);
-  const auth_token = sessionStorage.getItem("auth")
+  const auth_token = sessionStorage.getItem("auth");
+  const [logged, SetLogged] = React.useState(false);
   
   React.useEffect(() => {
-    console.log(cartItems);
+    if(sessionStorage.getItem("token"))
+      SetLogged(true);
     if(cartItems){
       const cartItemsF = cartItems.filter(x=> {if(x.qty != 0) return x});
       console.log(cartItemsF.length);
@@ -45,20 +47,65 @@ function CartItems(){
   }
 
 
-  const handleClick = (e) => {
+  const getDates = (startDate, endDate) => {
+    let dates = 0  
+      const addDays = function (days) {
+        const date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days)
+        return date
+      }
+
+      var currentDate = startDate
+      while (currentDate <= endDate) {
+        dates ++
+        currentDate = addDays.call(currentDate, 1)
+      }
+      
+    return dates;
     
+  }
+
+
+  const handleClick = (e) => {
+    /*client_id: req.body.client_id*/
+    console.log()
+    var datesP = [];
+    var priceC = 0;
+    var productsID = [];
     e.preventDefault();
+    cartItems.map(item => (
+      //datesProducts
+      datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]),
+      productsID.push(item._id),
+      priceC += item.price * item.qty * getDates(item.startD,item.endD),
+      console.log(priceC)
+    ));
+    
     $.ajax({
       url: "http://localhost:8000/API/rental/",
       type: "POST",
-      body: JSON.stringify({ client_id: "id",
-        product_id: "id",
-        start_date: "dara",
-        end_date: "ss"}),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://localhost:8000",
+        "Access-Control-Allow-Methods":"DELETE, POST, GET",
+        "Access-Control-Allow-Headers":"Content-Type, Authorization",
+      },
+      contentType: "application/json",
+      data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
+        products_id: productsID,
+        start_date: new Date(),
+        end_date: new Date(),
+        datesProducts : datesP,
+        price : priceC,
+        state : "Pending",
+      }),
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', auth_token)
+        console.log("ECCOMIS")
       },
-      success: res => {console.log(res)},
+      success: res => {console.log(res);
+        console.log("ECCOMI")
+      },
       error: err => {console.log(err)}
     });
 
@@ -108,7 +155,7 @@ function CartItems(){
         <div className="cartSection">
           <h1>CART</h1>
           <h2>Your cart is empty</h2>
-          <Button className='emptyCartBtn'>
+          <Button className='emptyCartBtn' disabled={logged}>
             Go to shop
           </Button>
         </div>

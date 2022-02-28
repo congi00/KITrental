@@ -67,7 +67,7 @@ router.post('/', async function (req, res) {
       description: req.body.description,
       category: req.body.category,
       price: req.body.price,
-      quantity: req.body.quantity,
+      subCategory: req.body.subCategory,
       creation_date: req.body.creation_date
     });
     product
