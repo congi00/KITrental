@@ -36,10 +36,6 @@ export default {
 
 <style lang="scss">
 .home-dashboard {
-  width: 100%;
-  padding: 2rem;
-  background: #031f1c;
-  color: white;
   .dashboard-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -71,7 +67,6 @@ export default {
     padding: 1.5rem;
     .chart-form {
       display: block;
-      margin: auto;
       margin-top: 1rem;
       width: 80%;
       .update-button {

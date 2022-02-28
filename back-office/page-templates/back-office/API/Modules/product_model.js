@@ -35,6 +35,10 @@ const product = new Schema({
     type: Number,
     required: true,
   },
+  creation_date:{
+    type: Date,
+    required: true
+  },
   indisponibilityDates:[{
     startD:{
       type: Date

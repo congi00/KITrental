@@ -474,7 +474,8 @@ function singleRental(id) {
           xhr.setRequestHeader('auth', authToken)
         },
         success: res => {
-          rented_products = res.products // [0] TO EDIT
+          rented_products = res.products
+          console.log(rented_products)
           $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
@@ -926,8 +927,12 @@ function createRecord(col, id, el) {
     }
   });
 
+  if (col === 'inventory') {
+    toCreateObject['creation_date'] = new Date();
+  }
+
   if (col === 'operations') {
-    //creation of operetion closed etc.
+    //creation of operation closed etc.
     toCreateObject['rental_id'] = id;
     toCreateObject['employee_id'] = sessionStorage.getItem("usr_id");
 

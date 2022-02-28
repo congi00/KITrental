@@ -12,7 +12,7 @@ router.get('/',login.verifyPermission(login.permissionRoleLevels["employee"]), f
   const reqQuery = req.query
   const query = {}
   if (reqQuery.client_id) query.client_id = reqQuery.client_id
-
+  
   Rental.find(query)
     .sort({ start_date: 1 })
     .exec()
@@ -33,11 +33,22 @@ router.get('/client/:query', function (req, res) {
     .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
-// Get every rental from frontoffice
+// Get every rental matching product id
 router.get('/rentalByProductId/:id', function (req, res) {
   const prod = req.params.id
   const query = {}
   query.products_id = prod
+
+  Rental.find(query)
+    .exec()
+    .then(rental => res.status(200).json({ rental }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+})
+
+// Get every rental matching array of products ids
+router.get('/rentalByProductsIds/:ids', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
+  var ids = req.params.ids.split(','); // id,id,id...
+  var query = {'products_id': { $in: ids}}
 
   Rental.find(query)
     .exec()

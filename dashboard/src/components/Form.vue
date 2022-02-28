@@ -7,32 +7,32 @@
     export default defineComponent({
         name: "Form",
         components: {Datepicker},
-          props: {
-              col : '',
-                modelValue: {
+        props: {
+            col : '',
+            modelValue: {
                 type: Object,
                 default: () => {}
-                },
             },
+        },
 
-            emits: ['update:modelValue'],
+        emits: ['update:modelValue'],
 
-            setup(props, { emit }) {
-                const { cookies } = useCookies();
-                const form = computed({
+        setup(props, { emit }) {
+            const { cookies } = useCookies();
+            const form = computed({
                 get: () => props.modelValue,
                 set: (value) => emit('update:modelValue', value),
-                });
+            });
 
-                return {
-                form, cookies
-                };
-            },
+            return {
+            form, cookies
+            };
+        },
         mounted () {
             // Generate random ID
             const randID = Date.now()
-                this.$refs.recordsList.setAttribute('id', randID)
-                this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
+            this.$refs.recordsList.setAttribute('id', randID)
+            this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
         },
         data() {
             return {
@@ -44,7 +44,6 @@
                 }
             }
         },
-        //expose: ['publicData'],
         methods: {
             handleChange(e) {
                 // `event` implicitly has `any` type
@@ -84,14 +83,25 @@
             <option value="inventory">Product</option>
             <option value="rental">Rental</option>
         </select> -->
-        <select v-if="this.col === 'inventory/category'" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="form.record">
-            <option selected>Open this select menu</option>
+        <select v-if="this.col === 'inventory/category'" class="form-select" aria-label=".form-select-lg example" v-model="form.category">
+            <!-- <option selected>Open this select menu</option> -->
             <option value="Household">Household</option>
             <option value="Professional">Professional</option>
         </select>
+        <select v-if="this.col === 'inventory/category'" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
+            <!-- <option selected>Open this select menu</option> -->
+            <option value="Incoming">Incoming</option>
+            <option value="rental">N° of Rental</option>
+            <option value="products">N° of Products</option>
+        </select>
+        <select v-if="this.col === 'clients'" class="form-select form-select" aria-label=".form-select-lg example" v-model="form.choice">
+            <!-- <option disabled selected>Open this select menu</option> -->
+            <option value="Incoming">Incoming</option>
+            <option value="rental">N° of Rental</option>
+        </select>
         <input v-if="this.col !== 'inventory/category' && this.col !== 'rental'" class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
         <datalist ref="recordsList" id="recordList"></datalist>
-        <select v-if="this.col === 'rental' || this.col === 'inventory'" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" v-model="form.choice">
+        <select v-if="this.col === 'rental' || this.col === 'inventory'" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
             <option selected value="Incoming">Incoming</option>
             <option value="Deals">Deals</option>
             <option v-if="this.col === 'inventory'" value="Conditions">Conditions</option>
