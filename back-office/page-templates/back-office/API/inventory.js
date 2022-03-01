@@ -41,18 +41,42 @@ router.get('/productsByCategoryName/:category', function (req, res) {
 })
 
 
-router.get('/price/:order&:category', function (req, res) {
-  if(req.params.order == "ASC")
-    var order=1
-  else
-    var order=-1
+router.get('/filter/', function (req, res) {
+  console.log(req.query["price"]);
+  if(req.query["price"]!="null")
+    if(req.query["price"] == "ASC")
+      var order=1
+    else
+      var order=-1
 
-  Products.find({ category: req.params.category})
-  .sort({price: order })
-  .exec()
-  .then(products => res.status(200).json({ products }))
-  .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+    var reqFilter = {}
+    if(req.query["sub"]!="null" && req.query["availability"]!="null")
+      reqFilter = {
+        category: req.query["category"],subCategory : req.query["sub"],availability : req.query["availability"]
+      }
+    else if(req.query["sub"]!="null")
+      reqFilter = {
+        category: req.query["category"],subCategory : req.query["sub"]
+      }
+    else if(req.query["availability"]!="null")
+      reqFilter = {
+        category: req.query["category"],availability : req.query["availability"]
+      }
+
+  if(!order)
+    Products.find(reqFilter)
+    .exec()
+    .then(products => res.status(200).json({ products }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+  else 
+    Products.find(reqFilter)
+    .sort({price: order })
+    .exec()
+    .then(products => res.status(200).json({ products }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
+
+
 
 
 //Add a new product
