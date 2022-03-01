@@ -568,8 +568,8 @@ function singleRental(id) {
                   <!-- Possible fields to edit in case of a rental closing operation -->
                   <div class="mb-3" id="rentClose" style="display: none;">
                     <div class="mb-3">
-                        <label for="productAvaiability" class="form-label">Avaiability</label>
-                        <select id="productAvaiable" class="form-select" name="avaiability" data-db-field="avaiability">
+                        <label for="productAvailability" class="form-label">Availability</label>
+                        <select id="productAvaiable" class="form-select" name="availability" data-db-field="availability">
                             <option value="available">Available</option>
                             <option value="unavailable">Unavailable</option>
                         </select>
@@ -663,7 +663,7 @@ function showInventory(){
           <th>Image</th>
           <th>Category</th>
           <th>Sub category</th>
-          <th>Avaiability</th>
+          <th>Availability</th>
           <th>State</th>
           <th>Price</th>
           <th>Archive</th>
@@ -677,7 +677,7 @@ function showInventory(){
             <td><img src="../img/products/${product.image}" width="30vw"></td>
             <td>${product.category}</td>
             <td>${product.subCategory}</td>
-            <td>${product.avaiability}</td>
+            <td>${product.availability}</td>
             <td>${product.state}</td>
             <td>${product.price}</td>
             <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
@@ -699,7 +699,7 @@ function showInventory(){
         </div>
         <div class="mb-3">
           <label for="productAval" class="form-label">Availability</label>
-          <select class="form-select" id="productAval" aria-label="Select Availability" data-db-field="avaiability">
+          <select class="form-select" id="productAval" aria-label="Select Availability" data-db-field="availability">
             <option selected>Open this select menu</option>
             <option value="available">Available</option>
             <option value="unavaiable">Unavailable</option>
@@ -783,19 +783,19 @@ function singleInventory(id) {
                   <label for="productName" class="form-label">Product's name</label>
                   <input type="text" data-db-field="name" class="form-control mb-3" id="productName" value="${product.name ? product.name : ''}" readonly>
 
-                  <label for="productAvaiability" class="form-label">Product's avaiability</label><br>
-                  <select id="productAvaiability" name="avaiability" data-db-field="avaiability" disabled>
-                    <option value="${product.avaiability ? product.avaiability : ''}">${product.avaiability ? product.avaiability : ''}</option>
-                    <option value="${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}">${product.avaiability=='avaiable' ? 'unavaiable' : 'avaiable'}</option>
+                  <label for="productAvailability" class="form-label">Product's availability</label><br>
+                  <select id="productAvailability" name="availability" data-db-field="availability" onchange="displayEdits(this);" disabled>
+                    <option value="${product.availability ? product.availability : ''}">${product.availability ? product.availability : ''}</option>
+                    <option value="${product.availability=='available' ? 'unavailable' : 'available'}">${product.availability=='available' ? 'unavailable' : 'available'}</option>
                   </select><br>
 
-                  
-                  <label for="rentalStartDate" class="form-label">Unavailability Starting Date</label>
-                  <input required type="datetime-local" data-db-field="startD" class="form-control mb-3" id="productStartDate">
+                  <div id="startEndDateU" style="display:none;">
+                    <label for="rentalStartDate" class="form-label">Unavailability Starting Date</label>
+                    <input required type="datetime-local" data-db-field="startD" class="form-control mb-3" id="productStartDate">
       
-                  <label for="rentalEndDate" class="form-label">Unavailability Ending Date</label>
-                  <input required type="datetime-local" data-db-field="endD" class="form-control mb-3" id="productEndDate">
-                  
+                    <label for="rentalEndDate" class="form-label">Unavailability Ending Date</label>
+                    <input required type="datetime-local" data-db-field="endD" class="form-control mb-3" id="productEndDate">
+                  </div>
 
                   <label for="productPrice" class="form-label">Price</label>
                   <input type="number" data-db-field="price" class="form-control mb-3" id="productPrice" value="${product.price ? product.price : ''}" readonly>
@@ -952,13 +952,13 @@ function createRecord(col, id, el) {
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
       var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
-      toUpdateObject['avaiability'] = toCreateObject['avaiability'];
+      toUpdateObject['availability'] = toCreateObject['availability'];
       
       toUpdateObject['indisponibilityDates'] = [...{startD : toCreateObject['startD'],startD : toCreateObject['endD']}];
       toUpdateObject['state'] = toCreateObject['state'];
       toUpdateObject['startD'] = toCreateObject['startD'];
       toUpdateObject['endD'] = toCreateObject['endD'];
-      delete toCreateObject.avaiability;
+      delete toCreateObject.availability;
       delete toCreateObject.state;
       delete toCreateObject.start_date;
       delete toCreateObject.end_date;
@@ -1188,7 +1188,7 @@ async function calcPrice(rental_price, rental_start_date, rental_end_date, clien
 }
 
 
-function updateRecordInfo(col, id, el) {
+async function updateRecordInfo(col, id, el) {
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
   if (col === 'clients' || ( col === 'rental' && new Date(startDate) > new Date() ) || col === 'inventory' ) {
     if (boolUtil) {
@@ -1204,13 +1204,56 @@ function updateRecordInfo(col, id, el) {
 
       // JavaScript object to pass as data to update in the POST request
       var toUpdateObject = {};
-      fields.each(function() {
-        toUpdateObject[$(this).data('db-field')] = $(this).val();
-        if(toUpdateObject["startD"]&& toUpdateObject["endD"] && !toUpdateObject["indisponibilityDates"])
-          toUpdateObject["indisponibilityDates"] = [ {startD : toUpdateObject["startD"] ,endD : toUpdateObject["endD"]}]
-      });
+      if(col === "inventory"){
+        var indisponibilityDatesP;
+        await $.ajax({
+          url: "API/inventory/" + id,
+          type: "GET",
+          success: function (response) {
+            if (response) {
+              indisponibilityDatesP = response.products.indisponibilityDates;
+              fields.each(function() {
+                console.log($(this).data('db-field'))
+                toUpdateObject[$(this).data('db-field')] = $(this).val();
+                if(col === "inventory"){
+                  if(toUpdateObject["startD"] && toUpdateObject["endD"]){
+                    console.log(toUpdateObject["indisponibilityDates"]);
+                  }else if(toUpdateObject["startD"] && !toUpdateObject["endD"]){
+                    toUpdateObject["availability"] = "unavailable";
+                  }
+                }
+              });
 
+              if(toUpdateObject["availability"] != "available"){
+                indisponibilityDatesP.push({startD : toUpdateObject["startD"] ,endD : toUpdateObject["endD"]});
+                toUpdateObject["indisponibilityDates"] =indisponibilityDatesP;  
+                console.log("ecc");
+                if(toUpdateObject["endD"])
+                  toUpdateObject["availability"] = "available";
+                console.log("ecc");
+              } 
+                
+
+
+              //toUpdateObject["availability"] = "avaiable";
+
+              console.log("ESS");
+              console.log(toUpdateObject["availability"]);
+
+              delete toUpdateObject.startD;
+              delete toUpdateObject.endD;
+            }
+          },
+        });
+      }else{
+        fields.each(function() {
+          console.log($(this).data('db-field'))
+          toUpdateObject[$(this).data('db-field')] = $(this).val();
+        });
+      }
       
+      
+
       console.log(toUpdateObject)
       // Update AJAX Request
       $.ajax({
@@ -1377,6 +1420,8 @@ function displayEdits(sel) {
   } else if(sel.value == "rent_close") {
     $("#rentConfirm").hide();
     $("#rentClose").show();
+  } else if(sel.value == "unavailable"){
+    $("#startEndDateU").show();
   }
 }
 

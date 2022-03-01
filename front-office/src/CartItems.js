@@ -6,12 +6,13 @@ import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap";
 import {Form, Button }from 'react-bootstrap';
 import Cookies from 'universal-cookie';
+import axios from 'Axios';
 import $ from 'jquery'
 
 
 function CartItems(){
   const cookies = new Cookies();
-  const cartItems = cookies.get('myCart');
+  const [cartItems,setcartItems] = React.useState(cookies.get('myCart'));
   const [totalPrice,setTotalPrice] = React.useState(0);
   const auth_token = sessionStorage.getItem("auth");
   const [logged, SetLogged] = React.useState(false);
@@ -24,10 +25,40 @@ function CartItems(){
       console.log(cartItemsF.length);
       if(cartItemsF.length != 0){
         cookies.set('myCart', cartItemsF, { path: '/' });
-        cartItems.map(item =>  (
-          setTotalPrice((prevState, props) => prevState + item.price*item.qty)
-      ))}
-      else
+
+
+        axios.get("API/promotions/",{headers: {'auth': auth_token}})    
+        .then((res) => {    
+          console.log(res.data);
+          var proms = res.data.promotions;
+          console.log(proms)
+          var changedCart =[]
+          cartItems.forEach(item => {
+            var pricePItem = item.price;
+            for (const [key, value] of Object.entries(proms)) {
+              var prom_start_date = new Date(value.start_date)
+              var prom_end_date = new Date(value.end_date)
+              if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
+                var old_rental_price = pricePItem 
+                pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+              }
+              console.log("Prima"+item.price)
+              item.price = pricePItem
+              console.log("Dopo"+item.price)
+              setTotalPrice((prevState, props) => prevState + pricePItem)
+            }
+            console.log(cartItems)
+            changedCart.push(item);
+            console.log(changedCart)
+            /*cartItems.map(item =>  (
+              setTotalPrice((prevState, props) => prevState + item.price*item.qty)
+            ))*/
+          });
+          setcartItems(changedCart)
+          
+        })
+ 
+      }else
         cookies.remove("myCart");
     }
   }, []);
@@ -73,13 +104,30 @@ function CartItems(){
     var priceC = 0;
     var productsID = [];
     e.preventDefault();
-    cartItems.map(item => (
-      //datesProducts
-      datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]),
-      productsID.push(item._id),
-      priceC += item.price * item.qty * getDates(item.startD,item.endD),
-      console.log(priceC)
-    ));
+
+    axios.get("API/promotions/",{headers: {'auth': auth_token}})    
+          .then((res) => {    
+            console.log(res.data);
+            var proms = res.data.promotions;
+            console.log(proms)
+        
+            cartItems.forEach(item => {
+              var pricePItem = item.price;
+              for (const [key, value] of Object.entries(proms)) {
+                var prom_start_date = new Date(value.start_date)
+                var prom_end_date = new Date(value.end_date)
+                if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
+                  var old_rental_price = pricePItem 
+                  pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+                }
+              }
+              datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
+              productsID.push(item._id);
+              priceC += pricePItem * item.qty * getDates(item.startD,item.endD);
+              
+              console.log(priceC);
+            });
+          })      
     
     $.ajax({
       url: "http://localhost:8000/API/rental/",

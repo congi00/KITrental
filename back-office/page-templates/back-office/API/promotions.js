@@ -7,7 +7,7 @@ const Promotion = require('./Modules/promotion_model');
 var router = express.Router();
 
 // Get all the promotions
-router.get('/',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
+router.get('/',login.verifyPermission(login.permissionRoleLevels["client"]), function (req, res) {
     Promotion.find()
   .exec()
   .then(promotions => res.status(200).json({ promotions }))
