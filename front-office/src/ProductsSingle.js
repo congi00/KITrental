@@ -12,6 +12,7 @@ import { useMediaQuery } from 'react-responsive'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import addDays from "date-fns/addDays";
+import $ from 'jquery';
 
 function ProductsSingle(){
   const cookies = new Cookies();
@@ -25,6 +26,9 @@ function ProductsSingle(){
   const param = searchParams.get("prdID");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
   const [Dates,setDates] = React.useState([]);
+  const [Bepi, setBepi] = React.useState(false);
+  const [linkSugg, setlinkSugg] = React.useState("/");
+  
 
   React.useEffect(() => {
     fetch("http://localhost:8000/API/inventory/"+param)
@@ -67,11 +71,39 @@ function ProductsSingle(){
     const [start, end] = dates; 
     setBTNDisabled(false);
     Dates.forEach(element => {
-      console.log(start)
-      console.log(element)
-      console.log(element >= start && element <= end);
-      if(element >= start && element <= end)
+      if(element >= start && element <= end){
         setBTNDisabled(true);
+        $.ajax({
+          url: "API/inventory/subcategory/"+ products.subCategory,
+          type: "GET",
+          contentType: "application/json",
+          success: function (response) {
+            if (response) {
+              console.log(response);
+              var idP;
+              var available = false;
+              response.products.forEach((element)=>{
+                if(element.indisponibilityDates.length <1){
+                  available = true;
+                  idP = element._id;
+                }
+                element.indisponibilityDates.forEach((item)=>{
+                  if(!( start>=  new Date(item.startDate) ||  end >= new Date(item.endDate)) && !(new Date(item.startDate) <= start   ||  new Date(item.endDate) >= end)){
+                    available = true;
+                    idP = element._id;
+                  }
+                })
+              });
+              if(available){
+                setBepi(true);
+                setlinkSugg("/productSingle?prdID="+idP)
+              }
+            } else {
+              alert("There was an error.");
+            }
+          },
+        });
+      }
     })
     setStartDate(start);
     setEndDate(end);
@@ -82,27 +114,21 @@ function ProductsSingle(){
   const getDates = (startDate, endDate) => {
     const dates = []
     const invDates = startDate;
-      
       const addDays = function (days) {
         const date = new Date(this.valueOf())
         date.setDate(date.getDate() + days)
         return date
       }
-
-      
-      
     invDates.forEach(element => {
-      startDate = new Date(element.startD)
+      startDate = new Date(element.startDate)
       var currentDate = startDate
-      endDate= new Date(element.endD)
+      endDate= new Date(element.endDate)
       while (currentDate <= endDate) {
         dates.push(currentDate)
         currentDate = addDays.call(currentDate, 1)
       }
     });
-      
     return dates;
-    
   }
 
 
@@ -128,8 +154,12 @@ function ProductsSingle(){
             <h4 className="priceTit"><b>{!isDesktop && <React.Fragment>Price<br/></React.Fragment>}<span className="productPrice">{products.price}$</span></b></h4>
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
+            <br/>
+            <h3 className={Bepi ? "suggBlock" : "suggNone"}>This product is unavailable in those date, if you want you can check this 
+            <span onClick={() => {window.location.href=linkSugg}}> <i>product</i></span>
+            </h3>
             <div className='calendar'>
-            {loggedIn ? (
+            {loggedIn ? ( 
             <DatePicker
               selected={startDate}
               startDate={startDate}

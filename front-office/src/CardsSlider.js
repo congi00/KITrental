@@ -180,7 +180,7 @@ function CardsSlider(){
               slidesPerView={"auto"}
               className="titles"
               >
-                {products.map(item => (item.avaiability == "unavailable" && ! loggedIn)? "":( 
+                {products.map(item => (item.availability == "unavailable" && ! loggedIn)? "":( 
                   <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "titlesName dBlock" : "titlesName dNone"}>{item.name}</SwiperSlide>
                 ))}
             </Swiper>
@@ -194,7 +194,7 @@ function CardsSlider(){
                 console.log(controlledSwiper.realIndex);
               }}
               >
-                {products.map(item => (item.avaiability == "unavailable" && ! loggedIn)? "":(
+                {products.map(item => (item.availability == "unavailable" && ! loggedIn)? "":(
                     <SwiperSlide className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "swiperP dBlock" : "swiperP dNone"} style={{backgroundImage:'url(img/products/'+item.image+')'}} 
                     onClick={() => handleClick(item._id)}
                     > {item.price}$</SwiperSlide>

@@ -1010,14 +1010,14 @@ function createRecord(col, id, el) {
                     },
                     success: res => {
                       const rntl = res.rental;
-                      $.ajax({
+                      /*$.ajax({
                         url: "API/inventory/" + updInventoryID,
                         type: "PATCH",
                         contentType: "application/json",
                         dataType: "json",
                         data: JSON.stringify({indisponibilityDates : [...{startD: rntl.start_date,endD: rntl.end_date}]}),
                         success:{}
-                      });
+                      });*/
                       $.ajax({
                         url: "API/clients/" + rntl.client_id,
                         type: "GET",

@@ -55,7 +55,7 @@ function CartItems(){
             ))*/
           });
           setcartItems(changedCart)
-          
+          console.log(cartItems);
         })
  
       }else
@@ -100,13 +100,14 @@ function CartItems(){
   const handleClick = (e) => {
     /*client_id: req.body.client_id*/
     console.log()
+
+    e.preventDefault();
     var datesP = [];
     var priceC = 0;
     var productsID = [];
-    e.preventDefault();
-
     axios.get("API/promotions/",{headers: {'auth': auth_token}})    
           .then((res) => {    
+            
             console.log(res.data);
             var proms = res.data.promotions;
             console.log(proms)
@@ -119,43 +120,62 @@ function CartItems(){
                 if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
                   var old_rental_price = pricePItem 
                   pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+                  console.log(pricePItem)
                 }
               }
               datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
               productsID.push(item._id);
-              priceC += pricePItem * item.qty * getDates(item.startD,item.endD);
+              console.log(pricePItem)
+              priceC += pricePItem * getDates(item.startD,item.endD);
               
               console.log(priceC);
             });
+            $.ajax({
+              url: "http://localhost:8000/API/rental/",
+              type: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:8000",
+                "Access-Control-Allow-Methods":"DELETE, POST, GET",
+                "Access-Control-Allow-Headers":"Content-Type, Authorization",
+              },
+              contentType: "application/json",
+              data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
+                products_id: productsID,
+                start_date: new Date(),
+                datesProducts : datesP,
+                price : priceC,
+                state : "Pending",
+              }),
+              beforeSend: xhr => {
+                xhr.setRequestHeader('auth', auth_token)
+              },
+              success: res => {
+                cartItems.forEach(item => {
+                  $.ajax({
+                    url: "API/inventory/" + item._id,
+                    type: "PATCH",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({indisponibilityDates : datesP}),
+                    beforeSend: xhr => {
+                      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                    },
+                    success: function (response) {
+                      if (response) {
+                        console.log(response);
+                      } else {
+                        alert("There was an error.");
+                      }
+                    },
+                  });
+                });
+              },
+              error: err => {console.log(err)}
+            });
           })      
     
-    $.ajax({
-      url: "http://localhost:8000/API/rental/",
-      type: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:8000",
-        "Access-Control-Allow-Methods":"DELETE, POST, GET",
-        "Access-Control-Allow-Headers":"Content-Type, Authorization",
-      },
-      contentType: "application/json",
-      data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
-        products_id: productsID,
-        start_date: new Date(),
-        end_date: new Date(),
-        datesProducts : datesP,
-        price : priceC,
-        state : "Pending",
-      }),
-      beforeSend: xhr => {
-        xhr.setRequestHeader('auth', auth_token)
-        console.log("ECCOMIS")
-      },
-      success: res => {console.log(res);
-        console.log("ECCOMI")
-      },
-      error: err => {console.log(err)}
-    });
+    
 
     // fetch("http://localhost:8000/API/rental/", {
     //     method: 'POST',
