@@ -972,6 +972,7 @@ function createRecord(col, id, el) {
 
   if (col === 'inventory') {
     toCreateObject['creation_date'] = new Date();
+    toCreateObject['indisponibilityDates'] = [];
   }
 
   if (col === 'operations') {
@@ -1165,10 +1166,25 @@ function createRecord(col, id, el) {
             prices.push(prod.price)
 
             // Insert unavailability dates into each product
-            // await $.ajax({
-            //   url: "API/inventory/" + prod._id,
-            //   type: "PATCH",
-            //   data: JSON.stringify({indisponibilityDates: toCreateObject['datesProducts'][i]})
+            var dates = prod.indisponibilityDates
+            dates = dates.concat(toCreateObject['datesProducts'][i]) // obj of start and end date
+            $.ajax({
+              url: "API/inventory/" + prod._id,
+              type: "PATCH",
+              contentType: "application/json",
+              dataType: "json",
+              data: JSON.stringify({indisponibilityDates: dates}),
+              beforeSend: xhr => {
+                xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+              },
+              success: res => {
+                if (res) {
+                  console.log('call done?')
+                } else {
+                  alert("There was an error.");
+                }
+              }
+            })
           })
 
           const rentalPrice = prodsSumPrice
@@ -1342,9 +1358,13 @@ async function updatePrice(rental_id, prodsDates) {
 
 async function updateRecordInfo(col, id, el) {
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
-  if (!startDate)
+
+  // Edit of single product dates inside rental
+  if (!startDate) {
     startDate = $('input[data-db-field="start_date"]').val()
-  boolUtil = false // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TO REMOVE and EDIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    boolUtil = false
+  }
+
   var toUpdateObject = {};
   var utils = {}
 
@@ -1399,7 +1419,7 @@ async function updateRecordInfo(col, id, el) {
               // Updates Price
               console.log(newDatesProds)
               var updatedPrice = await updatePrice(id, newDatesProds)
-              console.log(updatePrice)
+              console.log(updatedPrice)
             } else if (col === 'inventory') {
 
               var prodDatesArr = data.indisponibilityDates
