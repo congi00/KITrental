@@ -101,6 +101,14 @@
 }
 
 
+.suggNone{
+  display:none;
+}
+
+.suggBlock{
+  display: block;
+}
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {

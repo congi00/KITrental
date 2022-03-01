@@ -113,6 +113,22 @@ router.get('/category/:category', async function (req, res) {
   );
 })
 
+// Get single category
+router.get('/subcategory/:subcategory', async function (req, res) {
+  Products.find({ subCategory: req.params.subcategory})
+  .sort({price: -1 })
+  .exec()
+  .then(products =>
+    {if(products) res.status(200).json({ products })
+    else res.status(404).json({message: "Category not found"})
+  })
+  .catch(err =>
+    res.status(400).json({message: "Error accessing server data", error: err})
+  );
+})
+
+
+
 //Delete single product verify if there's no relation with rental
 router.delete('/:id', async function (req, res) {
   await Products.findOneAndDelete({ _id: req.params.id})
@@ -130,7 +146,6 @@ router.delete('/:id', async function (req, res) {
 //Update product
 router.patch('/:id', async function (req, res) {
   console.log(req.body);
-  console.log(req.params.id)
   
   await Products.findOneAndUpdate(
     { _id: req.params.id},

@@ -6,12 +6,13 @@ import { Link } from "react-router-dom";
 import {Card} from "react-bootstrap";
 import {Form, Button }from 'react-bootstrap';
 import Cookies from 'universal-cookie';
+import axios from 'Axios';
 import $ from 'jquery'
 
 
 function CartItems(){
   const cookies = new Cookies();
-  const cartItems = cookies.get('myCart');
+  const [cartItems,setcartItems] = React.useState(cookies.get('myCart'));
   const [totalPrice,setTotalPrice] = React.useState(0);
   const auth_token = sessionStorage.getItem("auth");
   const [logged, SetLogged] = React.useState(false);
@@ -24,10 +25,40 @@ function CartItems(){
       console.log(cartItemsF.length);
       if(cartItemsF.length != 0){
         cookies.set('myCart', cartItemsF, { path: '/' });
-        cartItems.map(item =>  (
-          setTotalPrice((prevState, props) => prevState + item.price*item.qty)
-      ))}
-      else
+
+
+        axios.get("API/promotions/",{headers: {'auth': auth_token}})    
+        .then((res) => {    
+          console.log(res.data);
+          var proms = res.data.promotions;
+          console.log(proms)
+          var changedCart =[]
+          cartItems.forEach(item => {
+            var pricePItem = item.price;
+            for (const [key, value] of Object.entries(proms)) {
+              var prom_start_date = new Date(value.start_date)
+              var prom_end_date = new Date(value.end_date)
+              if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
+                var old_rental_price = pricePItem 
+                pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+              }
+              console.log("Prima"+item.price)
+              item.price = pricePItem
+              console.log("Dopo"+item.price)
+              setTotalPrice((prevState, props) => prevState + pricePItem)
+            }
+            console.log(cartItems)
+            changedCart.push(item);
+            console.log(changedCart)
+            /*cartItems.map(item =>  (
+              setTotalPrice((prevState, props) => prevState + item.price*item.qty)
+            ))*/
+          });
+          setcartItems(changedCart)
+          console.log(cartItems);
+        })
+ 
+      }else
         cookies.remove("myCart");
     }
   }, []);
@@ -69,45 +100,82 @@ function CartItems(){
   const handleClick = (e) => {
     /*client_id: req.body.client_id*/
     console.log()
+
+    e.preventDefault();
     var datesP = [];
     var priceC = 0;
     var productsID = [];
-    e.preventDefault();
-    cartItems.map(item => (
-      //datesProducts
-      datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]),
-      productsID.push(item._id),
-      priceC += item.price * item.qty * getDates(item.startD,item.endD),
-      console.log(priceC)
-    ));
+    axios.get("API/promotions/",{headers: {'auth': auth_token}})    
+          .then((res) => {    
+            
+            console.log(res.data);
+            var proms = res.data.promotions;
+            console.log(proms)
+        
+            cartItems.forEach(item => {
+              var pricePItem = item.price;
+              for (const [key, value] of Object.entries(proms)) {
+                var prom_start_date = new Date(value.start_date)
+                var prom_end_date = new Date(value.end_date)
+                if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
+                  var old_rental_price = pricePItem 
+                  pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+                  console.log(pricePItem)
+                }
+              }
+              datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
+              productsID.push(item._id);
+              console.log(pricePItem)
+              priceC += pricePItem * getDates(item.startD,item.endD);
+              
+              console.log(priceC);
+            });
+            $.ajax({
+              url: "http://localhost:8000/API/rental/",
+              type: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:8000",
+                "Access-Control-Allow-Methods":"DELETE, POST, GET",
+                "Access-Control-Allow-Headers":"Content-Type, Authorization",
+              },
+              contentType: "application/json",
+              data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
+                products_id: productsID,
+                start_date: new Date(),
+                datesProducts : datesP,
+                price : priceC,
+                state : "Pending",
+              }),
+              beforeSend: xhr => {
+                xhr.setRequestHeader('auth', auth_token)
+              },
+              success: res => {
+                cartItems.forEach(item => {
+                  $.ajax({
+                    url: "API/inventory/" + item._id,
+                    type: "PATCH",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({indisponibilityDates : datesP}),
+                    beforeSend: xhr => {
+                      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                    },
+                    success: function (response) {
+                      if (response) {
+                        console.log(response);
+                      } else {
+                        alert("There was an error.");
+                      }
+                    },
+                  });
+                });
+              },
+              error: err => {console.log(err)}
+            });
+          })      
     
-    $.ajax({
-      url: "http://localhost:8000/API/rental/",
-      type: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:8000",
-        "Access-Control-Allow-Methods":"DELETE, POST, GET",
-        "Access-Control-Allow-Headers":"Content-Type, Authorization",
-      },
-      contentType: "application/json",
-      data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
-        products_id: productsID,
-        start_date: new Date(),
-        end_date: new Date(),
-        datesProducts : datesP,
-        price : priceC,
-        state : "Pending",
-      }),
-      beforeSend: xhr => {
-        xhr.setRequestHeader('auth', auth_token)
-        console.log("ECCOMIS")
-      },
-      success: res => {console.log(res);
-        console.log("ECCOMI")
-      },
-      error: err => {console.log(err)}
-    });
+    
 
     // fetch("http://localhost:8000/API/rental/", {
     //     method: 'POST',
