@@ -24,7 +24,7 @@ $(function() {
     showHome();
 
     // Library Components
-    dateRangePicker();
+    //dateRangePicker();
 });
 
 function showHome() {
@@ -415,6 +415,7 @@ function showRental() {
           <label for="searchObjects" class="form-label">Object Rented</label>
           <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
           <datalist id="objectsList"></datalist>
+          <input type="text" name="daterange" class="date-picker form-control" data-db-field="product_date" />
           <button class="btn-add-product" onclick="addProductField(this)">+</button>
         </div>
         <div class="mb-3">
@@ -425,9 +426,6 @@ function showRental() {
         <div class="mb-3">
             <label for="rentalStartDate" class="form-label">Rental Starting Date</label>
             <input required type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate">
-
-            <label for="rentalEndDate" class="form-label">Rental Ending Date</label>
-            <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate">
         </div>
         <div class="mb-3">
           <label for="rentalState" class="form-label">State</label>
@@ -475,7 +473,6 @@ function singleRental(id) {
         },
         success: res => {
           rented_products = res.products
-          console.log(rented_products)
           $.ajax({
             url: "API/clients/" + rental.client_id,
             type: "GET",
@@ -485,8 +482,11 @@ function singleRental(id) {
             success: res => {
               renting_client = res.client
               var rented_productsHTML = ` `
-              console.log(rented_products)
-              rented_products.forEach(prod => {
+              var rented_productsHTML_confirm = ` `
+              var rented_productsArr = []
+              rented_products.forEach((prod, i) => {
+                rented_productsArr.push(`${rented_products[i].name} id=${rented_products[i]._id}`)
+                // Generate HTML for displaying rented products in single rental
                 rented_productsHTML += `
                   <a href="javascript:singleInventory('${prod._id}');" style="max-width: calc(25% - 1rem);">
                     <div class="prod-thumbnail-wrapper">
@@ -494,6 +494,12 @@ function singleRental(id) {
                     </div>
                     <h2>${prod.name ? prod.name : ''}</h2>
                     </a>`
+                
+                // Generate HTML for displaying rented products in rental confirm operation
+                rented_productsHTML_confirm += `
+                <label for="${rented_products[i].name}" class="form-label">Product ${i+1}</label>
+                    <input required class="form-control" list="objectsList" id="${rented_products[i].name}" onkeyup="typingLogic(this)" value="${rented_productsArr[i]}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
+                    <datalist id="objectsList"></datalist>`
               })
               console.log(rented_productsHTML)
 
@@ -546,7 +552,7 @@ function singleRental(id) {
                   </div>
                 </div>
                 `)
-              
+                
               body = `
                   <div class="mb-3">
                     <label for="operationType" class="form-label">Type of Operation</label>
@@ -559,25 +565,11 @@ function singleRental(id) {
                   </div>
       
                   <!-- Possible fields to edit in case of a rental confirmation operation -->
-                  <div class="mb-3" id="rentConfirm">
-                    <label for="searchObjects" class="form-label">Object Rented</label>
-                    <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" value="${rented_products[0].name} id=${rented_products[0]._id}" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
-                    <datalist id="objectsList"></datalist>
+                  <div class="mb-3">
+                    ${rented_productsHTML_confirm}
                   </div>
-      
-                  <!-- Possible fields to edit in case of a rental closing operation -->
-                  <div class="mb-3" id="rentClose" style="display: none;">
-                    <div class="mb-3">
-                        <label for="productAvailability" class="form-label">Availability</label>
-                        <select id="productAvaiable" class="form-select" name="availability" data-db-field="availability">
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="productState" class="form-label">State</label>
-                        <input id="productState" class="form-control" type="text" name="state" data-db-field="state" value="${rented_products[0].state}">
-                    </div>
+                  <div class="mb-3" id="rentPenalty" style="display:none;">
+                    <button type="button" onclick='addPenalty(this, ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
                   </div>
                   <div class="mb-3">
                       <label for="operationNotes" class="form-label">Notes</label>
@@ -881,7 +873,8 @@ function showPromotions() {
 function addProductField(btn) {
   var fieldHTML = `
     <input required style="margin-top:0.5rem;" class="form-control" list="objectsList" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
-    <datalist id="objectsList"></datalist>`
+    <datalist id="objectsList"></datalist>
+    <input type="text" name="daterange" class="date-picker form-control" data-db-field="product_date" />`
     console.log(btn)
   $(fieldHTML).insertBefore(btn)
 }
@@ -920,7 +913,12 @@ function createRecord(col, id, el) {
 
   // JavaScript object to pass as data to update in the POST request
   var toCreateObject = {};
-  if (col === 'rental') toCreateObject['products_id'] = []
+  if (col === 'rental' || col === 'operations') toCreateObject['products_id'] = []
+  if (col === 'rental') toCreateObject['datesProducts'] = []
+  if (col === 'operations') {
+    toCreateObject['penalties_prods'] = []
+    toCreateObject['penalties_days'] = []
+  }
   fields.each(function() {
     // Turns an ID string in the BSON Object
     var val = $(this).val()
@@ -928,8 +926,20 @@ function createRecord(col, id, el) {
       var index = val.indexOf("id=") + 3
       val = val.substring(index)
     }
-    if (col === 'rental' && $(this).data('db-field') === 'product_id') {
+    if ((col === 'rental' || col === 'operations') && $(this).data('db-field') === 'product_id') {
       toCreateObject['products_id'].push(val)
+    } else if (col === 'rental' && $(this).data('db-field') === 'product_date') {
+      // Collecting dates for each products
+      dates_arr = [new Date($(this).data('daterangepicker').startDate.toISOString()), new Date($(this).data('daterangepicker').endDate.toISOString())]
+      toCreateObject['datesProducts'].push(dates_arr)
+    } else if (col === 'operations' && toCreateObject['type'] === 'rent_close') {
+
+      // Collecting penalties data 
+      if ($(this).data('db-field') === 'penalty_prod')
+        toCreateObject['penalties_prods'].push(val)
+      else if ($(this).data('db-field') === 'penalty_days')
+        toCreateObject['penalties_days'].push(val)
+
     } else {
       toCreateObject[$(this).data('db-field')] = val;
     }
@@ -948,17 +958,17 @@ function createRecord(col, id, el) {
     if (toCreateObject['type'] === 'rent_confirm') {
       // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
     } else if (toCreateObject['type'] === 'rent_close') {
+      console.log(toCreateObject)
       var updInventoryID = toCreateObject['product_id'];
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
-      var productID = toCreateObject['product_id'].substring(toCreateObject['product_id'].indexOf("id=") + 3);
       var toUpdateObject = {};
-      toUpdateObject['availability'] = toCreateObject['availability'];
+      // toUpdateObject['avaiability'] = toCreateObject['avaiability'];
       
       toUpdateObject['indisponibilityDates'] = [...{startD : toCreateObject['startD'],startD : toCreateObject['endD']}];
       toUpdateObject['state'] = toCreateObject['state'];
       toUpdateObject['startD'] = toCreateObject['startD'];
       toUpdateObject['endD'] = toCreateObject['endD'];
-      delete toCreateObject.availability;
+      // delete toCreateObject.avaiability;
       delete toCreateObject.state;
       delete toCreateObject.start_date;
       delete toCreateObject.end_date;
@@ -1107,21 +1117,37 @@ function createRecord(col, id, el) {
     }
   }
   if (col === 'rental') {
-    // toCreateObject['state'] = 'Accepted';
     $.ajax({
       url: "API/inventory/many/" + toCreateObject['products_id'].toString(),
       type: "GET",
       beforeSend: xhr => {
         xhr.setRequestHeader('auth', authToken)
       },
-      success: response => {
+      success: async response => {
         if (response) {
-          const diffInMs   = new Date(toCreateObject['end_date']) - new Date(toCreateObject['start_date'])
-          const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+          // Price Calculation
+          var prices = []
+          response.products.forEach(prod => {
+            prices.push(prod.price)
+          })
+          
+          var multPrices = []
           var prodsSumPrice = 0
-          response.products.forEach(prod => prodsSumPrice += prod.price) // Sum of products to multiply for rental days
-          toCreateObject['price'] = (prodsSumPrice * diffInDays).toString()
-          console.log(JSON.stringify(toCreateObject))
+          response.products.forEach((prod, i) => {
+            const diffInMs   = toCreateObject['datesProducts'][i][1].getTime() - toCreateObject['datesProducts'][i][0].getTime()
+            const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+            const multPrice = prod.price * diffInDays
+            prodsSumPrice += multPrice // Sum of products to multiply for rental days
+            multPrices.push(multPrice)
+          })
+
+          const rentalPrice = prodsSumPrice
+
+          const finalPrice = await calcPrice(rentalPrice, prices, multPrices, toCreateObject['datesProducts'], '')  
+          toCreateObject['price'] = finalPrice
+          // toCreateObject['price'] = (prodsSumPrice * diffInDays).toString()
+          // console.log(JSON.stringify(toCreateObject))
           $.ajax({
             url: "API/" + col + "/",
             type: "POST",
@@ -1165,8 +1191,11 @@ function createRecord(col, id, el) {
 
 /******** PRICE LOGIC *********/
 // Just promotions
-async function calcPrice(rental_price, rental_start_date, rental_end_date, client_id) {
-  let res = await $.ajax({
+async function calcPrice(total_price, products_prices, products_mult_prices, products_dates, client_id) {
+  var discounted_price = total_price
+  
+  // Applying Promotions
+  await $.ajax({
     url: "API/promotions/",
     type: "GET",
     beforeSend: xhr => {
@@ -1177,14 +1206,43 @@ async function calcPrice(rental_price, rental_start_date, rental_end_date, clien
       for (const [key, value] of Object.entries(proms)) {
         var prom_start_date = new Date(value.start_date)
         var prom_end_date = new Date(value.end_date)
-        if (rental_start_date >= prom_start_date && rental_end_date <= prom_end_date) {
-          var old_rental_price = rental_price 
-          rental_price = old_rental_price - ( old_rental_price / 100 * value.percentage )
-        }
+
+        products_dates.forEach((d, i) => {
+          // If the order was placed within the promotion period
+          if (d[0] >= prom_start_date && d[0] <= prom_end_date) {
+            discounted_price -= (products_mult_prices[i] / 100) * value.percentage
+          }
+        })
       }
     },
   });
-  return rental_price
+
+  // Weekdays Discount - Use Case 1
+  products_dates.forEach((d, index) => {
+    var start_day = d[0].getDay() // Sunday = 0, Monday = 1, ...
+    var diffInDays = products_mult_prices[index] / products_prices[index]
+    var current_day = start_day
+    var inner_weekdays = false
+    
+    for(i=0; i < diffInDays; i++) {
+      // Start weekdays check
+      if(current_day == 0) {
+        inner_weekdays = true;
+      }
+
+      // Inner weekdays Confirmed
+      if(current_day == 4 && inner_weekdays) {
+        var sub_amount = products_prices[index] + products_prices[index] * 0.5 + products_prices[index] * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
+        discounted_price -= sub_amount
+        inner_weekdays = false;
+      }
+      
+      if (current_day == 6) current_day = 0
+      else current_day++
+    }
+  })
+
+  return discounted_price
 }
 
 
@@ -1392,6 +1450,21 @@ function typingLogic(el) {
       }
       previousValue = $(el).val();
   }
+  if ($(el).data("db-field") === 'product_id' && $(el).val().indexOf("id=") > 0) {
+    var val = $(el).val();
+    var index = val.indexOf("id=") + 3;
+    var id = val.substring(index);
+    console.log(id)
+
+    $.ajax({
+      url: "API/inventory/" + id,
+      type: "GET",
+      success: res => {
+        console.log($(el))
+        dateRangePicker(res.products.indisponibilityDates, $(el).nextAll('input[name="daterange"]')[0]);
+      }
+    });
+  }
 }
 
 function getResults(val, col, field, dataList) {
@@ -1415,27 +1488,80 @@ function getResults(val, col, field, dataList) {
 
 function displayEdits(sel) {
   if (sel.value == "rent_confirm") {
-    $("#rentClose").hide();
-    $("#rentConfirm").show();
+    $("#rentPenalty").hide();
   } else if(sel.value == "rent_close") {
-    $("#rentConfirm").hide();
-    $("#rentClose").show();
+    $("#rentPenalty").show();
   } else if(sel.value == "unavailable"){
     $("#startEndDateU").show();
   }
 }
 
-function dateRangePicker() {
-  $(function() {
-    $('input[id="dateRange"]').daterangepicker({
-      timePicker : true,
-      opens: 'left',
-      locale: {
-        format: 'M/DD hh:mm A'
+function addPenalty(btn, rented_productsArr) {
+  var count = $(btn).data("count")
+  if (count < rented_productsArr.length) {
+   var selOptions = ``
+    rented_productsArr.forEach(prod => {
+      selOptions += `
+        <option value="${prod}">${prod}</option>
+      `
+    })
+    var fieldHTML = `
+      <div class="mb-3">
+        <label for="penaltyProd${count+1}" class="form-label">Penalty Product</label>
+        <select required id="penaltyProd${count+1}" class="form-select mb-2" data-db-field="penalty_prod">
+          ${selOptions}
+        </select>
+        <label for="penaltyDays${count+1}" class="form-label">Penalty Days</label>
+        <input type="number" class="form-control" id="penaltyDays${count+1}" min="1" max="7" data-db-field="penalty_days">
+      </div>`
+      console.log(btn)
+    $(fieldHTML).insertBefore(btn)
+    count++
+    $(btn).data("count", count)
+    if (count == rented_productsArr.length) btn.style.display = "none"
+  }
+}
+
+function dateRangePicker(disabledArr, pickerInput) {
+  console.log(pickerInput)
+  $(pickerInput).daterangepicker({
+    isInvalidDate: function(date){
+      // For each calendar date, check if it is within a disabled range.
+      for(i=0; i<disabledArr.length; i++){
+          // Get each from/to ranges
+          var From = new Date(disabledArr[i].startD)
+          var To = new Date(disabledArr[i].endD)
+          // Format them as dates : Year, Month (zero-based), Date
+          var FromDate = new Date(From.getUTCFullYear(), From.getUTCMonth(), From.getUTCDate());
+          var ToDate = new Date(To.getUTCFullYear(), To.getUTCMonth(), To.getUTCDate());
+
+          // Set a flag to be used when found
+          var found=false;
+          // Compare date
+          if(date >= FromDate && date <= ToDate){
+              found=true;
+              return true; // Return false (disabled) and the "red" class.
+          }
       }
-    }, function(start, end, label) {
-      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });
+      
+      //At the end of the for loop, if the date wasn't found, return true.
+      if(!found){
+          return false; // Return true (Not disabled) and no class.
+      }
+    }
+  });
+
+  $(pickerInput).on('apply.daterangepicker', function(ev, picker) {
+    var start_date = picker.startDate.toISOString()
+    var end_date = picker.endDate.toISOString()
+    var invalid = false
+    disabledArr.forEach(range => {
+      if(range.startD >= start_date && range.endD <= end_date)
+        invalid = true
+    })
+
+    if (invalid)
+      $(pickerInput).val("You can't comprehend disabled dates!");
   });
 }
 

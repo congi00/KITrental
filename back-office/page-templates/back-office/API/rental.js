@@ -58,7 +58,7 @@ router.get('/rentalByProductsIds/:ids', login.verifyPermission(login.permissionR
 
 //Add a new rental
 router.post('/', function (req, res) {
-  console.log(req);
+  console.log(req.body);
 
   const rental = new Rental({
     _id: new mongoose.Types.ObjectId(),
@@ -66,7 +66,6 @@ router.post('/', function (req, res) {
     products_id: req.body.products_id,
     datesProducts : req.body.datesProducts,
     start_date: req.body.start_date,
-    end_date: req.body.end_date,
     state: req.body.state,
     price: req.body.price
   });

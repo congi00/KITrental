@@ -244,6 +244,14 @@ table {
   margin-top: 0.25rem;
 }
 
+.date-picker {
+  margin-top: 0.5rem;
+  background: url(/img/schedule-calendar.png);
+  background-size: auto 60%;
+  background-repeat: no-repeat;
+  background-position: 98%;
+}
+
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
