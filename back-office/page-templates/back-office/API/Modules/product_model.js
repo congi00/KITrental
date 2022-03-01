@@ -45,10 +45,10 @@ const product = new Schema({
     required: true
   },
   indisponibilityDates:[{
-    startD:{
+    startDate:{
       type: Date
     },
-    endD:{
+    endDate:{
       type: Date
     },
   }]

@@ -129,14 +129,13 @@ router.delete('/:id', async function (req, res) {
 /*Verify the state*/
 //Update product
 router.patch('/:id', async function (req, res) {
-  console.log(req);
+  console.log(req.body);
+  console.log(req.params.id)
   
   await Products.findOneAndUpdate(
     { _id: req.params.id},
-    { "$push": { "indisponibilityDates": req.body.indisponibilityDates } },
     req.body
   )
-  .populate("")
   .exec()
   .then(result =>
     {if(result) res.status(200).json({ message: "Successful operation", result : result })

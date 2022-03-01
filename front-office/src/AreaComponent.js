@@ -186,7 +186,7 @@ function AreaComponent(){
                         <ListGroup className="list-group-flush">
                           <ListGroup.Item>State: {item.state}</ListGroup.Item>
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
-                          <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                          <ListGroup.Item>End: {item.end_date ? new Date(item.end_date).toLocaleString() : ''}</ListGroup.Item>
                         </ListGroup>
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Edit</Button>
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
@@ -198,7 +198,7 @@ function AreaComponent(){
                           <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" defaultValue={new Date(item.start_date).toISOString().slice(0,16)} readonly />
 
                           <label for="rentalEndDate" class="form-label">Ending Date</label>
-                          <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" defaultValue={new Date(item.end_date).toISOString().slice(0,16)} readonly />
+                          <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" defaultValue={item.end_date ? new Date(item.end_date).toISOString().slice(0,16) : ''} readonly />
                           <Button variant="primary" className='product-button' onClick={(e) => sendRentalData(item._id, e.target)}>Update</Button>
                         </form>
                       </div>
