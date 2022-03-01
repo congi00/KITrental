@@ -48,6 +48,9 @@ const rental = new Schema({
   real_price: {
     type: Number,
     required: true
+  },
+  note:{
+    type: String,
   }
 });
 

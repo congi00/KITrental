@@ -111,8 +111,9 @@ function CartItems(){
             console.log(res.data);
             var proms = res.data.promotions;
             console.log(proms)
-        
+            var real_price =0;
             cartItems.forEach(item => {
+
               var pricePItem = item.price;
               for (const [key, value] of Object.entries(proms)) {
                 var prom_start_date = new Date(value.start_date)
@@ -127,7 +128,7 @@ function CartItems(){
               productsID.push(item._id);
               console.log(pricePItem)
               priceC += pricePItem * getDates(item.startD,item.endD);
-              
+              real_price += item.price* getDates(item.startD,item.endD);
               console.log(priceC);
             });
             $.ajax({
@@ -146,6 +147,7 @@ function CartItems(){
                 datesProducts : datesP,
                 price : priceC,
                 state : "Pending",
+                real_price : real_price
               }),
               beforeSend: xhr => {
                 xhr.setRequestHeader('auth', auth_token)
