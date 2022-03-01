@@ -62,13 +62,14 @@ router.post('/', async function (req, res) {
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       image: req.body.image,
-      avaiability: req.body.avaiability,
+      availability: req.body.availability,
       state: req.body.state,
       description: req.body.description,
       category: req.body.category,
       price: req.body.price,
       subCategory: req.body.subCategory,
-      creation_date: req.body.creation_date
+      creation_date: req.body.creation_date,
+      indisponibilityDates: req.body.indisponibilityDates
     });
     product
       .save()
@@ -145,7 +146,8 @@ router.delete('/:id', async function (req, res) {
 /*Verify the state*/
 //Update product
 router.patch('/:id', async function (req, res) {
-  console.log(req.body);
+  console.log('PATCH inventory: ');
+  console.log(req.body)
   
   await Products.findOneAndUpdate(
     { _id: req.params.id},
