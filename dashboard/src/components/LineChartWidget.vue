@@ -106,6 +106,8 @@ export default defineComponent({
       } if (this.col === 'rental') {
         endpoint = "/api/rental/"
       } if (this.col === 'inventory') {
+        
+        console.log("ALERT");
         endpoint = "/api/rental/rentalByProductId/"
       } if (this.col === 'inventory/category') {
         endpoint = "/api/rental/rentalByProductsIds/"
@@ -131,7 +133,6 @@ export default defineComponent({
       }
       
       if (formData.choice !== 'products') {
-
         // Retrieve rental
         this.axios.get(endpoint + _params, {headers: {'auth': this.cookies.get('auth')}})
           .then((res) => {
@@ -192,10 +193,39 @@ export default defineComponent({
           console.log(incoming);
           counter.push(incoming);
         }else if(config.fieldToCountOn === "Conditions"){
-          this.axios.get("../api/inventory/", {params: {"product_id" : this.form.record}, headers: {'auth': this.cookies.get('auth')}})
+          this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
           .then((res) => {
-              var rental = res.data.rental
+              var inventoryP = res.data
+              var stateNew=0;
+              var statePerfect=0;
+              var stateGood=0;
+              var stateBroken=0;
+              inventoryP.forEach(element => {
+                switch(element.state){
+                  case "new":{
+                    stateNew ++;
+                    break;
+                  };
+                  case "perfect":{
+                    statePerfect++;
+                    break;
+                  };
+                  case "good":{
+                    stateGood++;
+                    break;
+                  };
+                  case "broken":{
+                    stateBroken++;
+                    break;
+                  };
+                  default:{
+                    break;
+                  }
+                }
+              });
+              console.log("ECC")
               console.log(rental)
+              console.log("ECCO")
               /* Only rental that fit within the picked date range (check based on *start_date*) */
               const resultObj = this.countPerMonth(rental, rangeDate)
               this.setData(resultObj.data, resultObj.labels)
@@ -205,7 +235,12 @@ export default defineComponent({
           })
         }else{
           // Standard counting by number of rental per month
+          console.log("ECCO")
+          console.log(Object.keys(filteredByValue))
+          console.log(Object.keys(filteredByValue).length)
           counter.push(Object.keys(filteredByValue).length)
+          console.log("ECCOLO")
+          
         }
         
         months.push(MONTHS[start_date.getMonth()])

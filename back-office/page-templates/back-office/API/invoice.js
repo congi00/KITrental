@@ -12,23 +12,30 @@ function createInvoice(infosPdf, path) {
 	//generateInvoiceTable(doc, invoice);
 
 	doc.end();
-	doc.pipe(fs.createWriteStream(path+(Math.random() + 1).toString(36).substring(7)+".pdf"));
+	doc.pipe(fs.createWriteStream(path+".pdf"));
 }
 
 function generateHeader(doc,infosPdf) {
 	doc .fillColor('#444444')
-        .fontSize(20)
+    .fontSize(20)
 		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 110, 57)
 		.fontSize(10)
 		.text('Via verdi 26', 200, 65, { align: 'right' })
 		.text('Bologna, BO, 40124', 200, 80, { align: 'right' })
-		.text('Product: '+infosPdf.product_name, 110, 137, {fontSize:"13vw"})
-        .text('Price: '+infosPdf.product_price+"$", 110, 157, {fontSize:"13vw"})
-        .text('Category: '+infosPdf.product_category, 110, 177, {fontSize:"13vw"})
-        .text('State: '+infosPdf.product_state, 110, 197, {fontSize:"13vw"})
-        .text('Address: '+infosPdf.client_address, 110, 217, {fontSize:"13vw"})
-        .text('Payment: '+infosPdf.client_payment, 110, 237, {fontSize:"13vw"})
 		.moveDown();
+    
+    var offset =0;
+  infosPdf.productsInfo.forEach(element => {
+    doc  .text('Product: '+element.product_name, 110, 137+offset, {fontSize:"13vw"})
+        .text('Price: '+element.product_price+"$", 110, 157+offset, {fontSize:"13vw"})
+        .text('Category: '+element.product_category, 110, 177+offset, {fontSize:"13vw"})
+        .text('State: '+element.product_state, 110, 197+offset, {fontSize:"13vw"})
+		.moveDown();
+    offset += 130;
+  });  
+  doc
+  .text('Total: '+infosPdf.finalPrice+"$", 210+offset, 317, {fontSize:"13vw"})
+  .moveDown();      
 }
 
 
@@ -140,16 +147,13 @@ router.post('/pdf/', async (req, res) => {
         client_name : req.body.clientInfo.client_name,
         client_surname : req.body.clientInfo.client_surname,
         client_address : req.body.clientInfo.client_address,
-        client_payment : req.body.clientInfo.client_payment,        
-        product_name: req.body.productInfo.product_name,
-        product_image: req.body.productInfo.product_image,
-        product_state: req.body.productInfo.product_state,
-        product_price: req.body.productInfo.product_price,
-        product_category: req.body.productInfo.product_category,
+        client_payment : req.body.clientInfo.client_payment,     
+        productsInfo : req.body.productsInfo,   
+        finalPrice : req.body.finalPrice
     }
     
     
-    createInvoice(infosPdf, "back-office/invoices/")
+    createInvoice(infosPdf, "back-office/invoices/"+req.body.rentalRef)
     /*res.status(200).json({ message: "Successful operation", result : result })
     .exec()
     .then(result => {

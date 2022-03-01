@@ -158,6 +158,7 @@ export default defineComponent({
             filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].price : console.log(filteredByValue[x].price);
           })
           console.log(incoming);
+          console.log("incoming");
           counter.push(incoming);
         }else{
           counter.push(Object.keys(filteredByValue).length)

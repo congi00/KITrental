@@ -27,39 +27,37 @@ function CardsSlider(){
   const [searchParams, setSearchParams] = useSearchParams();
   const [Asc,setAsc] = React.useState(false);
   const [Desc,setDesc] = React.useState(false);
+  const [selectCat,setSelectCat] = React.useState("");
+  const [availabilityF,setavailabilityF] = React.useState("");
   const param = searchParams.get("category") == "professional" ? "Professional":"Household" ;
   const price = searchParams.get("price");
+  const sub = searchParams.get("sub");
+  const availability = searchParams.get("availability");
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
   const loggedIn = sessionStorage.getItem("token");
+  
+  
 
 
   React.useEffect(() => {
-    //if(!price)
-      fetch("http://localhost:8000/API/inventory/category/"+ param)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result.products);
-          setIsLoaded(true);
-          if(!loggedIn){
-            result.products = result.products.filter((value, index, self) =>
-              index === self.findIndex((t) => (
-                t.subCategory === value.subCategory
-              ))
-            )
-          }
-          setProducts(result.products);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-    /*else
-      fetch("http://localhost:8000/API/inventory/price/"+ price+"&" +param)
+    if(!price){ 
+      var priceS = "null"
+    }else {
+      var priceS = price
+    }
+    if(!sub){ 
+      var subS = "null"
+    }else{
+      var subS = sub
+    }
+    if(!availability){ 
+      var availabilityS = "null"
+    }else{
+      var availabilityS = availability
+    }
+//+ price+"&sub="+ sub+"&availability="+ availability+"&category=" +param
+    if(price || sub || availability ){
+      fetch("http://localhost:8000/API/inventory/filter/?price="+ priceS+"&sub="+ subS+"&availability="+ availabilityS+"&category=" +param)
         .then(res => res.json())
         .then(
           (result) => {
@@ -74,7 +72,33 @@ function CardsSlider(){
             setIsLoaded(true);
             setError(error);
           }
-        )*/
+        )
+    }else{
+      fetch("http://localhost:8000/API/inventory/category/"+ param)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result.products);
+          setIsLoaded(true);
+          if(!loggedIn){
+            result.products = result.products.filter((value, index, self) =>
+              index === self.findIndex((t) => (
+                t.subCategory === value.subCategory
+              ))
+            )
+            result.products.sort((a,b) => (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0))
+          }
+          setProducts(result.products);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+    }
   }, [])
   
   const searchProduct = (e) =>{
@@ -96,17 +120,21 @@ function CardsSlider(){
     setDesc(!Desc);
   }
 
+
   function handleShow() {
     setShow(true);
   }
 
   const checkFilter = (e) => {
+    console.log(selectCat);
     e.preventDefault();
     if(Asc){
-      navigate("/catalog?category="+searchParams.get("category")+"&price=ASC");
+      navigate("/catalog?category="+searchParams.get("category")+"&price=ASC"+"&sub="+selectCat+"&availability="+availabilityF);
     }else if(Desc){
-      navigate("/catalog?category="+searchParams.get("category")+"&price=DESC");
-    }else{console.log("c")}
+      navigate("/catalog?category="+searchParams.get("category")+"&price=DESC"+"&sub="+selectCat+"&availability="+availabilityF);
+    }else{
+      navigate("/catalog?category="+searchParams.get("category")+"&price="+"&sub="+selectCat+"&availability="+availabilityF);
+    }
 
     window.location.reload(false);
   }
@@ -158,10 +186,25 @@ function CardsSlider(){
                     name="priceFilter"
                     onChange={onAsc}
                   />
-                  <Form.Label className="filterDate" for="startDate">Rent from</Form.Label>
-                  <Form.Control type="date" name='startDate'  />
-                  <Form.Label className="filterDate" for="endDate">To</Form.Label>
-                  <Form.Control type="date" name='endDate'  />
+                  <Form.Group className="mb-3">
+                    <Form.Label>Category</Form.Label>
+                    <Form.Select onChange={e => setSelectCat(e.target.value)}>
+                      <option>Select options</option>
+                      <option value="Blender">Blender</option>
+                      <option value="Barbeque">Barbeque</option>
+                      <option value="Torch">Torch</option>
+                      <option value="Kneader">Kneader</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Category</Form.Label>
+                    <Form.Select onChange={e => setavailabilityF(e.target.value)}>
+                      <option>Select options</option>
+                      <option value="available">Available</option>
+                      <option value="unavailable">Unavailable</option>
+                    </Form.Select>
+                  </Form.Group>
+                  
                   <Button type = 'submit' className="btnFormL"
                   onClick={checkFilter}
                   > 
