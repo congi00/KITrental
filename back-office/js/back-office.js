@@ -1159,7 +1159,7 @@ function createRecord(col, id, el) {
           var prodsSumPrice = 0
           prods.forEach((prod, i) => {
             const diffInMs   = toCreateObject['datesProducts'][i].endDate.getTime() - toCreateObject['datesProducts'][i].startDate.getTime()
-            const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+            const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
             const multPrice = prod.price * diffInDays
             prodsSumPrice += multPrice // Sum of products to multiply for rental days
             multPrices.push(multPrice)
@@ -1318,7 +1318,7 @@ async function updatePrice(rental_id, prodsDates) {
             // const diffInMs   = toCreateObject['datesProducts'][i].endDate.getTime() - toCreateObject['datesProducts'][i].startDate.getTime()
             console.log(prodsDates)
             const diffInMs   = (new Date(prodsDates[i].endDate)).getTime() - (new Date(prodsDates[i].startDate)).getTime()
-            const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+            const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
             const multPrice = prod.price * diffInDays
             prodsSumPrice += multPrice // Sum of products to multiply for rental days
             multPrices.push(multPrice)

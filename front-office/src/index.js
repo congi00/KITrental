@@ -12,6 +12,7 @@ import Cart from "./routes/Cart";
 import PrivateArea from './routes/PrivateArea';
 import Logout from './routes/Logout';
 import ChangeInfos from './routes/ChangeInfos';
+import EditRentalPage from './routes/EditRentalPage';
 import ScrollToTop from './scrollToTop';
 
 
@@ -30,6 +31,7 @@ ReactDOM.render(
       <Route path="/productSingle" element={<Product />} />
       <Route path="/catalog" element={<Inventory />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/editRental" element={<EditRentalPage />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

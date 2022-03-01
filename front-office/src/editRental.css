@@ -1,0 +1,182 @@
+.infoSection{
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #222;
+}
+
+
+.titleFormC{
+    color: #6c757d;
+    font-size: .875em;
+    margin-top: .25rem;
+    position: relative;
+    bottom: 30vh;
+    color: #fff;
+}
+
+.firstSectionC{
+    text-align: left;
+    position: relative;
+    bottom: 28vh;
+}
+
+.btnFormC{
+    background-color: #161616;
+    border-color: #161616;
+    height: 6vh;
+    left: 20vw;
+    position: relative;
+    width: 40vw;
+    bottom: 21vh;
+}
+
+.backIcon{
+    position: absolute;
+    left: 5vw;
+    top:5vh;
+    color: #fff;
+}
+
+/********** MEDIA QUERIES ************/
+
+@media (min-width: 992px) {
+    .infoSection {
+        width: 100%;
+    }
+    .formFields {
+        width: unset;
+        display: block;
+        margin: auto;
+        margin-top: 0;
+        padding-top: 17vh;
+    }
+    .backIcon {
+        font-size: 4vw;
+        top: 50vh;
+        transform: translate(0, -50%);
+    }
+    .titleFormC {
+        position: unset;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .firstSectionC {
+        position: unset;
+    }
+    .form-control{
+        left: 0;
+        width: 100%;
+    }
+    .selectProd {
+        left: 0;
+        width: 20%;
+        margin: auto;
+    }
+    .btnFormC {
+        position: unset;
+        width: 20%;
+        display: block;
+        margin: 1rem auto 1rem auto;
+    }
+    .edit-product-wrapper {
+        margin-top: 5rem;
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 3rem;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    .productsImg {
+        display: block;
+        max-width: 30%;
+        height: auto;
+    }
+    /* .calendar {
+        margin-top: 1rem;
+    } */
+    .pricesDiv {
+        color: white;
+        text-align: center;
+        margin-top: 3rem;
+        font-size: 1.2rem;
+        flex: 0 0 100%;
+    }
+    .parRentalPrice, .parProdPrice {
+        margin-right: 2rem;
+    }
+    .pricesDiv p {
+        display: inline;
+    }
+    .calendar > div {
+        display: block;
+        margin: auto;
+        width: fit-content;
+    }
+    .date-picker input {
+        max-width: 30%;
+    }
+    .reportTitle {
+        color: white;
+        margin-bottom: 1rem;
+    }
+    textarea {
+        width: 100%;
+        padding: 0.5rem;
+    }
+    .errorMSG {
+        color: #BF0603;
+        margin: 1rem 0 0 0;
+        font-size: 1.1rem;
+    }
+    .btn-broken {
+        height: 3em;
+        width: 8em;
+        border: none;
+        border-radius: 10em;
+        background: #BF0603;
+        font-size: 17px;
+        color: #ffffff;
+        font-family: inherit;
+        font-weight: 500;
+        display: block;
+        margin: 1rem auto 0 auto;
+        
+    }
+    
+    .btn-broken:hover {
+        animation: shake3856 0.3s linear infinite both;
+        background: #BF0603!important;
+    }
+    
+    @keyframes shake3856 {
+        0% {
+            -webkit-transform: translate(0);
+            transform: translate(0);
+        }
+    
+        20% {
+            -webkit-transform: translate(-1px, 1px);
+            transform: translate(-1px, 1px);
+        }
+        
+        40% {
+            -webkit-transform: translate(-1px, -1px);
+            transform: translate(-1px, -1px);
+        }
+        
+        60% {
+            -webkit-transform: translate(1px, 1px);
+            transform: translate(1px, 1px);
+        }
+        
+        80% {
+            -webkit-transform: translate(1px, -1px);
+            transform: translate(1px, -1px);
+        }
+    
+        100% {
+            -webkit-transform: translate(0);
+            transform: translate(0);
+        }
+    }
+}
