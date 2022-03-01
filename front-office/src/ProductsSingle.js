@@ -11,7 +11,6 @@ import Cookies from 'universal-cookie'
 import { useMediaQuery } from 'react-responsive'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import addDays from "date-fns/addDays";
 import $ from 'jquery';
 
 function ProductsSingle(){

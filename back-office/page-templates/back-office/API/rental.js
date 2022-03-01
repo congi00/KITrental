@@ -87,7 +87,7 @@ router.post('/', function (req, res) {
 })
 
 // Get single rental
-router.get('/:id',login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
+router.get('/:id',login.verifyPermission(login.permissionRoleLevels["client"]), function (req, res) {
     Rental.findOne({ _id: req.params.id})
   .exec()
   .then(rental => {
@@ -116,6 +116,7 @@ router.delete('/:id', function (req, res) {
 
 //Update rental
 router.patch('/:id', async function (req, res) {
+  console.log('PATCH RENTAL')
   console.log(req.body)
   await Rental.findOneAndUpdate(
     { _id: req.params.id},
