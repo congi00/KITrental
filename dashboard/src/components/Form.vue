@@ -9,6 +9,7 @@
         components: {Datepicker},
         props: {
             col : '',
+            chartType : '',
             modelValue: {
                 type: Object,
                 default: () => {}
@@ -30,7 +31,7 @@
         },
         mounted () {
             // Generate random ID
-            if (col !== 'rental') {
+            if (this.col !== 'rental') {
                 const randID = Date.now()
                 this.$refs.recordsList.setAttribute('id', randID)
                 this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
@@ -79,37 +80,31 @@
 
 <template>
     <form>
-        <!-- <select v-model="form.selected" class="form-select" @change="selectChange">
-            <option disabled value="">Please select one</option>
-            <option value="clients">Client</option>
-            <option value="inventory">Product</option>
-            <option value="rental">Rental</option>
-        </select> -->
-        <select v-if="this.col === 'inventory/category'" class="form-select" aria-label=".form-select-lg example" v-model="form.category">
+        <select v-if="this.col === 'inventory/category' && (this.chartType !== 'Torta' || this.col !== 'inventory')" class="form-select" aria-label=".form-select-lg example" v-model="form.category">
             <!-- <option selected>Open this select menu</option> -->
             <option value="Household">Household</option>
             <option value="Professional">Professional</option>
         </select>
-        <select v-if="this.col === 'inventory/category'" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
+        <select v-if="this.col === 'inventory/category' && (this.chartType !== 'Torta' || this.col !== 'inventory')" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
             <!-- <option selected>Open this select menu</option> -->
             <option value="Incoming">Incoming</option>
             <option value="rental">N° of Rental</option>
             <option value="products">N° of Products</option>
         </select>
-        <select v-if="this.col === 'clients'" class="form-select form-select" aria-label=".form-select-lg example" v-model="form.choice">
+        <select v-if="this.col === 'clients' && (this.chartType !== 'Torta' || this.col !== 'inventory')" class="form-select form-select" aria-label=".form-select-lg example" v-model="form.choice">
             <!-- <option disabled selected>Open this select menu</option> -->
             <option value="Incoming">Incoming</option>
             <option value="rental">N° of Rental</option>
         </select>
-        <input v-if="this.col !== 'inventory/category' && this.col !== 'rental'" class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
+        <input v-if="this.col !== 'inventory/category' && this.col !== 'rental' && (this.chartType !== 'Torta' || this.col !== 'inventory')" class="form-control" list="recordList" type="text" v-model="form.record" placeholder="Single Record" @keyup="handleChange" />
         <datalist ref="recordsList" id="recordList"></datalist>
-        <select v-if="this.col === 'rental' || this.col === 'inventory'" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
+        
+        <select v-if="this.col === 'rental' || this.col === 'inventory' && (this.chartType !== 'Torta' || this.col !== 'inventory')" class="form-select" aria-label=".form-select-lg example" v-model="form.choice">
             <option selected value="Incoming">Incoming</option>
             <option value="Deals">Deals</option>
-            <option v-if="this.col === 'inventory'" value="Conditions">Conditions</option>
         </select>
         <!-- <input class="form-control" type="number" v-model="form.date" placeholder="Months" /> -->
-        <Datepicker v-model="form.date" range :enableTimePicker="false" />
+        <Datepicker v-if="this.chartType !== 'Torta' || this.col !== 'inventory'" v-model="form.date" range :enableTimePicker="false" />
     </form>
 </template>
 

@@ -28,6 +28,16 @@
             hiddenOnCollapse: true
           },
           {
+            href: '/dashboard',
+            title: 'Home',
+            icon: {
+              element: 'font-awesome-icon',
+              attributes: {
+                icon: 'house-laptop'
+              }
+            }
+          },
+          {
             href: '/dashboard/clients',
             title: 'Clients',
             icon: {

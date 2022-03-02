@@ -9,7 +9,8 @@
       </div>
       <div class="col col-chart">
         <div class="chart-form">
-          <Form ref="formRef" v-model="form" :col="col" />
+          <h2 class="form-title">Insert Data Below:</h2>
+          <Form ref="formRef" v-model="form" :col="col" :chartType="chartType" />
           <button class="update-button" type="button" @click="updateData">Update Data</button>
           <h3  class="errorMsg" ref="errorMSG">Fields values missing!</h3>
         </div>
@@ -36,7 +37,8 @@ export default defineComponent({
   props: ['col'],
   data() {
     return {
-      form: {}
+      form: {},
+      chartType: 'Chart'
     }
   },
   mounted() {
@@ -53,6 +55,7 @@ export default defineComponent({
       plugins: {
         legend: {
           position: 'top',
+          display: false,
         },
         title: {
           display: true,
@@ -107,8 +110,6 @@ export default defineComponent({
         endpoint = "/api/rental/"
         _params = ''
       } if (this.col === 'inventory') {
-        
-        console.log("ALERT");
         endpoint = "/api/rental/rentalByProductId/"
       } if (this.col === 'inventory/category') {
         endpoint = "/api/rental/rentalByProductsIds/"
@@ -188,60 +189,55 @@ export default defineComponent({
         }
 
         if(config.fieldToCountOn === "Incoming"){
-          const IncomeOption = Object.keys(filteredByValue).map(x => {
-            filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].price : console.log(filteredByValue[x].price);
-          })
+          const IncomeOption = Object.keys(filteredByValue).map((x, i) => {
+            // console.log('prodPrice:')
+            // console.log(incoming+=filteredByValue[x].pricesProducts[i])
+            // console.log('prodPrices:')
+            // console.log(incoming+=filteredByValue[x].pricesProducts)
+            filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].pricesProducts[i].price : console.log(filteredByValue[x].price);
+          }) 
           console.log(incoming);
           counter.push(incoming);
-        }else if(config.fieldToCountOn === "Conditions"){
-          this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
-          .then((res) => {
-              var inventoryP = res.data
-              var stateNew=0;
-              var statePerfect=0;
-              var stateGood=0;
-              var stateBroken=0;
-              inventoryP.forEach(element => {
-                switch(element.state){
-                  case "new":{
-                    stateNew ++;
-                    break;
-                  };
-                  case "perfect":{
-                    statePerfect++;
-                    break;
-                  };
-                  case "good":{
-                    stateGood++;
-                    break;
-                  };
-                  case "broken":{
-                    stateBroken++;
-                    break;
-                  };
-                  default:{
-                    break;
-                  }
-                }
-              });
-              console.log("ECC")
-              console.log(rental)
-              console.log("ECCO")
-              /* Only rental that fit within the picked date range (check based on *start_date*) */
-              const resultObj = this.countPerMonth(rental, rangeDate)
-              this.setData(resultObj.data, resultObj.labels)
-          })    
-          .catch((errors) => {
-              console.log(errors);
-          })
-        }else{
+        }
+        // else if(config.fieldToCountOn === "Conditions"){
+        //   this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
+        //   .then((res) => {
+        //       var inventoryP = res.data
+        //       var stateNew=0;
+        //       var statePerfect=0;
+        //       var stateGood=0;
+        //       var stateBroken=0;
+        //       inventoryP.forEach(element => {
+        //         switch(element.state){
+        //           case "new":{
+        //             stateNew ++;
+        //             break;
+        //           };
+        //           case "perfect":{
+        //             statePerfect++;
+        //             break;
+        //           };
+        //           case "good":{
+        //             stateGood++;
+        //             break;
+        //           };
+        //           case "broken":{
+        //             stateBroken++;
+        //             break;
+        //           };
+        //           default:{
+        //             break;
+        //           }
+        //         }
+        //       });
+        //   })    
+        //   .catch((errors) => {
+        //       console.log(errors);
+        //   })
+        // }
+        else{
           // Standard counting by number of rental per month
-          console.log("ECCO")
-          console.log(Object.keys(filteredByValue))
-          console.log(Object.keys(filteredByValue).length)
-          counter.push(Object.keys(filteredByValue).length)
-          console.log("ECCOLO")
-          
+          counter.push(Object.keys(filteredByValue).length) 
         }
         
         months.push(MONTHS[start_date.getMonth()])
@@ -275,5 +271,10 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.form-title {
+  color: #222;
+  margin-bottom: 1.5rem;
 }
 </style>
