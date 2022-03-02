@@ -11,7 +11,7 @@ function Inventory(){
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
   return(
-    <div style={{"overflow":"hidden"}}>
+    <div>
       {isDesktop &&
         <Navbar />
       }

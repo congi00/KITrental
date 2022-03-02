@@ -319,7 +319,7 @@ function EditRental(){
                             <h1 className="changeinfos-title">Edit a Product's Dates</h1>
                         </div>
                     </Form.Text>
-                    <div className="firstSectionC">
+                    <div className="firstSectionEditRental">
                         <Form.Select aria-label="Select Product" size="lg" value={selectedOption} className="selectProd" onChange={e => {setInitialDates(e.target.value);setSelectedOption(e.target.value)}}>
                             <option>Select Product</option>
                             {products.map((prod, i) => (
@@ -329,7 +329,7 @@ function EditRental(){
                         <div className='edit-product-wrapper'>
                             {selectedOption != "Select Product"  &&
                             <>
-                                <img className="productsImg" src={'img/products/'+ products[selectedOption].image}/>
+                                <img className="imgEditRental" src={'img/products/'+ products[selectedOption].image}/>
                                 <div className='calendar'>
                                     <DatePicker
                                         wrapperClassName="date-picker"

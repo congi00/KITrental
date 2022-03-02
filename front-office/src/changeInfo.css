@@ -62,6 +62,10 @@
     }
     .firstSectionC {
         position: unset;
+        max-width: 30vw;
+    }
+    .firstSectionC label {
+        left: 0;
     }
     .btnFormC {
         position: unset;
