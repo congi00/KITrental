@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './cart.css';
 import {Card} from "react-bootstrap";
 import {Form, Button }from 'react-bootstrap';
+import {Link } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import $ from 'jquery'
@@ -209,9 +210,11 @@ function CartItems(){
         <div className="cartSection">
           <h1>CART</h1>
           <h2>Your cart is empty</h2>
-          <Button className='emptyCartBtn' onClick={navigate('/catalog')}>
-            Go to shop
-          </Button>
+          <Link to="/catalog">
+            <Button className='emptyCartBtn'>
+              Go to shop
+            </Button>
+          </Link>
         </div>
     )
   );
