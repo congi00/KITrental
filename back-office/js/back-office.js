@@ -393,7 +393,7 @@ function showRental() {
               <td>${new Date(rental.end_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
-              <td><a href=""><i class="bi bi-receipt" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href="https://site202126.tw.cs.unibo.it/invoices/'${rental._id}'.pdf"><i class="bi bi-receipt" style="color: brown; cursor: pointer;"></i></a></td>
             </tr>`);
         } else {
           $(tbdy).append(`
