@@ -1574,7 +1574,6 @@ async function updateRecordInfo(col, id, el) {
       var fields = $($(el).closest("form")).find("input, textarea, select");
       if (!fields.length) {
         fields = $($(el).siblings("input"))
-        console.log("utils['prod_date']")
         if ((col === 'rental' || col === 'inventory') && fields.data('db-field') === 'product_dates') {
           dates_obj = {startDate: new Date(fields.data('daterangepicker').startDate.toISOString()), endDate: new Date(fields.data('daterangepicker').endDate.toISOString())}
           utils['prod_date'] = dates_obj
@@ -1604,7 +1603,7 @@ async function updateRecordInfo(col, id, el) {
             var data = res[Object.keys(res)[0]]
             console.log(res)
             if (col === 'rental') {
-              
+              console.log("AKKK")
 
               // Retrieves datesProducts arr from db, replace the indexed prod date and update
               var newDatesProds = data.datesProducts
@@ -1693,6 +1692,58 @@ async function updateRecordInfo(col, id, el) {
       
       if(col == "rental"){
         console.log(toUpdateObject);
+
+        if(toUpdateObject["change_prod"])
+        await $.ajax({
+          url: "API/rental/" + id,
+          type: "GET",
+          beforeSend: xhr => {
+            xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+          },
+          success: async function (response) {
+            if (response) {
+              var rntl = response.rental;
+              console.log("CIAO");
+              console.log(response.rental);
+              toUpdateObject["change_prod"] = toUpdateObject["change_prod"].slice(toUpdateObject["change_prod"].indexOf("id=")+3)
+              console.log("eccolo")
+              console.log(toUpdateObject["change_prod"]);
+              rntl.products_id.map(async (element,index)=>{
+                if(element == toUpdateObject["change_prod"]){
+                  rntl.products_id[index] = toUpdateObject["changeNew_prod"]
+                  const actualPrice = rntl.pricesProducts[index];
+                  await $.ajax({
+                    url: "API/inventory/" + toUpdateObject["changeNew_prod"],
+                    type: "GET",
+                    beforeSend: xhr => {
+                      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                    },
+                    success: async function (response) {
+                      console.log(rntl.pricesProducts[index].price)
+                      console.log(toUpdateObject["payed_days"])
+                      var priceNewP = rntl.pricesProducts[index].price / toUpdateObject["payed_days"]
+                      console.log(rntl.note);
+                      if(rntl.note){
+                        toUpdateObject["note"] = rntl.note + " problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati";
+                        rntl.note = toUpdateObject["note"]
+                      }else{
+                        toUpdateObject["note"] = " problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati";
+                        rntl.note = toUpdateObject["note"];
+                      }console.log(rntl.note);
+                    }
+                  });
+                }
+              })
+              toUpdateObject["products_id"] = rntl.products_id
+              console.log(toUpdateObject["products_id"])
+
+            }
+          },
+        });
+        
+        //toUpdateObject[] = toUpdateObject[change_prod]
+
+
         //toUpdateObject[real_price] = toUpdateObject[real_price].parseInt();
       }
       console.log(toUpdateObject)
@@ -1709,6 +1760,8 @@ async function updateRecordInfo(col, id, el) {
         success: function (response) {
           if (response) {
             console.log(response);
+            if(response.rental)
+              singleRental(id)
             // Put everything back to read-only
             $(el).html("Update Data");
             $(el).siblings("input, textarea").attr("readonly", true);
@@ -1943,8 +1996,6 @@ function addPenalty(btn,col, rented_productsArr) {
                 </select>
                 <label for="payedDays${count+1}" class="form-label">Paid days</label>
                 <input type="number" class="form-control" id="paidDays${count+1}" onchange="calcPriceNew(this,'paid')" min="0" max="100" data-db-field="payed_days">
-                <label for="freeDays${count+1}" class="form-label">Free days</label>
-                <input type="number" class="form-control" id="freeDays${count+1}" onchange="calcPriceNew(this,'free');" min="0" max="100" data-db-field="free_days">
               </div>`
               console.log(btn)
             $(fieldHTML).insertBefore(btn)
