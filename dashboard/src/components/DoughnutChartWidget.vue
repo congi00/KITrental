@@ -7,9 +7,10 @@
         </div>
         <DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
       </div>
-      <div class="col">
+      <div class="col col-chart">
         <div class="chart-form">
-          <Form ref="formRef" v-model="form" :col="col" />
+          <h2 class="form-title">Insert Data Below:</h2>
+          <Form ref="formRef" v-model="form" :col="col" :chartType="chartType" />
           <button class="update-button" type="button" @click="updateData">Update Data</button>
           <h3  class="errorMsg" ref="errorMSG">Fields values missing!</h3>
         </div>
@@ -36,7 +37,8 @@ export default defineComponent({
   props: ['col'],
   data() {
     return {
-      form: {}
+      form: {},
+      chartType: 'Torta'
     }
   },
   mounted() {
@@ -79,99 +81,51 @@ export default defineComponent({
     return { testData, setData, chartRef, options, cookies };
   },
   methods: {
-    updateData(e) {
-      /* IMPORT FORM DATA from Form Sub-Component */
-      const formData = this.form
-      var colData = "rental" // !!!HARD-CODED!!!
-      var record = formData.record        // id with format: {recordName} id={recordID}
-      var rangeDate = formData.date
-      var rangeDate = rangeDate.map(x => new Date(x))
-      if (!this.col || (!record&& !(this.col == "rental")) || !rangeDate) {
-        this.$refs.errorMSG.style.display ="block";
-        return;
-      } else {
-        this.$refs.errorMSG.style.display ="none";
-      }
-      if (record && record.includes('id=')) {
-        var index = record.indexOf("id=") + 3
-        record = record.substring(index)
-      }
+    async updateData(e) {
+      const CONDITIONS = [
+          'New',
+          'Perfect',
+          'Good',
+          'Broken'
+        ];
+      var conditions = []
 
-      /* QUERY FOR RETRIEVING DATA from the db */
-      var q = {}
-      if (this.col === 'clients') {
-        q = {"client_id" : record}
-      } if (this.col === 'inventory') {
-        q = {"product_id" : record}
-      } if (this.col === 'inventory/category') {
-        
-      }
-      this.axios.get("../api/" + colData + "/", {params: q, headers: {'auth': this.cookies.get('auth')}})
-        .then((res) => {
-            var rental = res.data.rental
-            console.log(rental)
-            /* Only rental that fit within the picked date range (check based on *start_date*) */
-            const resultObj = this.countPerMonth(rental, rangeDate)
-            this.setData(resultObj.data, resultObj.labels)
+      this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
+      .then((res) => {
+          var inventoryP = res.data.products
+          var stateNew=0;
+          var statePerfect=0;
+          var stateGood=0;
+          var stateBroken=0;
+          inventoryP.forEach(element => {
+            switch(element.state){
+              case "new":{
+                stateNew ++;
+                break;
+              };
+              case "perfect":{
+                statePerfect++;
+                break;
+              };
+              case "good":{
+                stateGood++;
+                break;
+              };
+              case "broken":{
+                stateBroken++;
+                break;
+              };
+              default:{
+                break;
+              }
+            }
+          });
+          conditions = [stateNew, statePerfect, stateGood, stateBroken]
+          this.setData(conditions, CONDITIONS)
         })    
         .catch((errors) => {
             console.log(errors);
-        })  
-      // var data = [0, 0, 1, 2, 3]
-      // this.setData(data)
-    },
-    countPerMonth(rental, range) {
-      /* Initialization first sub range (month) */
-      var start_date = range[0]
-      var end_date = new Date(range[0].getFullYear(), start_date.getMonth() + 1, 0); // This way you get the last day of the previous month
-      var counter = []
-      var months = []
-      var start_m = moment(start_date)
-      var end_m = moment(end_date)
-      const MONTHS = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December'
-        ];
-      var incoming = 0;
-      /* The range is smaller than one month */
-      if (end_date > range[1]) return rental.length 
-
-      /* Count how many records per month within the given range */
-      do {
-        const filteredByValue = Object.fromEntries(
-            Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
-
-        if(this.form.choice === "Incoming"){
-          
-          const IncomeOption = Object.keys(filteredByValue).map(x => {
-            filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].price : console.log(filteredByValue[x].price);
-          })
-          console.log(incoming);
-          counter.push(incoming);
-        }else{
-          counter.push(Object.keys(filteredByValue).length)
-        }
-        
-        months.push(MONTHS[start_date.getMonth()])
-
-        /* Month Range Update */
-        start_date = start_m.add(1, 'month').toDate()
-        end_date   = end_m.add(1, 'month').toDate()
-        
-        if (end_date > range[1]) end_date = range[1]
-      } while (start_date < range[1])
-
-      return {data: counter, labels: months} 
+        })
     }
   }
 });
@@ -188,5 +142,15 @@ export default defineComponent({
 
 .dp__month_year_row {
     position: unset; // CSS fix for vue3-date-time-picker overlay
+}
+
+.col-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-title {
+  color: #222;
+  margin-bottom: 1.5rem;
 }
 </style>

@@ -7,10 +7,10 @@ export default {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container titles-wrapper">
     <h1>Welcome in your dashboard panel Mr. Manager!</h1>
     <h2 style="margin-bottom:2rem">From here you're be able to generate and inspect graphs on several statistics</h2>
-    <h2 style="margin-bottom:3rem">like income and number of rentals, <u>divided by months</u>. </h2>
+    <h2 style="margin-bottom:1rem">like income and number of rentals, <u>divided by months</u>. </h2>
     <h2 style="margin-bottom:3rem">Please, select an option among the ones in the sidebar. </h2>
   </div>
 </template>
@@ -37,4 +37,9 @@ export default {
 .vsm--scroll-overflow, .vsm--scroll {
   position: unset!important;
 }
+
+.titles-wrapper {
+  margin-top: 3rem;
+}
+
 </style>

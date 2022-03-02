@@ -57,8 +57,7 @@ export default {
   }
 }
 .charts-wrapper {
-  max-width: 50vw;
-  max-height: 50vh;
+  height: 42vh;
   margin: 1rem;
   display: flex; 
   justify-content: center;
@@ -67,8 +66,14 @@ export default {
     background: white;
     display: flex;
     align-self: flex-start;
-    max-width: 40vw;
+    width: 90%;
+    height: 100%;
     padding: 1.5rem;
+    div:nth-child(2) {
+      max-width: 100%;
+      position: relative;
+      height: 100%;
+    }
     .chart-form {
       display: block;
       margin: auto;
