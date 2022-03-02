@@ -1067,6 +1067,7 @@ function createRecord(col, id, el) {
                         xhr.setRequestHeader('auth', authToken)
                       },
                       success: res => {
+
                         additivePrice += (res.products.price * toCreateObject['penalties_days'][index] * (50/100)) 
                         if(index == toCreateObject['penalties_prods'].length-1){
                           additivePrice+=rntl.price;
@@ -1078,7 +1079,7 @@ function createRecord(col, id, el) {
                             type: "PATCH",
                             contentType: "application/json",
                             dataType: "json",
-                            data: JSON.stringify({note:"penalties",price: additivePrice }),
+                            data: JSON.stringify({note:"penalties",price: additivePrice, }),
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)
                             },
@@ -1129,8 +1130,24 @@ function createRecord(col, id, el) {
                                         )
                                       });
                                       console.log("prezzo rental"+additivePrice)
-                                      const finalPrice = await calcPrice(additivePrice, products_prices, multPrices, rentalPriceR.datesProducts, rentalPriceR.client_id);
+                                      const pricesFinalP = await calcPrice(additivePrice, products_prices, multPrices, rentalPriceR.datesProducts, rentalPriceR.client_id,"getPrices");
+                                      const finalPrice = pricesFinalP.discounted_price
+                                      const pricesProducts = pricesFinalP.pricesProducts
+                                      console.log(pricesProducts)
                                       console.log(finalPrice)
+                                      $.ajax({
+                                        url: "API/rental/" + rntl._id,
+                                        type: "PATCH",
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        data: JSON.stringify({pricesProducts: pricesProducts}),
+                                        beforeSend: xhr => {
+                                          xhr.setRequestHeader('auth', authToken)
+                                        },
+                                        success: function (response) {
+                                          console.log("OK")
+                                        }
+                                      });
                                       $.ajax({
                                         url: "API/invoice/pdf/",
                                         type: "POST",
@@ -1166,6 +1183,103 @@ function createRecord(col, id, el) {
                         console.log("ASKKKK")
                       }});
                   });
+                }else{
+                            $.ajax({
+                              url: "API/clients/" + rntl.client_id,
+                              type: "GET",
+                              beforeSend: xhr => {
+                                xhr.setRequestHeader('auth', authToken)
+                              },
+                              success: res => {
+                                const clnt = res.client;
+                                const clientInfo = {
+                                    client_name: res.client.name,
+                                    client_surname: res.client.surname,
+                                    client_address: res.client.address,
+                                    client_payment: res.client.payment,
+                                }
+                                console.log("CIAO")
+                                $.ajax({
+                                  url: "API/inventory/many/" + rntl.products_id.toString(),
+                                  type: "GET",
+                                  beforeSend: xhr => {
+                                    xhr.setRequestHeader('auth', authToken)
+                                  },
+                                  success: async res => {
+                                    var products_prices = []
+                                    var multPrices = []
+                                    var prodsSumPrice = 0
+                                    const productsInfo = []
+                                    res.products.forEach((element,i)=>{
+                                      products_prices.push(element.price)
+                                      const diffInMs   = (new Date(rntl.datesProducts[i].endDate)).getTime() - (new Date(rntl.datesProducts[i].startDate)).getTime()
+                                      const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+                                      const multPrice = element.price * diffInDays
+                                      prodsSumPrice += multPrice // Sum of products to multiply for rental days
+                                      multPrices.push(multPrice)
+                                      productsInfo.push(
+                                        {
+                                          product_name: element.name,
+                                          product_image: element.image,
+                                          product_state: element.state,
+                                          product_price: element.price,
+                                          product_category: element.category,
+                                        }
+                                      )
+                                    });
+                                    console.log("prezzo rental"+additivePrice)
+                                    const pricesFinalP = await calcPrice(additivePrice, products_prices, multPrices, rntl.datesProducts, rntl.client_id,"getPrices");
+                                    const finalPrice = pricesFinalP.discounted_price
+                                    const pricesProducts = pricesFinalP.pricesProducts
+                                         
+                                    $.ajax({
+                                      url: "API/rental/" + rntl._id,
+                                      type: "PATCH",
+                                      contentType: "application/json",
+                                      dataType: "json",
+                                      data: JSON.stringify({pricesProducts: pricesProducts}),
+                                      beforeSend: xhr => {
+                                        xhr.setRequestHeader('auth', authToken)
+                                      },
+                                      success: function (response) {
+                                        console.log("OK")
+                                      }
+                                    });
+                                    
+                                    console.log(finalPrice)
+                                    $.ajax({
+                                      url: "API/invoice/pdf/",
+                                      type: "POST",
+                                      contentType: "application/json",
+                                      dataType: "json",
+                                      data: JSON.stringify({
+                                        clientInfo : clientInfo,
+                                        productsInfo : productsInfo,
+                                        rentalRef : rntl._id,
+                                        finalPrice : finalPrice
+                                      }),
+                                      beforeSend: xhr => {
+                                        xhr.setRequestHeader('auth', authToken)
+                                      },
+                                      success: function (response) {
+                                        if (response) {
+                                        } else {
+                                          alert("There was an error.");
+                                        }
+                                      },      
+                                      error: function(err){
+                                        console.log(err);
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            });
+                            console.log("response")
+                          
+                      
+                      console.log("ASKKKK")
+                    
                 }
                     }
                   });
@@ -1234,12 +1348,17 @@ function createRecord(col, id, el) {
             })
           })
 
+          console.log(prodsSumPrice);
           const rentalPrice = prodsSumPrice
-
-          const finalPrice = await calcPrice(rentalPrice, prices, multPrices, toCreateObject['datesProducts'], '')  
+          
+          const pricesFinalP = await calcPrice(rentalPrice, prices, multPrices, toCreateObject['datesProducts'], '',"getPrices")  
+          const finalPrice = pricesFinalP.discounted_price
+          const pricesProducts = pricesFinalP.pricesProducts
+          toCreateObject["pricesProducts"] = pricesProducts
+          console.log(toCreateObject["pricesProducts"]);
           toCreateObject['price'] = finalPrice
           toCreateObject['real_price'] = rentalPrice
-
+          toCreateObject["pricesProducts"] = pricesProducts;
           $.ajax({
             url: "API/" + col + "/",
             type: "POST",
@@ -1253,6 +1372,11 @@ function createRecord(col, id, el) {
               }
             },
           });
+
+
+          // toCreateObject['price'] = (prodsSumPrice * diffInDays).toString()
+          // console.log(JSON.stringify(toCreateObject))
+          
         } else {
           alert("There was an error.");
         }
@@ -1283,9 +1407,13 @@ function createRecord(col, id, el) {
 
 /******** PRICE LOGIC *********/
 // Just promotions
-async function calcPrice(total_price, products_prices, products_mult_prices, products_dates, client_id) {
+async function calcPrice(total_price, products_prices, products_mult_prices, products_dates, client_id,col) {
   var discounted_price = total_price
-  
+  var products_mult_pricesN = products_mult_prices;
+  console.log("AAA")
+  console.log(products_mult_prices)
+  console.log(products_mult_pricesN)
+  console.log("AAA")
   // Applying Promotions
   await $.ajax({
     url: "API/promotions/",
@@ -1303,6 +1431,12 @@ async function calcPrice(total_price, products_prices, products_mult_prices, pro
           // If the order was placed within the promotion period
           if (d.startDate >= prom_start_date && d.startDate <= prom_end_date) {
             discounted_price -= (products_mult_prices[i] / 100) * value.percentage
+            
+            console.log("xx")
+            console.log(products_mult_pricesN[i])
+            products_mult_pricesN[i] -= (products_mult_prices[i] / 100) * value.percentage
+            console.log("xxx")
+            console.log(products_mult_pricesN[i])
           }
         })
       }
@@ -1326,6 +1460,7 @@ async function calcPrice(total_price, products_prices, products_mult_prices, pro
       if(current_day == 4 && inner_weekdays) {
         var sub_amount = products_prices[index] + products_prices[index] * 0.5 + products_prices[index] * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
         discounted_price -= sub_amount
+        products_mult_pricesN[index] -=sub_amount
         inner_weekdays = false;
       }
       
@@ -1334,7 +1469,18 @@ async function calcPrice(total_price, products_prices, products_mult_prices, pro
     }
   })
 
-  return discounted_price
+  var pricesProducts = []
+  console.log(products_mult_pricesN);
+  products_mult_pricesN.forEach(element => {
+    pricesProducts = pricesProducts.concat({price : element})
+  });
+
+  console.log()
+  if(col === "getPrices")
+    return {discounted_price,pricesProducts}
+  else{
+    return discounted_price
+  }
 }
 
 async function updatePrice(rental_id, prodsDates) {
@@ -1373,7 +1519,7 @@ async function updatePrice(rental_id, prodsDates) {
 
           const rentalPrice = prodsSumPrice
           console.log("Calculating price...")
-          updatedPrice = await calcPrice(rentalPrice, prices, multPrices, prodsDates, '')  
+          updatedPrice = await calcPrice(rentalPrice, prices, multPrices, prodsDates, '',"")  
           console.log('updated price inner: ' + updatedPrice)
 
           $.ajax({
@@ -1417,7 +1563,6 @@ async function updateRecordInfo(col, id, el) {
 
   if (col === 'clients' || ( col === 'rental' && new Date(startDate) > new Date() ) || col === 'inventory' ) {
     if (boolUtil) {
-      console.log("Ciao")
       $(el).siblings("input, textarea").attr("readonly", false);
       $("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
@@ -1429,13 +1574,13 @@ async function updateRecordInfo(col, id, el) {
       var fields = $($(el).closest("form")).find("input, textarea, select");
       if (!fields.length) {
         fields = $($(el).siblings("input"))
+        console.log("utils['prod_date']")
         if ((col === 'rental' || col === 'inventory') && fields.data('db-field') === 'product_dates') {
           dates_obj = {startDate: new Date(fields.data('daterangepicker').startDate.toISOString()), endDate: new Date(fields.data('daterangepicker').endDate.toISOString())}
           utils['prod_date'] = dates_obj
           utils['prev_prod_date'] = new Date(fields.data('daterangepicker').oldStartDate.toISOString())
           if (col === 'rental') utils['prodPos'] = fields.data('picker')
         }
-
         
       } else {
         // JavaScript object to pass as data to update in the POST request
@@ -1466,6 +1611,7 @@ async function updateRecordInfo(col, id, el) {
               newDatesProds[utils['prodPos']] = utils['prod_date']
               toUpdateObject['datesProducts'] = newDatesProds
 
+              
               // Updates Price
               console.log(newDatesProds)
               var updatedPrice = await updatePrice(id, newDatesProds)
@@ -1815,7 +1961,7 @@ function addPenalty(btn,col, rented_productsArr) {
 }
 
 function calcPriceNew(btn,col){
-  
+
 
 
   if(col === "free"){
