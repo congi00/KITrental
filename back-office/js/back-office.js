@@ -414,7 +414,8 @@ function showRental() {
           <input required class="form-control" list="objectsList" id="searchObjects" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
           <datalist id="objectsList"></datalist>
           <input type="text" name="daterange" class="date-picker form-control" data-db-field="product_date" />
-          <button class="btn-add-product" onclick="addProductField(this)">+</button>
+          <button type="button" class="btn-add-product" onclick="addProductField(this)">Add Product</button>
+          <button type="button" class="btn-add-multiplier" onclick="addPriceSupplement(this)">Add Multiplier</button>
         </div>
         <div class="mb-3">
             <label for="searchClients" class="form-label">Client Renting</label>
@@ -579,40 +580,44 @@ function singleRental(id) {
                 </div>
                 `)
                 
-              body = `
-                  <div class="mb-3">
-                    <label for="operationType" class="form-label">Type of Operation</label>
-                    <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
-                        <!-- <option value="rent_create">Create Rent</option>
-                        <option value="rent_update">Update Rent</option> -->
-                        <option value="rent_confirm">Rent Confirmation</option>
-                        <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
-                    </select>
-                  </div>
-      
-                  <!-- Possible fields to edit in case of a rental confirmation operation -->
-                  <div class="mb-3">
-                    ${rented_productsHTML_confirm}
-                  </div>
-                  <div class="mb-3" id="rentPenalty" style="display:none;">
-                    <button type="button" onclick='addPenalty(this,"penalty", ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
-                  </div>
-                  <div class="mb-3">
-                      <label for="operationNotes" class="form-label">Notes</label>
-                      <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
-                      </textarea>
-                </div>`
+              // If rental is closed no more operations are possible
+              if (rental.state !== 'Closed') {
 
-              $(content).append(createModal(body))
-              $(document).off("click", "#createRecord")
-              $(document).on("click", "#createRecord", function(){
-                createRecord('operations', id, this)
-              });
+                body = `
+                    <div class="mb-3">
+                      <label for="operationType" class="form-label">Type of Operation</label>
+                      <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
+                          <!-- <option value="rent_create">Create Rent</option>
+                          <option value="rent_update">Update Rent</option> -->
+                          <option value="rent_confirm">Rent Confirmation</option>
+                          <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
+                      </select>
+                    </div>
         
-              var myModalEl = document.getElementById('staticBackdrop')
-              myModalEl.addEventListener('hidden.bs.modal', function (event) {
-                singleRental(id);
-              })
+                    <!-- Possible fields to edit in case of a rental confirmation operation -->
+                    <div class="mb-3">
+                      ${rented_productsHTML_confirm}
+                    </div>
+                    <div class="mb-3" id="rentPenalty" style="display:none;">
+                      <button type="button" onclick='addPenalty(this,"penalty", ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="operationNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" list="clientsList" id="operationNotes" data-db-field="notes" placeholder="Type to search...">
+                        </textarea>
+                  </div>`
+
+                $(content).append(createModal(body))
+                $(document).off("click", "#createRecord")
+                $(document).on("click", "#createRecord", function(){
+                  createRecord('operations', id, this)
+                });
+          
+                var myModalEl = document.getElementById('staticBackdrop')
+                myModalEl.addEventListener('hidden.bs.modal', function (event) {
+                  singleRental(id);
+                })
+              }
             }
           });
         }
@@ -903,6 +908,19 @@ function addProductField(btn) {
     <input type="text" name="daterange" class="date-picker form-control" data-db-field="product_date" />`
     console.log(btn)
   $(fieldHTML).insertBefore(btn)
+}
+
+function addPriceSupplement(btn) {
+  console.log($(btn).prev().prev('input[data-db-field="price_supplement"]').length)
+  if (!$(btn).prev().prev('input[data-db-field="price_supplement"]').length) {
+    var key = (new Date()).getTime()
+    var fieldHTML = `
+    <label for="priceSupplement${key}" class="form-label" style="margin-top:1rem">Price Supplement</label>
+    <input type="number" class="form-control" id="priceSupplement${key}" placeholder="5" data-db-field="price_supplement" min="1" max="100"">`
+    console.log(btn)
+    console.log($(btn).prev())
+  $(fieldHTML).insertBefore($(btn).prev())
+  }
 }
 
 function createModal(body) {
@@ -1277,6 +1295,7 @@ function createRecord(col, id, el) {
     }
   }
   if (col === 'rental') {
+    toCreateObject['note'] = ''
     $.ajax({
       url: "API/inventory/many/" + toCreateObject['products_id'].toString(),
       type: "GET",
@@ -1292,12 +1311,20 @@ function createRecord(col, id, el) {
           var multPrices = []
           var prodsSumPrice = 0
           prods.forEach((prod, i) => {
+            var productPrice = prod.price
+
+            // Adding price supplement in case of several reserved bookings - USE CASE 5
+            if (toCreateObject["price_supplement"]) {
+              productPrice += productPrice / 100 * toCreateObject["price_supplement"]
+              toCreateObject['note'] = `Product price from ${prod.price}$ to ${productPrice}$ due to ${toCreateObject["price_supplement"]}% of supplement for multiple reserved bookings.`
+            }
+
             const diffInMs   = toCreateObject['datesProducts'][i].endDate.getTime() - toCreateObject['datesProducts'][i].startDate.getTime()
             const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
-            const multPrice = prod.price * diffInDays
+            const multPrice = productPrice * diffInDays
             prodsSumPrice += multPrice // Sum of products to multiply for rental days
             multPrices.push(multPrice)
-            prices.push(prod.price)
+            prices.push(productPrice)
 
             // Insert unavailability dates into each product
             var dates = prod.indisponibilityDates

@@ -25,6 +25,7 @@ function EditRental(){
     const [changedInfo,changeC] = React.useState({});
     const [selectedOption, setSelectedOption] = React.useState('Select Product');
     const [error, setError] = React.useState(false);
+    const [discountsMSGs, setDiscountsMSGs] = React.useState('');
     const [calcPrice, setCalcPrice] = React.useState({prod: 0, rntl: 0, discounted: 0});
     const auth_token = sessionStorage.getItem("auth")
 
@@ -172,9 +173,12 @@ function EditRental(){
 
     // Calc Price end edit db documents
     const calculatePrice = async (total_price, products_prices, products_mult_prices, products_dates) => {
+        setDiscountsMSGs('')
+        var discountsMSG = ''
         var discounted_price = total_price
         var singleProduct = selectedOption
         var singleProductPrice = products_mult_prices[singleProduct]
+        console.log('ao?')
         
         // Applying Promotions
         await axios.get("API/promotions/", {headers: {auth: auth_token}})
@@ -192,39 +196,66 @@ function EditRental(){
                                 
                                 if (i == singleProduct)
                                     singleProductPrice -= (products_mult_prices[singleProduct] / 100) * value.percentage
+
+                                if (discountsMSG == ''){
+                                    discountsMSG += '-' + value.percentage + "% for " + value.name + " promotion"
+                                }else{
+                                    discountsMSG += ', ' + '-' + value.percentage + "% for " + value.name + " promotion"
+                                }
+                                console.log(discountsMSG)
                             }
                         })
                     }
+                    console.log('now weekedays')
                 }
             )
-      
-        // Weekdays Discount - Use Case 1
-        products_dates.forEach((d, index) => {
-          var start_day = new Date(d.startDate).getDay() // Sunday = 0, Monday = 1, ...
-          var diffInDays = products_mult_prices[index] / products_prices[index]
-          var current_day = start_day
-          var inner_weekdays = false
-          for(var i=0; i < diffInDays; i++) {
-            // Start weekdays check
-            if(current_day == 0) {
-              inner_weekdays = true;
-            }
-      
-            // Inner weekdays Confirmed
-            if(current_day == 4 && inner_weekdays) {
-              var sub_amount = products_prices[index] + products_prices[index] * 0.5 + products_prices[index] * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
-              discounted_price -= sub_amount
-              if (index == singleProduct)
-                singleProductPrice -= sub_amount
-              inner_weekdays = false;
-            }
+            .then (() => {
+                console.log('weekdays')
+                // Weekdays Discount - Use Case 1
+                products_dates.forEach((d, index) => {
+                var start_day = new Date(d.startDate).getDay() // Sunday = 0, Monday = 1, ...
+                var diffInDays = products_mult_prices[index] / products_prices[index]
+                var current_day = start_day
+                var discounted = false
+                var inner_weekdays = false
+                for(var i=0; i < diffInDays; i++) {
+                    // Start weekdays check
+                    if(current_day == 0) {
+                    inner_weekdays = true;
+                    }
             
-            if (current_day == 6) current_day = 0
-            else current_day++
-          }
-        })
-      
-        return {total: discounted_price, single: singleProductPrice}
+                    // Inner weekdays Confirmed
+                    if(current_day == 4 && inner_weekdays) {
+                    var sub_amount = products_prices[index] + products_prices[index] * 0.5 + products_prices[index] * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
+                    discounted_price -= sub_amount
+                    if (index == singleProduct)
+                        singleProductPrice -= sub_amount
+                    inner_weekdays = false;
+                    discounted = true;
+                    // console.log(sub_amount)
+                    // console.log('discounts')
+                        if (discountsMSG == ''){
+                            discountsMSG += '-' + sub_amount + '$'
+                        }else{
+                            discountsMSG += ' , ' + '-' + sub_amount + '$'
+                        }
+                        console.log(discountsMSG)
+                    }
+                    
+                    if (current_day == 6) current_day = 0
+                    else current_day++
+                }
+                if (discounted) discountsMSG += ' for inner Mon-Tue-Wed'
+                // console.log(discountsMSG)
+                })
+
+                // Output of the message displaying discounts
+                setDiscountsMSGs(discountsMSG)
+
+                // return {total: discounted_price, single: singleProductPrice}
+                // setCalcPrice({prod: updatedPrices.single, rntl: rentalPrice, discounted: updatedPrices.total})
+                setCalcPrice({prod: singleProductPrice, rntl: total_price, discounted: discounted_price})
+            })
       }
       
     const updatePrice = async (productDates) => {
@@ -234,7 +265,7 @@ function EditRental(){
                     var rental = res.data.rental
                     axios.get("API/inventory/many/" + rental.products_id.toString())
                         .then(
-                            async res => {
+                            res => {
                                 var prods = res.data.products
 
                                 var newDatesProds = rental.datesProducts
@@ -254,9 +285,9 @@ function EditRental(){
                                 })
                         
                                 const rentalPrice = prodsSumPrice
-                                var updatedPrices = await calculatePrice(rentalPrice, prices, multPrices, newDatesProds)  
+                                var updatedPrices = calculatePrice(rentalPrice, prices, multPrices, newDatesProds)  
 
-                                setCalcPrice({prod: updatedPrices.single, rntl: rentalPrice, discounted: updatedPrices.total})
+                                // setCalcPrice({prod: updatedPrices.single, rntl: rentalPrice, discounted: updatedPrices.total})
                             }
                         )
                 }
@@ -323,7 +354,10 @@ function EditRental(){
                                     <p className='parRentalPrice'>Rental Price: {calcPrice.discounted}$</p>
                                     <p className='parProdPrice'>Product Price (per day): {products[selectedOption].price}$</p>
                                     <p>New Product Price: {calcPrice.prod}$</p>
-                                </div>       
+                                </div>
+                                <div className='discountsDiv'>
+                                    {discountsMSGs}
+                                </div>
                             </>
                             }
                         </div>

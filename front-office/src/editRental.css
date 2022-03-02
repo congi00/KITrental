@@ -78,6 +78,11 @@
         display: block;
         margin: 1rem auto 1rem auto;
     }
+    .discountsDiv {
+        color: #118C4F;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
     .edit-product-wrapper {
         margin-top: 5rem;
         display: flex;

@@ -30,9 +30,11 @@
         },
         mounted () {
             // Generate random ID
-            const randID = Date.now()
-            this.$refs.recordsList.setAttribute('id', randID)
-            this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
+            if (col !== 'rental') {
+                const randID = Date.now()
+                this.$refs.recordsList.setAttribute('id', randID)
+                this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
+            }
         },
         data() {
             return {

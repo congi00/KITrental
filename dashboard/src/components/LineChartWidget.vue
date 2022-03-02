@@ -105,6 +105,7 @@ export default defineComponent({
         endpoint = "/api/rental/client/"
       } if (this.col === 'rental') {
         endpoint = "/api/rental/"
+        _params = ''
       } if (this.col === 'inventory') {
         
         console.log("ALERT");

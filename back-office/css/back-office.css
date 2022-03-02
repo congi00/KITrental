@@ -1,6 +1,6 @@
-#content {
-  /* Entry Point */
-}
+/* #content {
+  Entry Point
+} */
 
 .rental-cards-group {
   display: grid;
@@ -239,6 +239,12 @@ table {
 
 .btn-add-product {
   background-color: #06514c;
+  color: white;
+  border-color: white;
+  margin-top: 0.25rem;
+}
+.btn-add-multiplier {
+  background-color: #352208;
   color: white;
   border-color: white;
   margin-top: 0.25rem;
