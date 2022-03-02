@@ -130,6 +130,7 @@ function CartItems(){
               priceC += pricePItem * getDates(item.startD,item.endD);
               real_price += item.price* getDates(item.startD,item.endD);
               console.log(priceC);
+              
             });
             $.ajax({
               url: "http://localhost:8000/API/rental/",

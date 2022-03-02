@@ -22,7 +22,6 @@ function EditRental(){
     const [products, setProducts] = React.useState([]);
     const [productsIndDates, setProductsIndDates] = React.useState([]);
     const [Dates,setDates] = React.useState([]);
-    const [changedInfo,changeC] = React.useState({});
     const [selectedOption, setSelectedOption] = React.useState('Select Product');
     const [error, setError] = React.useState(false);
     const [discountsMSGs, setDiscountsMSGs] = React.useState('');
@@ -82,14 +81,17 @@ function EditRental(){
     // Submit report
     const submitReport = async e => {
         e.preventDefault();
-        console.log(changedInfo);
         var brokenProduct = products[selectedOption]._id
         var issue = document.getElementsByTagName('textarea')[0].value
         axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
             {broken_product: {prod_id: brokenProduct, issue: issue}}, 
             {headers: {auth: auth_token}})
             .then(
-                res => console.log(res)
+                res => {
+                    alert("Report submitted successfully!")
+                    navigate("/privateArea")
+                },
+                err => console.log(err)
             )
     }
 
@@ -143,7 +145,13 @@ function EditRental(){
             {datesProducts: newDatesProds, price: calcPrice.discounted, real_price: calcPrice.rntl}, 
             {headers: {auth: auth_token}})
             .then(
-                res => console.log(res)
+                res => {
+                    alert("Product edited successfully!")
+                    navigate("/privateArea")
+                },
+                err => {
+                    console.log(err)
+                }
             )
     }
 
@@ -338,15 +346,20 @@ function EditRental(){
                                 </div>
                                 <div>
                                     <h2 className="reportTitle">Report an Issue</h2>
-                                    <FloatingLabel controlId="floatingTextarea2" label="Describe the issue">
-                                        <Form.Control
-                                        as="textarea"
-                                        placeholder="The product doesn't work..."
-                                        />
-                                    </FloatingLabel>
-                                    <Button type = 'submit' className="btn-broken" onClick={submitReport}>
-                                        Report
-                                    </Button>
+                                    <Form>
+                                        <Form.Group>
+                                            <FloatingLabel controlId="floatingTextarea2" label="Describe the issue">
+                                                <Form.Control
+                                                required
+                                                as="textarea"
+                                                placeholder="The product doesn't work..."
+                                                />
+                                            </FloatingLabel>
+                                            <Button type = 'button' className="btn-broken" onClick={submitReport}>
+                                                Report
+                                            </Button>
+                                        </Form.Group>
+                                    </Form>                                    
                                 </div>                
                                 <div className='pricesDiv'>
                                     <p className='parRentalPrice'>Rental Price: {calcPrice.discounted}$</p>
