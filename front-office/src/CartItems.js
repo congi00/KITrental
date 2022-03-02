@@ -163,7 +163,7 @@ function CartItems(){
                     },
                     success: function (response) {
                       if (response) {
-                        console.log(response);
+                        window.location.href="/invoices/"+res.rental._id+".pdf";
                       } else {
                         alert("There was an error.");
                       }
