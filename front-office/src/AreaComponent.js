@@ -189,7 +189,6 @@ function AreaComponent(){
                           <ListGroup.Item>End: {item.end_date ? new Date(item.end_date).toLocaleString() : ''}</ListGroup.Item>
                         </ListGroup>
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
-                        {/* <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Edit</Button> */}
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
 
                       </Card.Body>
