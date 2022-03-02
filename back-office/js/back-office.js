@@ -504,9 +504,9 @@ function singleRental(id) {
                   <button style="margin-top:0.5rem" id="updateData" type="button" class="btn btn-primary" data-product="${i}">Update Data</button>
                   ${rental.broken_product && prod._id == rental.broken_product.prod_id ? `
                     <div class="issueDiv">
-                      <h3>ISSUE!!</h3>
+                      <h3 style="margin-top: 0.5rem;">ISSUE!!</h3>
                       <p>The client says: ${rental.broken_product.issue}</p>
-                      <p>Change the product by clicking the "Change broken product" button on the right.</p>
+                      <p>Change the product by toggling "Change broken product" button and checking the checkbox on the right.</p>
                     </div>
                   ` : ''}
                 </div>
@@ -1885,6 +1885,8 @@ async function updateRecordInfo(col, id, el) {
                     $(el).siblings("input, textarea").attr("readonly", true);
                     $("select").attr("disabled", true);
                     boolUtil = true;
+
+                    singleRental(id)
                   } else {
                     alert("There was an error.");
                   }
