@@ -557,6 +557,10 @@ function singleRental(id) {
                           <button type="button" onclick='addPenalty(this,"rental",${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Change broken product</button> 
                           </div>
                           <div class="mb-3">
+                            <label for="rentalTotalPrice" class="form-label">Sale cause of broken product</label>
+                            <input type="checkbox"  id="saleBrokenPrice" name="50" readonly>
+                          </div>
+                          <div class="mb-3">
                             <label for="rentalTotalPrice" class="form-label">Total Price</label>
                             <div class="input-group">
                               <span class="input-group-text">$</span>
@@ -1565,6 +1569,7 @@ async function updateRecordInfo(col, id, el) {
     if (boolUtil) {
       $(el).siblings("input, textarea").attr("readonly", false);
       $("select").attr("disabled", false);
+      
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
       $(el).html("Save Updated Data");
       boolUtil = false;
@@ -1603,8 +1608,6 @@ async function updateRecordInfo(col, id, el) {
             var data = res[Object.keys(res)[0]]
             console.log(res)
             if (col === 'rental') {
-              console.log("AKKK")
-
               // Retrieves datesProducts arr from db, replace the indexed prod date and update
               var newDatesProds = data.datesProducts
               newDatesProds[utils['prodPos']] = utils['prod_date']
@@ -1693,54 +1696,130 @@ async function updateRecordInfo(col, id, el) {
       if(col == "rental"){
         console.log(toUpdateObject);
 
-        if(toUpdateObject["change_prod"])
-        await $.ajax({
-          url: "API/rental/" + id,
-          type: "GET",
-          beforeSend: xhr => {
-            xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
-          },
-          success: async function (response) {
-            if (response) {
-              var rntl = response.rental;
-              console.log("CIAO");
-              console.log(response.rental);
-              toUpdateObject["change_prod"] = toUpdateObject["change_prod"].slice(toUpdateObject["change_prod"].indexOf("id=")+3)
-              console.log("eccolo")
-              console.log(toUpdateObject["change_prod"]);
-              rntl.products_id.map(async (element,index)=>{
-                if(element == toUpdateObject["change_prod"]){
-                  rntl.products_id[index] = toUpdateObject["changeNew_prod"]
-                  const actualPrice = rntl.pricesProducts[index];
-                  await $.ajax({
-                    url: "API/inventory/" + toUpdateObject["changeNew_prod"],
-                    type: "GET",
-                    beforeSend: xhr => {
-                      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
-                    },
-                    success: async function (response) {
-                      console.log(rntl.pricesProducts[index].price)
-                      console.log(toUpdateObject["payed_days"])
-                      var priceNewP = rntl.pricesProducts[index].price / toUpdateObject["payed_days"]
-                      console.log(rntl.note);
-                      if(rntl.note){
-                        toUpdateObject["note"] = rntl.note + " problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati";
-                        rntl.note = toUpdateObject["note"]
-                      }else{
-                        toUpdateObject["note"] = " problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati";
-                        rntl.note = toUpdateObject["note"];
-                      }console.log(rntl.note);
-                    }
-                  });
-                }
-              })
-              toUpdateObject["products_id"] = rntl.products_id
-              console.log(toUpdateObject["products_id"])
+        if(toUpdateObject["change_prod"]){
+          $.ajax({
+            url: "API/rental/" + id,
+            type: "GET",
+            beforeSend: xhr => {
+              xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+            },
+            success: function (response) {
+              if (response) {
+                var rntl = response.rental;
+                toUpdateObject["note"] = rntl.note
+                console.log("CIAO");
+                console.log(response.rental);
+                toUpdateObject["change_prod"] = toUpdateObject["change_prod"].slice(toUpdateObject["change_prod"].indexOf("id=")+3)
+                console.log("eccolo")
+                console.log(toUpdateObject["change_prod"]);
+                rntl.products_id.forEach(async (element,index)=>{
+                  if(element == toUpdateObject["change_prod"]){
+                    rntl.products_id[index] = toUpdateObject["changeNew_prod"]
+                    const actualPrice = rntl.pricesProducts[index];
+                    $.ajax({
+                      url: "API/inventory/" + toUpdateObject["changeNew_prod"],
+                      type: "GET",
+                      beforeSend: xhr => {
+                        xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                      },
+                      success: function (response) {
+                        console.log(rntl.pricesProducts[index].price)
+                        console.log(toUpdateObject["payed_days"])
+                        var priceNewP = rntl.pricesProducts[index].price / toUpdateObject["payed_days"]
+                        
+                                                 
+                        console.log(rntl.note);
+                      }
+                    });
+                  }
 
+                  if(rntl.products_id.length-1 == index){
+                    toUpdateObject["products_id"] = rntl.products_id
+                    console.log(toUpdateObject["products_id"])
+                    if(!rntl.note)
+                      toUpdateObject["note"] = "problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati"
+                    else
+                      toUpdateObject["note"] = rntl.note + "problemi di malfunzionamento. Prezzi relativi a "+toUpdateObject["payed_days"]+"giorni, ma i giorni di noleggio restano invariati"
+                    $.ajax({
+                      url: "API/rental/" + id,
+                      type: "PATCH",
+                      contentType: "application/json",
+                      dataType: "json",
+                      data: JSON.stringify(toUpdateObject),
+                      beforeSend: xhr => {
+                        xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                      },
+                      success: function (response) {
+                        
+                        if (response) {
+                          console.log(response);
+                          //if(response.rental)
+                          // Put everything back to read-only
+                          $(el).html("Update Data");
+                          $(el).siblings("input, textarea").attr("readonly", true);
+                          $("select").attr("disabled", true);
+                          boolUtil = true;
+                        } else {
+                          alert("There was an error.");
+                        }
+                      },
+                      error: function (response){ 
+                        console.log(response);
+                      }
+                    });
+                  }
+                })
+              }
+            },
+          });
+        }
+
+        var usCase = document.getElementById('saleBrokenPrice').checked;
+        if(usCase){
+          $.ajax({
+            url: "API/rental/" + id,
+            type: "GET",
+            beforeSend: xhr => {
+              xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+            },
+            success: function (response) {
+              toUpdateObject["price"] = toUpdateObject["price"] * (50/100)
+              if(!toUpdateObject["note"])
+                toUpdateObject["note"] = "Prezzo aggiornato con 50% di sconto per il disagio"
+              else
+                toUpdateObject["note"] = response.rental.note + "Prezzo aggiornato con 50% di sconto per il disagio"
+
+              $.ajax({
+                url: "API/rental/" + id,
+                type: "PATCH",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(toUpdateObject),
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                },
+                success: function (response) {
+
+                  if (response) {
+                    console.log(response);
+                    //if(response.rental)
+                    // Put everything back to read-only
+                    $(el).html("Update Data");
+                    $(el).siblings("input, textarea").attr("readonly", true);
+                    $("select").attr("disabled", true);
+                    boolUtil = true;
+                  } else {
+                    alert("There was an error.");
+                  }
+                },
+                error: function (response){ 
+                  console.log(response);
+                }
+              });
             }
-          },
-        });
-        
+          });
+        }
+
         //toUpdateObject[] = toUpdateObject[change_prod]
 
 
@@ -1748,6 +1827,7 @@ async function updateRecordInfo(col, id, el) {
       }
       console.log(toUpdateObject)
       // Update AJAX Request
+      if(col != "rental")
       $.ajax({
         url: "API/" + col + "/" + id,
         type: "PATCH",
@@ -1760,8 +1840,7 @@ async function updateRecordInfo(col, id, el) {
         success: function (response) {
           if (response) {
             console.log(response);
-            if(response.rental)
-              singleRental(id)
+            //if(response.rental)
             // Put everything back to read-only
             $(el).html("Update Data");
             $(el).siblings("input, textarea").attr("readonly", true);
