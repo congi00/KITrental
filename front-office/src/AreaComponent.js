@@ -159,8 +159,8 @@ function AreaComponent(){
                               <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                               <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                             </ListGroup>
-                            <Button variant="primary" className='product-button'>Edit</Button>
-                            <Button variant="danger" className='product-remove-button'>Delete</Button>
+                            <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
+                            <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
                           </Card.Body>
                         </Card>
                         </SwiperSlide>
@@ -239,7 +239,7 @@ function AreaComponent(){
                                 <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                                 <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                               </ListGroup>
-                              <Button variant="primary" className='product-button' onClick={(e) => updateRental(item._id, e.target)}>Invoice</Button>
+                              <Button variant="primary" className='invoice-button' onClick={() => navigate('/invoices/' + item._id + '.pdf')}>Invoice</Button>
                             </Card.Body>
                           </Card>
                         </SwiperSlide>
