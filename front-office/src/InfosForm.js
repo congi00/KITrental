@@ -38,29 +38,6 @@ function InfosForm(){
         },
         error: err => console.log(err)
       });
-
-        // fetch("http://localhost:8000/API/clients/"+param)
-        // .then(res => res.json())
-        // .then(
-        //     (result) => {
-        //     setClientInfo(result.client);
-        //     console.log(result.client.username)
-        //     changeC({
-        //         name: result.client.name,
-        //         surname: result.client.surname,
-        //         username: result.client.username,
-        //         password: result.client.password,
-        //         email : result.client.email,
-        //     });
-
-        //     },
-        //     // Note: it's important to handle errors here
-        //     // instead of a catch() block so that we don't swallow
-        //     // exceptions from actual bugs in components.
-        //     (error) => {
-        //         alert("error");
-        //     }
-        // )
     }, [])
 
     const submitChanges = async e => {
@@ -76,18 +53,6 @@ function InfosForm(){
           success: res => console.log(res),
           error: err => console.log(err)
         });
-        // return fetch('http://localhost:8000/API/clients/'+clientInfo._id, {
-        // method: 'PATCH',
-        // headers: {
-        //     'Content-Type': 'application/json',
-        //     "Access-Control-Allow-Origin": "*",
-        //     "Access-Control-Allow-Headers":"Content-Type, Authorization, X-Requested-With"
-        // },
-        // body: JSON.stringify(changedInfo)
-        // })
-        // .then(
-        // data => data.json()
-        // )
     }
 
 

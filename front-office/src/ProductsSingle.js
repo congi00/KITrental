@@ -50,13 +50,7 @@ function ProductsSingle(){
   const onAdd = (product) =>{
     const cartItems = cookies.get('myCart');
     if(cartItems){
-      const exist = cartItems.find(x => x._id === product._id);
-      console.log(exist);
-      if(exist)
-        cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: exist.qty , startD : startDate, endD: endDate } : x), { path: '/' });
-      else
-        //... notation = array concatenation
-        cookies.set('myCart', [...cartItems, { ...product, qty:1 , startD : startDate, endD: endDate}], { path: '/' });
+      cookies.set('myCart', [...cartItems, { ...product, qty:1 , startD : startDate, endD: endDate}], { path: '/' });
     }else{
       cookies.set('myCart', [{ ...product, qty:1, startD : startDate, endD: endDate}], { path: '/' });
     }

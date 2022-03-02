@@ -22,9 +22,13 @@
 .cartSection h2{
   font-family: 'Jost', sans-serif;
   font-size: 2rem;
-  color: #fff;
+  color: #222;
   position: relative;
-  top: 25vh;
+  top: 0vh;
+}
+
+.total-price-wrapper h2{
+  color:#fff;
 }
 
 .cartSection .itemTitle{
@@ -51,7 +55,7 @@
   width: 90vw;
   height: 15vh;
   position: relative;
-  left: 5vw;
+  left: 2vw;
   margin-top: 5vh;
 }
 
@@ -92,7 +96,7 @@
 .itemPrice{
   position: absolute;
   right: 5vw;
-  top: 2vh;
+  top: 3vh;
 }
 
 .itemPrice input{

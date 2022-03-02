@@ -4,6 +4,9 @@
     background-color: #222;
 }
 
+.infoPage{
+    overflow: hidden;
+}
 
 .titleFormC{
     color: #6c757d;
@@ -26,7 +29,7 @@
     height: 6vh;
     left: 20vw;
     position: relative;
-    width: 40vw;
+    width: 50vw;
     bottom: 21vh;
 }
 
@@ -37,6 +40,15 @@
     color: #fff;
 }
 
+.formFields{
+    position: relative;
+    top: 40vh;
+}
+
+.changeinfos-title{
+    margin-left: 15vw;
+}
+
 /********** MEDIA QUERIES ************/
 
 @media (min-width: 992px) {
@@ -44,6 +56,7 @@
         width: 100%;
     }
     .formFields {
+        position: unset;
         width: 30vw;
         display: block;
         margin: auto;
