@@ -28,6 +28,7 @@ import { Chart, registerables } from 'chart.js'
 import moment from 'moment';
 import { defineComponent } from 'vue'
 import { useCookies } from "vue3-cookies";
+import {calculateChartData} from '../scripts/calculateChartData'
 
 Chart.register(...registerables)
 
@@ -114,7 +115,7 @@ export default defineComponent({
       } if (this.col === 'inventory/category') {
         endpoint = "/api/rental/rentalByProductsIds/"
         await this.axios.get("/api/inventory/productsByCategoryName/" + formData.category)
-                .then((res) => {
+                .then(async (res) => {
                     var products = res.data.products
                     console.log(products)
                     if (formData.choice !== 'products') {
@@ -124,7 +125,7 @@ export default defineComponent({
                       })
                       _params = prodsId.toString()
                     } else {
-                      const resultObj = this.countPerMonth(products, rangeDate, {colToCount: 'products'})
+                      const resultObj = await calculateChartData(products, rangeDate, {colToCount: 'products'}, this.col)
                       this.setData(resultObj.data, resultObj.labels)
                     }
                     
@@ -137,118 +138,17 @@ export default defineComponent({
       if (formData.choice !== 'products') {
         // Retrieve rental
         this.axios.get(endpoint + _params, {headers: {'auth': this.cookies.get('auth')}})
-          .then((res) => {
+          .then(async (res) => {
               var rental = res.data.rental
               console.log(rental)
               /* Only rental that fit within the picked date range (check based on *start_date*) */
-              const resultObj = this.countPerMonth(rental, rangeDate, {fieldToCountOn: this.form.choice})
+              const resultObj = await calculateChartData(rental, rangeDate, {fieldToCountOn: this.form.choice}, this.col)
               this.setData(resultObj.data, resultObj.labels)
           })    
           .catch((errors) => {
               console.log(errors);
           })  
       }        
-    },
-    countPerMonth(rental, range, config) {
-      /* Initialization first sub range (month) */
-      var start_date = range[0]
-      var end_date = new Date(range[0].getFullYear(), start_date.getMonth() + 1, 0); // This way you get the last day of the previous month
-      var counter = []
-      var months = []
-      var start_m = moment(start_date)
-      var end_m = moment(end_date)
-      const MONTHS = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December'
-        ];
-
-        var incoming, filteredByValue;
-
-      /* The range is smaller than one month */
-      if (end_date > range[1]) return rental.length 
-
-      /* Count how many records per month within the given range */
-      do {
-        incoming = 0;
-        if (config.colToCount === 'products') {
-          filteredByValue = Object.fromEntries(
-            Object.entries(rental).filter(([key, value]) => new Date(value.creation_date) >= start_date && new Date(value.creation_date) <= end_date ) )
-        } else {
-          filteredByValue = Object.fromEntries(
-            Object.entries(rental).filter(([key, value]) => new Date(value.start_date) >= start_date && new Date(value.start_date) <= end_date ) )
-        }
-
-        if(config.fieldToCountOn === "Incoming"){
-          const IncomeOption = Object.keys(filteredByValue).map((x, i) => {
-            // console.log('prodPrice:')
-            // console.log(incoming+=filteredByValue[x].pricesProducts[i])
-            // console.log('prodPrices:')
-            // console.log(incoming+=filteredByValue[x].pricesProducts)
-            filteredByValue[x].price != undefined ? incoming+=filteredByValue[x].pricesProducts[i].price : console.log(filteredByValue[x].price);
-          }) 
-          console.log(incoming);
-          counter.push(incoming);
-        }
-        // else if(config.fieldToCountOn === "Conditions"){
-        //   this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
-        //   .then((res) => {
-        //       var inventoryP = res.data
-        //       var stateNew=0;
-        //       var statePerfect=0;
-        //       var stateGood=0;
-        //       var stateBroken=0;
-        //       inventoryP.forEach(element => {
-        //         switch(element.state){
-        //           case "new":{
-        //             stateNew ++;
-        //             break;
-        //           };
-        //           case "perfect":{
-        //             statePerfect++;
-        //             break;
-        //           };
-        //           case "good":{
-        //             stateGood++;
-        //             break;
-        //           };
-        //           case "broken":{
-        //             stateBroken++;
-        //             break;
-        //           };
-        //           default:{
-        //             break;
-        //           }
-        //         }
-        //       });
-        //   })    
-        //   .catch((errors) => {
-        //       console.log(errors);
-        //   })
-        // }
-        else{
-          // Standard counting by number of rental per month
-          counter.push(Object.keys(filteredByValue).length) 
-        }
-        
-        months.push(MONTHS[start_date.getMonth()])
-
-        /* Month Range Update */
-        start_date = start_m.add(1, 'month').toDate()
-        end_date   = end_m.add(1, 'month').toDate()
-        if (end_date > range[1]) end_date = range[1]
-      } while (start_date < range[1])
-
-      return {data: counter, labels: months} 
     }
   }
 });
