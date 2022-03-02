@@ -6,7 +6,7 @@ import {Form, Button }from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 import axios from 'Axios';
 import $ from 'jquery'
-
+import { useNavigate } from "react-router-dom";
 
 function CartItems(){
   const cookies = new Cookies();
@@ -14,6 +14,7 @@ function CartItems(){
   const [totalPrice,setTotalPrice] = React.useState(0);
   const auth_token = sessionStorage.getItem("auth");
   const [logged, SetLogged] = React.useState(false);
+  const navigate = useNavigate();
   
   React.useEffect(() => {
     if(sessionStorage.getItem("token"))
@@ -24,7 +25,7 @@ function CartItems(){
       if(cartItemsF.length != 0){
         cookies.set('myCart', cartItemsF, { path: '/' });
 
-
+        console.log(auth_token);
         axios.get("API/promotions/",{headers: {'auth': auth_token}})    
         .then((res) => {    
           console.log(res.data);
@@ -171,6 +172,7 @@ function CartItems(){
               error: err => {console.log(err)}
             });
           })      
+          /*<!-- onChange={e => onTodoChange(e.target.value,item)} -->*/
   }
   return(
     cartItems ? (
@@ -189,7 +191,6 @@ function CartItems(){
                 </div>
                 <div className="itemPrice">
                   <h2>{item.price*item.qty}$</h2>
-                  <Form.Control type="number" min="0" placeholder={item.qty} onChange={e => onTodoChange(e.target.value,item)} />
                 </div>
               </Card.Body>
             </Card>
@@ -207,7 +208,7 @@ function CartItems(){
         <div className="cartSection">
           <h1>CART</h1>
           <h2>Your cart is empty</h2>
-          <Button className='emptyCartBtn' disabled={logged}>
+          <Button className='emptyCartBtn' onClick={navigate('/catalog')}>
             Go to shop
           </Button>
         </div>
