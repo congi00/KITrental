@@ -49,13 +49,13 @@ function EditRental(){
 
     // Retrieve Rental document and products, set the states
     React.useEffect(() => {
-    axios.get("http://localhost:8000/API/rental/"+ param, {headers: {auth: auth_token}})
+    axios.get("https://site202126.tw.cs.unibo.it/API/rental/"+ param, {headers: {auth: auth_token}})
         .then(
         res => {
             var rental = res.data.rental
             setRentalInfo(rental);
             
-            axios.get("http://localhost:8000/API/inventory/many/" + rental.products_id.toString())
+            axios.get("https://site202126.tw.cs.unibo.it/API/inventory/many/" + rental.products_id.toString())
                 .then(
                     res => {
                         var products = res.data.products
@@ -83,7 +83,7 @@ function EditRental(){
         e.preventDefault();
         var brokenProduct = products[selectedOption]._id
         var issue = document.getElementsByTagName('textarea')[0].value
-        axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
+        axios.patch("https://site202126.tw.cs.unibo.it/API/rental/" + rentalInfo._id, 
             {broken_product: {prod_id: brokenProduct, issue: issue}}, 
             {headers: {auth: auth_token}})
             .then(
@@ -127,7 +127,7 @@ function EditRental(){
         // toUpdateObject['indisponibilityDates'] = prodIndDatesArr
 
         // Update product document with edited indisponibility date
-        axios.patch("http://localhost:8000/API/inventory/" + products[selectedOption]._id, 
+        axios.patch("https://site202126.tw.cs.unibo.it/API/inventory/" + products[selectedOption]._id, 
             {indisponibilityDates: prodIndDatesArr}, 
             {headers: {auth: auth_token}})
             .then(
@@ -141,7 +141,7 @@ function EditRental(){
         var newDatesProds = rentalInfo.datesProducts
         newDatesProds[selectedOption] = range
         // Update rental document with edited indisponibility date, discounted price and real price
-        axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
+        axios.patch("https://site202126.tw.cs.unibo.it/API/rental/" + rentalInfo._id, 
             {datesProducts: newDatesProds, price: calcPrice.discounted, real_price: calcPrice.rntl}, 
             {headers: {auth: auth_token}})
             .then(
