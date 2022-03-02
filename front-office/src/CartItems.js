@@ -4,7 +4,7 @@ import './cart.css';
 import {Card} from "react-bootstrap";
 import {Form, Button }from 'react-bootstrap';
 import Cookies from 'universal-cookie';
-import axios from 'Axios';
+import axios from 'axios';
 import $ from 'jquery'
 import { useNavigate } from "react-router-dom";
 
