@@ -329,7 +329,7 @@ function EditRental(){
                         <div className='edit-product-wrapper'>
                             {selectedOption != "Select Product"  &&
                             <>
-                                <img className="imgEditRental" src={'img/products/'+ products[selectedOption].image}/>
+                                <img className="imgEditRental productsImg" src={'img/products/'+ products[selectedOption].image}/>
                                 <div className='calendar'>
                                     <DatePicker
                                         wrapperClassName="date-picker"
