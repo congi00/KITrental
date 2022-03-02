@@ -28,6 +28,7 @@ import { Chart, registerables } from 'chart.js'
 import moment from 'moment';
 import { defineComponent } from 'vue'
 import { useCookies } from "vue3-cookies";
+import {calculateChartData} from '../scripts/calculateChartData'
 
 Chart.register(...registerables)
 
@@ -82,50 +83,76 @@ export default defineComponent({
   },
   methods: {
     async updateData(e) {
-      const CONDITIONS = [
-          'New',
-          'Perfect',
-          'Good',
-          'Broken'
-        ];
-      var conditions = []
+      /* IMPORT FORM DATA from Form Sub-Component */
+      const formData = this.form
+      var queryType = this.form.choice
+      var colData = "rental" // !!!HARD-CODED!!!
+      var record = formData.record        // id with format: {recordName} id={recordID}
+      var rangeDate = formData.date
+      if (this.col !== 'inventory') {
+         rangeDate = rangeDate.map(x => new Date(x))
+        if (!this.col || (!record&& !(this.col == "rental" || this.col == 'inventory/category')) || !rangeDate || !queryType) {
+          this.$refs.errorMSG.style.display ="block";
+          return;
+        } else {
+          this.$refs.errorMSG.style.display ="none";
+        }
+      }
+      if (record && record.includes('id=')) {
+        var index = record.indexOf("id=") + 3
+        record = record.substring(index);
+      }
 
-      this.axios.get("../api/inventory/", { headers: {'auth': this.cookies.get('auth')}})
-      .then((res) => {
-          var inventoryP = res.data.products
-          var stateNew=0;
-          var statePerfect=0;
-          var stateGood=0;
-          var stateBroken=0;
-          inventoryP.forEach(element => {
-            switch(element.state){
-              case "new":{
-                stateNew ++;
-                break;
-              };
-              case "perfect":{
-                statePerfect++;
-                break;
-              };
-              case "good":{
-                stateGood++;
-                break;
-              };
-              case "broken":{
-                stateBroken++;
-                break;
-              };
-              default:{
-                break;
-              }
-            }
-          });
-          conditions = [stateNew, statePerfect, stateGood, stateBroken]
-          this.setData(conditions, CONDITIONS)
-        })    
-        .catch((errors) => {
-            console.log(errors);
-        })
+      /* QUERY FOR RETRIEVING DATA from the db */
+      var _params = record
+      var endpoint = ""
+      if (this.col === 'clients') {
+        endpoint = "/api/rental/client/"
+      } if (this.col === 'rental') {
+        endpoint = "/api/rental/"
+        _params = ''
+      } if (this.col === 'inventory') {
+        endpoint = "/api/rental/"
+        _params = ''
+      } if (this.col === 'inventory/category') {
+        endpoint = "/api/rental/rentalByProductsIds/"
+        await this.axios.get("/api/inventory/productsByCategoryName/" + formData.category)
+                .then(async (res) => {
+                    var products = res.data.products
+                    console.log(products)
+                    if (formData.choice !== 'products') {
+                      var prodsId = []
+                      products.forEach(prod => {
+                        prodsId.push(prod._id)
+                      })
+                      _params = prodsId.toString()
+                    } else {
+                      const resultObj = await calculateChartData(products, rangeDate, {colToCount: 'products'}, this.col)
+                      this.setData(resultObj.data, resultObj.labels)
+                    }
+                    
+                })    
+                .catch((errors) => {
+                    console.log(errors);
+                })  
+      }
+      
+      if (formData.choice !== 'products') {
+        // Retrieve rental
+        console.log(endpoint + _params)
+        this.axios.get(endpoint + _params, {headers: {'auth': this.cookies.get('auth')}})
+          .then(async (res) => {
+              var rental = res.data.rental
+              console.log(rental)
+              /* Only rental that fit within the picked date range (check based on *start_date*) */
+              if (this.col === 'inventory') this.form.choice = "Conditions"
+              const resultObj = await calculateChartData(rental, rangeDate, {fieldToCountOn: this.form.choice}, this.col)
+              this.setData(resultObj.data, resultObj.labels)
+          })    
+          .catch((errors) => {
+              console.log(errors);
+          })  
+      }        
     }
   }
 });
