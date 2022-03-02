@@ -152,7 +152,7 @@ function AreaComponent(){
                           <Card.Body>
                             <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
                             <Card.Text>
-                              {/* {item.desc} */}
+                              {item.note}
                             </Card.Text>
                             <ListGroup className="list-group-flush">
                               <ListGroup.Item>State: {item.state}</ListGroup.Item>
@@ -181,7 +181,7 @@ function AreaComponent(){
                         })}
                         </Card.Title>
                         <Card.Text>
-                          {/* {item.desc} */}
+                          {item.note}
                         </Card.Text>
                         <ListGroup className="list-group-flush">
                           <ListGroup.Item>State: {item.state}</ListGroup.Item>
@@ -233,7 +233,7 @@ function AreaComponent(){
                             <Card.Body>
                               <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
                               <Card.Text>
-                                {/* {item.desc} */}
+                              {item.note}
                               </Card.Text>
                               <ListGroup className="list-group-flush">
                                 <ListGroup.Item>State: {item.state}</ListGroup.Item>
@@ -261,7 +261,7 @@ function AreaComponent(){
                       <Card.Body>
                         <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
                         <Card.Text>
-                          {/* {item.desc} */}
+                        {item.note}
                         </Card.Text>
                         <ListGroup className="list-group-flush">
                           <ListGroup.Item>State: {item.state}</ListGroup.Item>

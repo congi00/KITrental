@@ -68,7 +68,8 @@ router.post('/', function (req, res) {
     start_date: req.body.start_date,
     state: req.body.state,
     price: req.body.price,
-    real_price: req.body.real_price
+    real_price: req.body.real_price,
+    note: req.body.note ? req.body.note : '' 
   });
   rental
     .save()

@@ -243,6 +243,12 @@ table {
   border-color: white;
   margin-top: 0.25rem;
 }
+.btn-add-multiplier {
+  background-color: #352208;
+  color: white;
+  border-color: white;
+  margin-top: 0.25rem;
+}
 
 .date-picker {
   margin-top: 0.5rem;
