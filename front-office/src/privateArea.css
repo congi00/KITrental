@@ -70,6 +70,10 @@
     width: 65vw;
 }
 
+.privateArea{
+    overflow: hidden;
+}
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {

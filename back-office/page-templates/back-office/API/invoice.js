@@ -34,7 +34,8 @@ function generateHeader(doc,infosPdf) {
     offset += 130;
   });  
   doc
-  .text('Total: '+infosPdf.finalPrice+"$", 210+offset, 317, {fontSize:"13vw"})
+  .text("Notes: "+infosPdf.rentalNotes, 210+offset, 317, {fontSize:"13vw"})
+  .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
   .moveDown();      
 }
 
@@ -149,6 +150,7 @@ router.post('/pdf/', async (req, res) => {
         client_address : req.body.clientInfo.client_address,
         client_payment : req.body.clientInfo.client_payment,     
         productsInfo : req.body.productsInfo,   
+        rentalNotes:  req.body.rentalNotes,
         finalPrice : req.body.finalPrice
     }
     

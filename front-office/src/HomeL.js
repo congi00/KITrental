@@ -4,7 +4,6 @@ import './landing.css';
 import HomeSection from "./HomeSection";
 import AboutSection from "./AboutSection";
 
-
 function HomeL(){
   return (
     <div className="Landing-home">

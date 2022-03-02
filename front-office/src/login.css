@@ -113,6 +113,15 @@
   left:10vw;
 }
 
+.login-title{
+  font-size: 13vw;
+}
+
+/*.login-form{
+  overflow-y: hidden;
+}*/
+
+
 @media (min-width: 992px) {
   .formPageL {
     background: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0)),url(https://auditkitchengear.com/wp-content/uploads/2022/01/20191011-DSC_7759-Edit_HI_RES.jpeg);

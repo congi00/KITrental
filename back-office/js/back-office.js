@@ -1178,7 +1178,6 @@ function createRecord(col, id, el) {
                                       client_address: res.client.address,
                                       client_payment: res.client.payment,
                                   }
-                                  console.log("CIAO")
                                   $.ajax({
                                     url: "API/inventory/many/" + rentalPriceR.products_id.toString(),
                                     type: "GET",
@@ -1235,6 +1234,7 @@ function createRecord(col, id, el) {
                                           clientInfo : clientInfo,
                                           productsInfo : productsInfo,
                                           rentalRef : rentalPriceR._id,
+                                          rentalNotes : rentalPriceR.note,
                                           finalPrice : finalPrice
                                         }),
                                         beforeSend: xhr => {
@@ -1334,6 +1334,7 @@ function createRecord(col, id, el) {
                                         clientInfo : clientInfo,
                                         productsInfo : productsInfo,
                                         rentalRef : rntl._id,
+                                        rentalNotes : rentalPriceR.note,
                                         finalPrice : finalPrice
                                       }),
                                       beforeSend: xhr => {
@@ -1354,10 +1355,6 @@ function createRecord(col, id, el) {
                               }
                             });
                             console.log("response")
-                          
-                      
-                      console.log("ASKKKK")
-                    
                 }
                     }
                   });

@@ -55,7 +55,7 @@ function CardsSlider(){
     }else{
       var availabilityS = availability
     }
-//+ price+"&sub="+ sub+"&availability="+ availability+"&category=" +param
+
     if(price || sub || availability ){
       fetch("http://localhost:8000/API/inventory/filter/?price="+ priceS+"&sub="+ subS+"&availability="+ availabilityS+"&category=" +param)
         .then(res => res.json())
