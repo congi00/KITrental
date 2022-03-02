@@ -502,7 +502,7 @@ function singleRental(id) {
                     dateRangePicker(prod.indisponibilityDates, $('input[data-picker="' + i + '"]'), rental.datesProducts[i])
                   });
                   $(document).on('click', 'button[data-product="' + i + '"]',async (e) => {
-                    console.log('PORCODDIO')
+                    
                     await updateRecordInfo('inventory', prod._id, e.target);
                     await updateRecordInfo('rental', rental._id, e.target);
                   });
@@ -541,9 +541,7 @@ function singleRental(id) {
                           <label for="rentalStartDate" class="form-label">Starting Date</label>
                           <input type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="rentalStartDate" value="${new Date(rental.start_date).toISOString().slice(0,16)}" readonly>
 
-                          <label for="rentalEndDate" class="form-label">Ending Date</label>
-                          <input type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="rentalEndDate" value="${rental.end_date ? new Date(rental.end_date).toISOString().slice(0,16) : ''}" readonly>
-
+                          
                           <div class="mb-3">
                             <label for="rentalState" class="form-label">State</label>
                             <select class="form-select" id="rentalState" aria-label="Select State" data-db-field="state" disabled>
@@ -555,17 +553,20 @@ function singleRental(id) {
                             </select>
                           </div>
                           <div class="mb-3">
+                          <button type="button" onclick='addPenalty(this,"rental",${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Change broken product</button> 
+                          </div>
+                          <div class="mb-3">
                             <label for="rentalTotalPrice" class="form-label">Total Price</label>
                             <div class="input-group">
                               <span class="input-group-text">$</span>
-                              <input type="text" data-db-field="start_date" class="form-control" id="rentalTotalPrice" value="${rental.real_price}" readonly>
+                              <input type="text" data-db-field="real_price" class="form-control" id="rentalTotalPrice" value="${rental.real_price}" readonly>
                             </div>
                           </div>
                           <div class="mb-3">
                             <label for="rentalPrice" class="form-label">Discounted Price</label>
                             <div class="input-group">
                               <span class="input-group-text">$</span>
-                              <input type="text" data-db-field="start_date" class="form-control" id="rentalPrice" value="${rental.price}" readonly>
+                              <input type="text" data-db-field="price" class="form-control" id="rentalPrice" value="${rental.price}" readonly>
                             </div>
                           </div>
                           <!-- If the end date is in the future, add a button to modify and update the rental data -->
@@ -594,7 +595,7 @@ function singleRental(id) {
                     ${rented_productsHTML_confirm}
                   </div>
                   <div class="mb-3" id="rentPenalty" style="display:none;">
-                    <button type="button" onclick='addPenalty(this, ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
+                    <button type="button" onclick='addPenalty(this,"penalty", ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
                   </div>
                   <div class="mb-3">
                       <label for="operationNotes" class="form-label">Notes</label>
@@ -1148,22 +1149,6 @@ function createRecord(col, id, el) {
                       }});
                   });
                 }
-
-
-
-
-
-
-
-                      /*$.ajax({
-                        url: "API/inventory/" + updInventoryID,
-                        type: "PATCH",
-                        contentType: "application/json",
-                        dataType: "json",
-                        data: JSON.stringify({indisponibilityDates : [...{startD: rntl.start_date,endD: rntl.end_date}]}),
-                        success:{}
-                      });*/
-                      
                     }
                   });
                  
@@ -1175,33 +1160,6 @@ function createRecord(col, id, el) {
                 console.log(err);
               }
             });
-      //     } else {
-      //       alert("There was an error.");
-      //     }
-      //   },
-      //   error: function(err){
-      //     console.log(err);
-      //   }
-      // });
-      //fill invoice
-      
-      /*var rentID = response.rental._id; 
-      $.ajax({
-        url: "API/invoice/"+toCreateObject['invoice_id'],
-        type: "PATCH",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-          rental_id: rentID,
-        }),
-        success: function (response) {
-          if (response) {
-          } else {
-            alert("There was an error.");
-          }
-        },
-      });*/
-      console.log("s")
     }
   }
   if (col === 'rental') {
@@ -1419,10 +1377,11 @@ async function updatePrice(rental_id, prodsDates) {
 
 
 async function updateRecordInfo(col, id, el) {
+  console.log(col)
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
 
   // Edit of single product dates inside rental
-  if (!startDate) {
+  if (!startDate && col != "inventory") {
     startDate = $('input[data-db-field="start_date"]').val()
     boolUtil = false
   }
@@ -1432,6 +1391,7 @@ async function updateRecordInfo(col, id, el) {
 
   if (col === 'clients' || ( col === 'rental' && new Date(startDate) > new Date() ) || col === 'inventory' ) {
     if (boolUtil) {
+      console.log("Ciao")
       $(el).siblings("input, textarea").attr("readonly", false);
       $("select").attr("disabled", false);
       // IF TIME LEFT, SAVE A COPY OF THE DATA, CONFRONT IT WITH THE EDITED ONE BEFORE SUBMITTING, IF EQUAL NO QUERY (OPTIMIZATION)
@@ -1449,6 +1409,8 @@ async function updateRecordInfo(col, id, el) {
           utils['prev_prod_date'] = new Date(fields.data('daterangepicker').oldStartDate.toISOString())
           if (col === 'rental') utils['prodPos'] = fields.data('picker')
         }
+
+        
       } else {
         // JavaScript object to pass as data to update in the POST request
         fields.each(function() {
@@ -1469,9 +1431,9 @@ async function updateRecordInfo(col, id, el) {
           },
           success: async res => {
             var data = res[Object.keys(res)[0]]
-            console.log(data)
-
+            console.log(res)
             if (col === 'rental') {
+              
 
               // Retrieves datesProducts arr from db, replace the indexed prod date and update
               var newDatesProds = data.datesProducts
@@ -1542,8 +1504,6 @@ async function updateRecordInfo(col, id, el) {
 
 
               //toUpdateObject["availability"] = "avaiable";
-
-              console.log("ESS");
               console.log(toUpdateObject["availability"]);
 
               delete toUpdateObject.startD;
@@ -1559,7 +1519,10 @@ async function updateRecordInfo(col, id, el) {
       }
       
       
-
+      if(col == "rental"){
+        console.log(toUpdateObject);
+        //toUpdateObject[real_price] = toUpdateObject[real_price].parseInt();
+      }
       console.log(toUpdateObject)
       // Update AJAX Request
       $.ajax({
@@ -1583,6 +1546,9 @@ async function updateRecordInfo(col, id, el) {
             alert("There was an error.");
           }
         },
+        error: function (response){ 
+          console.log(response);
+        }
       });
     }
   } else  {
@@ -1744,30 +1710,94 @@ function displayEdits(sel) {
   }
 }
 
-function addPenalty(btn, rented_productsArr) {
-  var count = $(btn).data("count")
-  if (count < rented_productsArr.length) {
-   var selOptions = ``
-    rented_productsArr.forEach(prod => {
-      selOptions += `
-        <option value="${prod}">${prod}</option>
-      `
-    })
-    var fieldHTML = `
-      <div class="mb-3">
-        <label for="penaltyProd${count+1}" class="form-label">Penalty Product</label>
-        <select required id="penaltyProd${count+1}" class="form-select mb-2" data-db-field="penalty_prod">
-          ${selOptions}
-        </select>
-        <label for="penaltyDays${count+1}" class="form-label">Penalty Days</label>
-        <input type="number" class="form-control" id="penaltyDays${count+1}" min="1" max="7" data-db-field="penalty_days">
-      </div>`
-      console.log(btn)
-    $(fieldHTML).insertBefore(btn)
-    count++
-    $(btn).data("count", count)
-    if (count == rented_productsArr.length) btn.style.display = "none"
+function addPenalty(btn,col, rented_productsArr) {
+  if(col==="penalty"){
+    var count = $(btn).data("count")
+    if (count < rented_productsArr.length) {
+    var selOptions = ``
+      rented_productsArr.forEach(prod => {
+        selOptions += `
+          <option value="${prod}">${prod}</option>
+        `
+      })
+      var fieldHTML = `
+        <div class="mb-3">
+          <label for="penaltyProd${count+1}" class="form-label">Penalty Product</label>
+          <select required id="penaltyProd${count+1}" class="form-select mb-2" data-db-field="penalty_prod">
+            ${selOptions}
+          </select>
+          <label for="penaltyDays${count+1}" class="form-label">Penalty Days</label>
+          <input type="number" class="form-control" id="penaltyDays${count+1}" min="1" max="7" data-db-field="penalty_days">
+        </div>`
+        console.log(btn)
+      $(fieldHTML).insertBefore(btn)
+      count++
+      $(btn).data("count", count)
+      if (count == rented_productsArr.length) btn.style.display = "none"
+    }
+  }else{
+    var count = $(btn).data("count")
+
+    var selNewOptions = ``
+    $.ajax({
+      url: "API/inventory/",
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+      },
+      success: res => {
+        // Conversion from String to JSON object
+        res.products.forEach(element =>{
+          selNewOptions += `
+          <option value="${element._id}">${element.name + " id="+ element._id}</option>
+          `
+        })
+        if (count < rented_productsArr.length) {
+          var selOptions = ``
+            rented_productsArr.forEach(prod => {
+              selOptions += `
+                <option value="${prod}">${prod}</option>
+              `
+            })
+            var fieldHTML = `
+              <div class="mb-3">
+                <label for="changeProd${count+1}" class="form-label">Change product</label>
+                <select required id="changeProd${count+1}" class="form-select mb-2" data-db-field="change_prod">
+                  ${selOptions}
+                </select>
+                <label for="changeNewProd${count+1}" class="form-label">New product</label>
+                <select required id="changeNewProd${count+1}" class="form-select mb-2" data-db-field="changeNew_prod">
+                  ${selNewOptions}
+                </select>
+                <label for="payedDays${count+1}" class="form-label">Paid days</label>
+                <input type="number" class="form-control" id="paidDays${count+1}" onchange="calcPriceNew(this,'paid')" min="0" max="100" data-db-field="payed_days">
+                <label for="freeDays${count+1}" class="form-label">Free days</label>
+                <input type="number" class="form-control" id="freeDays${count+1}" onchange="calcPriceNew(this,'free');" min="0" max="100" data-db-field="free_days">
+              </div>`
+              console.log(btn)
+            $(fieldHTML).insertBefore(btn)
+            count++
+            $(btn).data("count", count)
+            if (count == rented_productsArr.length) btn.style.display = "none"
+          }
+      },
+    });
+
+
+    
   }
+}
+
+function calcPriceNew(btn,col){
+  
+
+
+  if(col === "free"){
+    console.log(btn.value)
+
+  }else{
+    console.log(btn.value)  
+  }  
 }
 
 function dateRangePicker(disabledArr, pickerInput, initialVal) {

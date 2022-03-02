@@ -25,6 +25,11 @@ const rental = new Schema({
       type: Date
     }
   }],
+  pricesProducts:[{
+    price: {
+      type: Number
+    }
+  }],
   invoice_id:{
     type: Schema.Types.ObjectId,
     ref: "Invoice",
