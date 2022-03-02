@@ -30,9 +30,7 @@ function EditRental(){
 
     // Retrieve dates of unavailability ranges
     const onSelectDate = (dates) => {
-        const [start, end] = dates; 
-        console.log('selected dates')
-        console.log(dates)
+        const [start, end] = dates;
         setError(false);
         var valid = true
         Dates[selectedOption].forEach(element => {
@@ -68,8 +66,6 @@ function EditRental(){
                             products_ind_dates.push(prod.indisponibilityDates)
                             unavailability_dates.push(getDates(prod.indisponibilityDates))
                         })
-                        console.log('unavailability_dates')
-                        console.log(unavailability_dates)
                         setProductsIndDates(products_ind_dates)
                         setDates(unavailability_dates)
                         setCalcPrice({discounted: rental.price})
@@ -100,49 +96,26 @@ function EditRental(){
 
     // Submit data to edit in the rental document (and in the edited product for unavailability dates)
     const submitChanges = async e => {
-        console.log('SUBMIT')
         e.preventDefault();
-        if (document.getElementsByClassName("errorMSG").length || selectedOption === 'Select Product') {console.log('volevi');return;}
-        var range = {startDate: new Date(startDate), endDate: new Date(endDate)}
+        if (document.getElementsByClassName("errorMSG").length || selectedOption === 'Select Product') {console.log("Can't sumbit");return;}
+        var endD = new Date(endDate)
+        endD.setHours(endD.getHours() + 2) // date formats issues
+        var range = {startDate: new Date(startDate), endDate: endD}
         
-        /***** RENTAL UPDATE *******/
-
-        // Replacing the indexed prod date and update
-        console.log(productsIndDates)
-        var newDatesProds = productsIndDates
-        newDatesProds[selectedOption] = range
-        console.log(newDatesProds)
-
-        // Update rental document with edited indisponibility date, discounted price and real price
-        axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
-            {datesProducts: newDatesProds, price: calcPrice.discounted, real_price: calcPrice.rntl}, 
-            {headers: {auth: auth_token}})
-            .then(
-                res => console.log(res)
-            )
-
         /***** INVENTORY UPDATE *******/
         
-        var prodIndDatesArr = []
-        if (typeof productsIndDates[selectedOption] === 'object' && productsIndDates[selectedOption] !== null)
-        prodIndDatesArr = [productsIndDates[selectedOption]]
-        else
-            prodIndDatesArr = productsIndDates[selectedOption]
-        console.log(prodIndDatesArr)
+        var prodIndDatesArr = productsIndDates[selectedOption]
         var replacePos = null
         prodIndDatesArr.some((date, i) => {
             var prevStartDate = new Date(rentalInfo.datesProducts[selectedOption].startDate) // Previous start date in order to check which db date to replace
-            console.log(prevStartDate)
             var startIndDate = new Date(date.startDate)
-            console.log(startIndDate)
+
             startIndDate.setHours(startIndDate.getHours()) // So that the conversion to UTC doesn't add 2 hours and get the next day instead
             startIndDate.setHours(0, 0, 0, 0)
             prevStartDate.setHours(0, 0, 0, 0)
-            console.log(startIndDate)
-            console.log(prevStartDate)
+
             if (startIndDate.getTime() == prevStartDate.getTime()) {
                 replacePos = i
-                console.log(replacePos)
                 return true;
             }
         })
@@ -159,11 +132,24 @@ function EditRental(){
             .then(
                 res => console.log(res)
             )
+
+
+        /***** RENTAL UPDATE *******/
+
+        // Replacing the indexed prod date and update
+        var newDatesProds = rentalInfo.datesProducts
+        newDatesProds[selectedOption] = range
+        // Update rental document with edited indisponibility date, discounted price and real price
+        axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
+            {datesProducts: newDatesProds, price: calcPrice.discounted, real_price: calcPrice.rntl}, 
+            {headers: {auth: auth_token}})
+            .then(
+                res => console.log(res)
+            )
     }
 
     // Calculate array of days between the ranges of unavailable dates
     const getDates = (startDate) => {
-        // console.log(startDate)
         const dates = []
         var endDate
         const invDates = startDate;
@@ -209,30 +195,23 @@ function EditRental(){
                             }
                         })
                     }
-                    // console.log('proms done inner')
                 }
             )
-            // console.log('proms done')
       
         // Weekdays Discount - Use Case 1
-        // console.log(products_dates)
         products_dates.forEach((d, index) => {
           var start_day = new Date(d.startDate).getDay() // Sunday = 0, Monday = 1, ...
           var diffInDays = products_mult_prices[index] / products_prices[index]
           var current_day = start_day
           var inner_weekdays = false
-        // console.log(diffInDays)
           for(var i=0; i < diffInDays; i++) {
             // Start weekdays check
-            // console.log(current_day)
             if(current_day == 0) {
               inner_weekdays = true;
             }
-            // console.log(inner_weekdays)
       
             // Inner weekdays Confirmed
             if(current_day == 4 && inner_weekdays) {
-                // console.log('weekdays discount')
               var sub_amount = products_prices[index] + products_prices[index] * 0.5 + products_prices[index] * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
               discounted_price -= sub_amount
               if (index == singleProduct)
@@ -266,8 +245,6 @@ function EditRental(){
                                 var multPrices = []
                                 var prodsSumPrice = 0
                                 prods.forEach((prod, i) => {
-                                    // const diffInMs   = toCreateObject['datesProducts'][i].endDate.getTime() - toCreateObject['datesProducts'][i].startDate.getTime()
-                                    // console.log(newDatesProds)
                                     const diffInMs   = (new Date(newDatesProds[i].endDate)).getTime() - (new Date(newDatesProds[i].startDate)).getTime()
                                     const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
                                     const multPrice = prod.price * diffInDays
@@ -277,9 +254,7 @@ function EditRental(){
                                 })
                         
                                 const rentalPrice = prodsSumPrice
-                                // console.log("Calculating price...")
                                 var updatedPrices = await calculatePrice(rentalPrice, prices, multPrices, newDatesProds)  
-                                // console.log('updated price inner: {single: ' + updatedPrices.single + ', total: ' + updatedPrices.total)
 
                                 setCalcPrice({prod: updatedPrices.single, rntl: rentalPrice, discounted: updatedPrices.total})
                             }
@@ -289,12 +264,10 @@ function EditRental(){
     }
 
     const setInitialDates = async (prodIndex) => {
-        // console.log(rentalInfo.datesProducts[prodIndex].startDate)
         var start = new Date(rentalInfo.datesProducts[prodIndex].startDate)
         var end = new Date(rentalInfo.datesProducts[prodIndex].endDate)
         setStartDate(start)
         setEndDate(end)
-        // onSelectDate([start, end])
     }
 
     return (
