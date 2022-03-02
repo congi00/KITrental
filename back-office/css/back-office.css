@@ -167,6 +167,34 @@ nav{
     background-image:  linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)),url("../img/handshake.jpg");
 }
 
+.rental-alert {
+  --bs-table-bg: #eed202;
+  --bs-table-hover-bg: #eed202;
+  position: relative;
+}
+.rental-alert::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: '\f071';
+  color: #eed202;
+  position: absolute;
+  font-size: 2rem;
+  right: -50px;
+}
+
+.issueDiv {
+  position: absolute;
+  color: #222;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 1rem;
+  background: yellow;
+  width: 100%;
+  border-radius: 20px;
+  border: 2px solid #222;
+  padding: 0.25rem 0.5rem;
+}
+
 /**** SINGLE RENTAL ***/
 .colsRental {
   gap: 1rem;

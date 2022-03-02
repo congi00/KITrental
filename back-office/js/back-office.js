@@ -397,7 +397,7 @@ function showRental() {
             </tr>`);
         } else {
           $(tbdy).append(`
-            <tr class="table-light">
+            <tr class="table-light ${rental.broken_product ? 'rental-alert' : ''}">
               <td data-id="start_date">${new Date(rental.start_date).toLocaleString()}</td>
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
@@ -493,7 +493,7 @@ function singleRental(id) {
                 rented_productsArr.push(`${rented_products[i].name} id=${rented_products[i]._id}`)
                 // Generate HTML for displaying rented products in single rental
                 rented_productsHTML += `
-                <div style="text-align:center;" >
+                <div style="text-align:center; position: relative;" >
                   <a href="javascript:singleInventory('${prod._id}');" style="max-width: calc(25% - 1rem);">
                     <div class="prod-thumbnail-wrapper">
                       <img class="img-fluid prod-img-thumbnail img-thumbnail" src="${prod.image ? '/img/products/' + prod.image : ''}" alt="Rented Product photo" />
@@ -502,6 +502,13 @@ function singleRental(id) {
                   </a>
                   <input  type="text" name="daterange" class="date-picker form-control" id="pickerProd${i}" data-picker="${i}" data-db-field="product_dates" />
                   <button style="margin-top:0.5rem" id="updateData" type="button" class="btn btn-primary" data-product="${i}">Update Data</button>
+                  ${rental.broken_product && prod._id == rental.broken_product.prod_id ? `
+                    <div class="issueDiv">
+                      <h3>ISSUE!!</h3>
+                      <p>The client says: ${rental.broken_product.issue}</p>
+                      <p>Change the product by clicking the "Change broken product" button on the right.</p>
+                    </div>
+                  ` : ''}
                 </div>
                   `
                   // Event listener to create dateRangePicker
@@ -1807,6 +1814,9 @@ async function updateRecordInfo(col, id, el) {
               })
               toUpdateObject["products_id"] = rntl.products_id
               console.log(toUpdateObject["products_id"])
+
+              // Remove broken product alerts
+              toUpdateObject["broken_product"] = null
 
             }
           },

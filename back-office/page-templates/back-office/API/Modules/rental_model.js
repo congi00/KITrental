@@ -54,6 +54,15 @@ const rental = new Schema({
     type: Number,
     required: true
   },
+  broken_product: {
+    prod_id : {
+      type: Schema.Types.ObjectId,
+      ref: "Products",
+    },
+    issue : {
+      type: String
+    }    
+  },
   note:{
     type: String,
   }

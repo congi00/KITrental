@@ -83,16 +83,14 @@ function EditRental(){
     const submitReport = async e => {
         e.preventDefault();
         console.log(changedInfo);
-        // return $.ajax({
-        //   url: "http://localhost:8000/API/rental/" + rentalInfo._id,
-        //   type: "PATCH",
-        //   body: JSON.stringify(rentalInfo),
-        //   beforeSend: xhr => {
-        //     xhr.setRequestHeader('auth', auth_token)
-        //   },
-        //   success: res => console.log(res),
-        //   error: err => console.log(err)
-        // });
+        var brokenProduct = products[selectedOption]._id
+        var issue = document.getElementsByTagName('textarea')[0].value
+        axios.patch("http://localhost:8000/API/rental/" + rentalInfo._id, 
+            {broken_product: {prod_id: brokenProduct, issue: issue}}, 
+            {headers: {auth: auth_token}})
+            .then(
+                res => console.log(res)
+            )
     }
 
     // Submit data to edit in the rental document (and in the edited product for unavailability dates)
