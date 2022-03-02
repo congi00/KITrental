@@ -87,6 +87,9 @@
   box-shadow: none;
 }
 
+.catalogButton{
+  display:none;
+}
 
 .accordion-item{
   border-bottom: 2px solid #666;

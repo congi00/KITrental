@@ -6,7 +6,6 @@ import LoginSection from "../LoginSection";
 
 function Login(){
   const loggedIn = sessionStorage.getItem('token');
-  
   return(    
     loggedIn ? (
       <Navigate to={{pathname : "/privateArea"}} />
