@@ -28,7 +28,7 @@ function ProductsSingle(){
   
 
   React.useEffect(() => {
-    fetch("http://localhost:8000/API/inventory/"+param)
+    fetch("https://site202126.tw.cs.unibo.it/API/inventory/"+param)
       .then(res => res.json())
       .then(
         (result) => {

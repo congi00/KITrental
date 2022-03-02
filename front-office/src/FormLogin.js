@@ -15,11 +15,10 @@ function FormLogin({ setToken }){
 
   async function loginUser(credentials) {
     // var auth_token = JSON.parse(sessionStorage.getItem("token")).id
-    return fetch('http://localhost:8000/API/login/clients', {
+    return fetch('https://site202126.tw.cs.unibo.it/API/login/clients', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:8000",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods":"DELETE, POST, GET",
         "Access-Control-Allow-Headers":"Content-Type, Authorization",

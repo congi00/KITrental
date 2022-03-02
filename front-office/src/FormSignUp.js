@@ -83,7 +83,6 @@ function FormSignUp(){
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "http://localhost:8000",
             "Access-Control-Allow-Credentials": "true",
             "Access-Control-Allow-Methods":"DELETE, POST, GET",
             "Access-Control-Allow-Headers":"Content-Type, Authorization",

@@ -2,8 +2,7 @@
   "name": "front-office",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost:8000/",
-  "proxy": "http://localhost:8000",
+  "homepage": "https://site202126.tw.cs.unibo.it/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
