@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const login = require('./login')
 
 
 const Employees = require('./Modules/employees_model.js');
@@ -10,7 +11,7 @@ var bcrypt = require('bcrypt');
 
 
 // Get all the employees
-router.get('/', function (req, res) {
+router.get('/',login.verifyPermission(login.permissionRoleLevels["manager"]), function (req, res) {
   Employees.find()
   .exec()
   .then(employees => res.status(200).json({ employees }))
@@ -18,17 +19,13 @@ router.get('/', function (req, res) {
 })
 
 //Add a new employee
-router.post('/', async function (req, res) {
+router.post('/',login.verifyPermission(login.permissionRoleLevels["manager"]), async function (req, res) {
   console.log(req.body)
   const employee = new Employees({
       _id: new mongoose.Types.ObjectId(),
-      name: req.body.name,
-      surname: req.body.surname,
       username: req.body.username,
       password: await bcrypt.hash(req.body.password, 14),
-      role: req.body.role,
-      email: req.body.email,
-      avatar: req.body.avatar
+      role: req.body.role
     });
     employee
       .save()
@@ -61,7 +58,7 @@ router.get('/:id', function (req, res) {
 
 
 //Delete employee
-router.delete('/:id', function (req, res) {
+router.delete('/:id',login.verifyPermission(login.permissionRoleLevels["manager"]), function (req, res) {
   Employees.findOneAndDelete({ _id: req.params.id})
   .exec()
   .then(result => {
@@ -72,44 +69,5 @@ router.delete('/:id', function (req, res) {
     res.status(400).json({message: "Error accessing server data", error: err})
   );
 })
-
-
-//Update employee
-router.patch('/:id', async function (req, res) {
-  if(req.params.password) req.params.password = await bcrypt.hash(req.body.password, 14);
-  await Employees.findOneAndUpdate(
-    { _id: req.params.id},
-    req.body,
-    { overwrite: true }
-  )
-  .exec()
-  .then(result => {
-    if(result) res.status(200).json({ message: "Successful operation", result : result })
-    else res.status(404).json({message: "User not found"})
-  })
-  .catch(err =>
-    res.status(400).json({message: "Error accessing server data", error: err})
-  );
-})
-
-
-/*exports.cryptPassword = function(password, callback) {
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err)
-    return callback(err);
-
-    bcrypt.hash(password, salt, function(err, hash) {
-      return callback(err, hash);
-    });
-  });
-};*/
-
-/*exports.comparePassword = function(plainPass, hashword, callback) {
-  bcrypt.compare(plainPass, hashword, function(err, isPasswordMatch) {
-    return err == null ?
-    callback(null, isPasswordMatch) :
-    callback(err);
-  });
-};*/
 
 module.exports = router;

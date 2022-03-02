@@ -4,14 +4,6 @@ const Schema = mongoose.Schema;
 
 const employees = new Schema({
   _id: Schema.Types.ObjectId,
-  name:{
-    type: String,
-    required: true,
-  },
-  surname:{
-    type: String,
-    required: true,
-  },
   username:{
     type: String,
     required: true,
@@ -26,12 +18,6 @@ const employees = new Schema({
     type: String,
     enum: ["manager","officer"],
     required: true,
-  },
-  email:{
-    type: String,
-  },
-  avatar:{
-    type: String,
   },
 });
 

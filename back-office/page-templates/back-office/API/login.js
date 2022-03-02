@@ -23,7 +23,8 @@ router.post('/', jsonParser, async (req, res) => {
       res.status(404).json({message: "false"});
   }else{
     var pass = await bcrypt.compare(password,employee.password);
-    const token = await generateToken(permissionRoleLevels["employee"], employee._id);
+    var permissionLvl = (employee.role == 'manager') ? 'manager' : 'employee'
+    const token = await generateToken(permissionRoleLevels[permissionLvl], employee._id);
     // checkUser(employee, res, permissionRoleLevels["employee"])
     res.status(200).json({password: pass, id:employee._id, role: employee.role, auth: token});
   }
@@ -63,16 +64,7 @@ router.post('/managers', jsonParser, async (req, res) => {
   }
 })
 
-// const fs = require('fs');
-// const path = require('path');
-// const bcrypt = require('bcryptjs');
-
-
-// let router = express.Router();
-// const keysPath = path.join(global.rootDir, '.keys');
-// const privateKey = fs.readFileSync(path.join(keysPath, 'jwtRS256.key'));
-// const publicKey = fs.readFileSync(path.join(keysPath, 'jwtRS256.key.pub'));
-
+// Token Generation
 
 const permissionRoleLevels = {
   "no-auth": 0,

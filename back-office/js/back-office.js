@@ -153,6 +153,12 @@ function authentication(employees,formData){
   //return false;
 }
 
+function logOut() {
+  sessionStorage.removeItem('usr_id')
+  sessionStorage.removeItem('auth')
+  showHome()
+}
+
 // Retrieve and display all the clients
 function showClients() {
   $.ajax({
@@ -901,6 +907,67 @@ function showPromotions() {
   });
 }
 
+// Retrieve and display all the employees (manager-only)
+function showEmployees() {
+  $.ajax({
+    url: "API/employees/",
+    type: "GET",
+    beforeSend: xhr => {
+      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+    },
+    success: res => {
+      var content = document.getElementById("content");
+      content.innerHTML = "";
+      var container = document.createElement('div');
+      container.className = "container table-wrapper pt-5";
+      var tbl = document.createElement('table');
+      tbl.className = "table table-light table-hover";
+      var thd = document.createElement('thead');
+      $(thd).append(`
+        <tr class="table-light">
+          <th>Username</th>
+          <th>Role</th>
+          <th>Delete</th>
+        </tr>`)
+      var tbdy = document.createElement('tbody');
+      $.each(res.employees, (i, employee) => {
+        $(tbdy).append(`
+          <tr class="table-light">
+            <td>${employee.username}</td>
+            <td>${employee.role}</td>
+            <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+          </tr>`);
+      })
+      tbl.appendChild(thd);
+      tbl.appendChild(tbdy);
+      content.appendChild(container).appendChild(tbl);
+      var body = `
+        <div class="mb-3">
+          <label for="employeeUsername" class="form-label">Employee's Username</label>
+          <input required id="employeeUsername" class="form-control" data-db-field="username" placeholder="mariorossi">
+        </div>
+        <div class="mb-3">
+          <label for="employeePassword" class="form-label">Employee's Password</label>
+          <input required id="employeePassword" class="form-control" data-db-field="password" placeholder="password">
+        </div>
+        <div class="mb-3">
+            <label for="employeeRole" class="form-label">Employee's Role</label>
+            <select required id="employeeRole" class="form-select" data-db-field="role">
+              <option value="officer">Officer</option>
+              <option value="manager">Manager</option>
+            </select>
+        </div>`
+      $(content).append(createModal(body))
+    
+      // Event listeners
+      $(document).off("click", "#createRecord")
+      $(document).on("click", "#createRecord", function createClient(){
+        createRecord('employees', '', this)
+      });
+    },
+  });
+}
+
 function addProductField(btn) {
   var fieldHTML = `
     <input required style="margin-top:0.5rem;" class="form-control" list="objectsList" onkeyup="typingLogic(this)" data-collection="inventory" data-field-search="name" data-db-field="product_id" placeholder="Type to search...">
@@ -1390,12 +1457,16 @@ function createRecord(col, id, el) {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(toCreateObject),
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', authToken)
+      },
       success: function (response) {
         if (response) {
           switch (col) {
             case 'clients' : showClients(); break;
             case 'inventory' : showInventory(); break;
             case 'promotions' : showPromotions(); break;
+            case 'employees' : showEmployees(); break;
           }
         } else {
           alert("There was an error.");
