@@ -200,7 +200,7 @@ function CartItems(){
                 start_date: new Date(),
                 datesProducts : datesP,
                 price : priceC,
-                state : "Pending",
+                state : "Accepted",
                 real_price : real_price,
                 pricesProducts: pricesProducts
               }),
