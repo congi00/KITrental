@@ -39,6 +39,7 @@
   position: relative;
   bottom: 2vh;
   left: 75vw;
+  width: fit-content;
 }
 .productDesc h4 span{
   font-size:2rem;
@@ -88,6 +89,7 @@
   position: relative;
   top:20vh;
   left:20vw;
+  width: fit-content;
 }
 
 .swiperP{
@@ -119,7 +121,7 @@
   }
   .product-wrapper {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     padding-top: 13vh;
   }
   .product-wrapper > div {

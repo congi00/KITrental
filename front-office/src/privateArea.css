@@ -19,6 +19,7 @@
     top: 23vh;
     left: 10vw;
     border-radius: 100%;
+    object-fit: cover;
 }
 
 .Infos{

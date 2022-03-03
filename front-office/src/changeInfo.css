@@ -1,7 +1,10 @@
 .infoSection{
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .infoPage{
@@ -13,24 +16,27 @@
     font-size: .875em;
     margin-top: .25rem;
     position: relative;
-    bottom: 30vh;
+    /* bottom: 30vh; */
     color: #fff;
 }
 
 .firstSectionC{
     text-align: left;
     position: relative;
-    bottom: 28vh;
+    /* bottom: 28vh; */
 }
 
 .btnFormC{
     background-color: #161616;
     border-color: #161616;
     height: 6vh;
-    left: 20vw;
+    /* left: 20vw; */
     position: relative;
     width: 50vw;
-    bottom: 21vh;
+    /* bottom: 21vh; */
+    display: block;
+    margin: auto;
+    margin-top: 2rem;
 }
 
 .backIcon{
