@@ -344,7 +344,7 @@ function EditRental(){
                                     />
                                     {error && <p className='errorMSG'>The range includes unavailable dates!</p>}
                                 </div>
-                                <div>
+                                <div className='form-group-wrapper'>
                                     <h2 className="reportTitle">Report an Issue:</h2>
                                     <Form>
                                         <Form.Group>
