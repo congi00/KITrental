@@ -1323,7 +1323,8 @@ function createRecord(col, id, el) {
                                       },
                                       success: function (response) {
                                         console.log("OK")
-                                        notes = response.rental.note;
+                                        console.log(response.result);
+                                        notes = response.result.note;
                                       }
                                     });
                                     
