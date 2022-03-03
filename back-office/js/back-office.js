@@ -1311,7 +1311,7 @@ function createRecord(col, id, el) {
                                     console.log("Prezzo finale" + pricesFinalP.discounted_price)
                                     const finalPrice = pricesFinalP.discounted_price
                                     const pricesProducts = pricesFinalP.pricesProducts
-                                         
+                                    var notes;     
                                     $.ajax({
                                       url: "API/rental/" + rntl._id,
                                       type: "PATCH",
@@ -1323,6 +1323,7 @@ function createRecord(col, id, el) {
                                       },
                                       success: function (response) {
                                         console.log("OK")
+                                        notes = response.rental.note;
                                       }
                                     });
                                     
@@ -1336,7 +1337,7 @@ function createRecord(col, id, el) {
                                         clientInfo : clientInfo,
                                         productsInfo : productsInfo,
                                         rentalRef : rntl._id,
-                                        rentalNotes : rentalPriceR.note,
+                                        rentalNotes : notes,
                                         finalPrice : finalPrice
                                       }),
                                       beforeSend: xhr => {
