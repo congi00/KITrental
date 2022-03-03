@@ -62,7 +62,10 @@ function ProductsSingle(){
     const [start, end] = dates; 
     setBTNDisabled(false);
     Dates.forEach(element => {
-      if(start >= element && element <= end){
+      console.log(element)
+      console.log(start)
+      console.log(end)
+      if(start >= new Date(element) && new Date(element) <= end){
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
           type: "GET",
