@@ -26,6 +26,8 @@
     text-align: left;
     position: relative;
     /* bottom: 28vh; */
+    display: block;
+    margin: auto;
 }
 
 .btnFormC{
