@@ -176,7 +176,7 @@ function CartItems(){
                   console.log(pricePItem)
                 }
               }
-              pricesProducts.push(pricePItem);
+              pricesProducts.push(pricePItem.parseInt());
               datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
               productsID.push(item._id);
               console.log(pricePItem)
@@ -250,7 +250,6 @@ function CartItems(){
                 </div>
                 <div className="itemPrice">
                   <h2>{item.price*item.qty}$</h2>
-                  <Form.Control type="number" min="0" placeholder={item.qty} onChange={e => onTodoChange(e.target.value,item)} />
                 </div>
               </Card.Body>
             </Card>
