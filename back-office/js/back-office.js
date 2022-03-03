@@ -762,6 +762,7 @@ function showInventory(){
             <option value="Blender">Blender</option>
             <option value="Torch">Torch</option>
             <option value="Kneader">Kneader</option>
+            <option value="Smoker">Smoker</option>
             <option value="Barbeque">Barbeque</option>
           </select>
         </div>
@@ -1962,10 +1963,10 @@ async function deleteRecord(col, id, el) {
 
     var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
     console.log(startDate)
-    if (new Date(startDate) <= new Date()) {
+    /*if (new Date(startDate) <= new Date()) {
       toDelete = false;
       errMsg = "You can't delete active rental.";
-    }
+    }*/
   }
 
   if (col === 'clients') {

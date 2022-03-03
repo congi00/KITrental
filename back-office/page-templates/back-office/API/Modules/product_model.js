@@ -33,7 +33,7 @@ const product = new Schema({
   },
   subCategory:{
     type: String,
-    enum: ["Blender","Torch","Barbeque","Kneader"],
+    enum: ["Blender","Torch","Barbeque","Kneader","Smoker"],
     required: true,
   },
   price:{

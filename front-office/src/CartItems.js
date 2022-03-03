@@ -162,6 +162,7 @@ function CartItems(){
             console.log(res.data);
             var proms = res.data.promotions;
             console.log(proms)
+            var pricesProducts = []
             var real_price =0;
             cartItems.forEach(item => {
 
@@ -175,6 +176,7 @@ function CartItems(){
                   console.log(pricePItem)
                 }
               }
+              pricesProducts.push(pricePItem);
               datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
               productsID.push(item._id);
               console.log(pricePItem)
@@ -184,11 +186,11 @@ function CartItems(){
               
             });
             $.ajax({
-              url: "http://localhost:8000/API/rental/",
+              url: "/API/rental/",
               type: "POST",
               headers: {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:8000",
+                "Access-Control-Allow-Origin": "https://site202126.tw.cs.unibo.it/",
                 "Access-Control-Allow-Methods":"DELETE, POST, GET",
                 "Access-Control-Allow-Headers":"Content-Type, Authorization",
               },
@@ -199,7 +201,8 @@ function CartItems(){
                 datesProducts : datesP,
                 price : priceC,
                 state : "Pending",
-                real_price : real_price
+                real_price : real_price,
+                pricesProducts: pricesProducts
               }),
               beforeSend: xhr => {
                 xhr.setRequestHeader('auth', auth_token)
@@ -217,7 +220,7 @@ function CartItems(){
                     },
                     success: function (response) {
                       if (response) {
-                        console.log(response);
+                        window.location.href="/privateArea";
                       } else {
                         alert("There was an error.");
                       }
