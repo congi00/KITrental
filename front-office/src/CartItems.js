@@ -250,7 +250,6 @@ function CartItems(){
                 </div>
                 <div className="itemPrice">
                   <h2>{item.price*item.qty}$</h2>
-                  <Form.Control type="number" min="0" placeholder={item.qty} onChange={e => onTodoChange(e.target.value,item)} />
                 </div>
               </Card.Body>
             </Card>
