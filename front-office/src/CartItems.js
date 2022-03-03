@@ -108,6 +108,7 @@ function CartItems(){
             console.log(res.data);
             var proms = res.data.promotions;
             console.log(proms)
+            var pricesProducts = []
             var real_price =0;
             cartItems.forEach(item => {
 
@@ -121,6 +122,7 @@ function CartItems(){
                   console.log(pricePItem)
                 }
               }
+              pricesProducts.push(pricePItem);
               datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
               productsID.push(item._id);
               console.log(pricePItem)
@@ -145,7 +147,8 @@ function CartItems(){
                 datesProducts : datesP,
                 price : priceC,
                 state : "Pending",
-                real_price : real_price
+                real_price : real_price,
+                pricesProducts: pricesProducts
               }),
               beforeSend: xhr => {
                 xhr.setRequestHeader('auth', auth_token)
@@ -163,7 +166,7 @@ function CartItems(){
                     },
                     success: function (response) {
                       if (response) {
-                        window.location.href="/invoices/"+res.rental._id+".pdf";
+                        window.location.href="/privateArea";
                       } else {
                         alert("There was an error.");
                       }
