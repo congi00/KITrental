@@ -176,7 +176,7 @@ function CartItems(){
                   console.log(pricePItem)
                 }
               }
-              pricesProducts.push(pricePItem);
+              pricesProducts.push(pricePItem.parseInt());
               datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
               productsID.push(item._id);
               console.log(pricePItem)
