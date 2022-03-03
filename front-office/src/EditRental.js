@@ -312,7 +312,7 @@ function EditRental(){
             <Link to="/privateArea">
                 <FontAwesomeIcon className="backIcon" icon={faArrowLeft} size="2x"/>
             </Link>
-            <div className="formFields container">
+            <div className="editRentalFields container">
                 <Form className="Infos-form">
                     <Form.Text>
                         <div className="titleFormC">

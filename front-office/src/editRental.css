@@ -49,11 +49,7 @@
     .infoSection {
         width: 100%;
     }
-    .formFields {
-        /* width: unset; */
-        display: block;
-        margin: auto;
-        margin-top: 0;
+    .editRentalFields {
         padding-top: 17vh;
     }
     .backIcon {
