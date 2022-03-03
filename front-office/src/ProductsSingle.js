@@ -66,6 +66,7 @@ function ProductsSingle(){
       console.log("Start" + start)
       console.log("End" + end)
       if(start >= element && element <= end){
+        setBTNDisabled(true);
         console.log("Inserto contentente")
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
@@ -104,8 +105,6 @@ function ProductsSingle(){
             }
           },
         });
-      }else{
-        setBTNDisabled(true);
       }
     })
     setStartDate(start);
