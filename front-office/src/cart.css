@@ -1,12 +1,12 @@
 .CartPage{
   background-color:#222;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .cartSection{
   width: 100vw;
-  height: 87vh;
+  min-height: 87vh;
   position: absolute;
   top:13vh;
   text-align: center;
@@ -124,11 +124,12 @@
 }
 
 .formCart button{
-  position: absolute;
+  /* position: absolute; */
   width: 90vw;
   height: 7vh;
   left: 5vw;
-  bottom:2vh;
+  /* bottom:2vh; */
+  margin-bottom: 2vh;
 }
 
 .errNone{
@@ -244,5 +245,11 @@
     padding: 1.5rem;
     border-top: 2px solid white;
     margin-top: 2rem;
+  }
+  .CartPage{
+    background-color:#222;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
   }
 }
