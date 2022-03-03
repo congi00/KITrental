@@ -144,6 +144,17 @@
         margin: 1rem 0 0 0;
         font-size: 1rem;
     }
+    .pricesDiv p {
+        display: inline;
+    }
+    .pricesDiv {
+        color: white;
+    }
+    .discountsDiv {
+        color: #118C4F;
+        font-weight: bold;
+        /* font-size: 1.5rem; */
+    }
 } 
 
 
