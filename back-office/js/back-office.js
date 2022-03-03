@@ -1159,7 +1159,7 @@ function createRecord(col, id, el) {
                             type: "PATCH",
                             contentType: "application/json",
                             dataType: "json",
-                            data: JSON.stringify({note:newNotes,price: additivePrice, }),
+                            data: JSON.stringify({note:newNotes,price: additivePrice, end_date: new Date(), state: "Closed"}),
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)
                             },
@@ -1260,7 +1260,6 @@ function createRecord(col, id, el) {
                             }
                           });
                         }
-                        console.log("ASKKKK")
                       }});
                   });
                 }else{
@@ -1278,7 +1277,7 @@ function createRecord(col, id, el) {
                                     client_address: res.client.address,
                                     client_payment: res.client.payment,
                                 }
-                                console.log("CIAO")
+                                
                                 $.ajax({
                                   url: "API/inventory/many/" + rntl.products_id.toString(),
                                   type: "GET",
@@ -1309,20 +1308,22 @@ function createRecord(col, id, el) {
                                     });
                                     console.log("prezzo rental"+additivePrice)
                                     const pricesFinalP = await calcPrice(additivePrice, products_prices, multPrices, rntl.datesProducts, rntl.client_id,"getPrices");
+                                    console.log("Prezzo finale" + pricesFinalP.discounted_price)
                                     const finalPrice = pricesFinalP.discounted_price
                                     const pricesProducts = pricesFinalP.pricesProducts
-                                         
+                                    var notes;     
                                     $.ajax({
                                       url: "API/rental/" + rntl._id,
                                       type: "PATCH",
                                       contentType: "application/json",
                                       dataType: "json",
-                                      data: JSON.stringify({pricesProducts: pricesProducts}),
+                                      data: JSON.stringify({pricesProducts: pricesProducts, end_date: new Date(), state: "Closed"}),
                                       beforeSend: xhr => {
                                         xhr.setRequestHeader('auth', authToken)
                                       },
                                       success: function (response) {
                                         console.log("OK")
+                                        notes = response.rental.note;
                                       }
                                     });
                                     
@@ -1336,7 +1337,7 @@ function createRecord(col, id, el) {
                                         clientInfo : clientInfo,
                                         productsInfo : productsInfo,
                                         rentalRef : rntl._id,
-                                        rentalNotes : rentalPriceR.note,
+                                        rentalNotes : notes,
                                         finalPrice : finalPrice
                                       }),
                                       beforeSend: xhr => {
