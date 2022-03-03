@@ -62,7 +62,7 @@ function ProductsSingle(){
     const [start, end] = dates; 
     setBTNDisabled(false);
     Dates.forEach(element => {
-      if(element >= start && element <= end){
+      if(start >= element && element <= end){
         setBTNDisabled(true);
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
@@ -79,7 +79,7 @@ function ProductsSingle(){
                   idP = element._id;
                 }
                 element.indisponibilityDates.forEach((item)=>{
-                  if((start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))){
+                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))){
                     available = true;
                     idP = element._id;
                   }
