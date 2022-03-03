@@ -113,8 +113,10 @@
   .landSubTitle:nth-child(3) { font-size: 2rem;}
   .custom-image {
     width: 65vw;
-    left: 17.5vw;
+    /* left: 17.5vw; */
     top: 0;
+    width: 60vw;
+    margin-top: 2rem;
   }
 }
 
