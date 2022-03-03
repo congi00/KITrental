@@ -4,6 +4,14 @@
     background-color: #222;
 }
 
+.pricesDiv {
+    color: white;
+}
+
+.reportTitle {
+    color: white;
+    margin-bottom: 1rem;
+}
 
 .titleFormC{
     color: #6c757d;
@@ -18,6 +26,8 @@
     text-align: left;
     position: relative;
     /* bottom: 28vh; */
+    display: block;
+    margin: auto;
 }
 
 .btnFormC{
@@ -43,18 +53,125 @@
     color: #fff;
 }
 
+.btn-broken {
+    height: 3em;
+    width: 8em;
+    border: none;
+    border-radius: 10em;
+    background: #BF0603;
+    font-size: 17px;
+    color: #ffffff;
+    font-family: inherit;
+    font-weight: 500;
+    display: block;
+    margin: 1rem auto 0 auto;
+    
+}
+
+.btn-broken:hover {
+    animation: shake3856 0.3s linear infinite both;
+    background: #BF0603!important;
+}
+
+@keyframes shake3856 {
+    0% {
+        -webkit-transform: translate(0);
+        transform: translate(0);
+    }
+
+    20% {
+        -webkit-transform: translate(-1px, 1px);
+        transform: translate(-1px, 1px);
+    }
+    
+    40% {
+        -webkit-transform: translate(-1px, -1px);
+        transform: translate(-1px, -1px);
+    }
+    
+    60% {
+        -webkit-transform: translate(1px, 1px);
+        transform: translate(1px, 1px);
+    }
+    
+    80% {
+        -webkit-transform: translate(1px, -1px);
+        transform: translate(1px, -1px);
+    }
+
+    100% {
+        -webkit-transform: translate(0);
+        transform: translate(0);
+    }
+}
+
+.editRentalFields {
+    margin-top: 30%;
+}
+
+@media (max-width: 992px) {
+    .Infos-form {
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .form-text {
+        flex: 0 0 100%;
+    }
+    .edit-product-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 3rem;
+        row-gap: 2rem;
+    }
+    .imgEditRental {
+        width: 50%;
+        height: auto;
+        flex: 0 0 50%;
+    }
+    .form-group-wrapper {
+        flex: 0 0 100%;
+        text-align: center;
+    }
+    .reportTitle {
+        color: white;
+    }
+    textarea {
+        width: 80%;
+        padding: 0.5rem;
+    }
+    textarea + label {
+        left: 5%;    }
+    .errorMSG {
+        color: #BF0603;
+        margin: 1rem 0 0 0;
+        font-size: 1rem;
+    }
+    .pricesDiv p {
+        /* display: inline; */
+        margin-bottom: 0.25rem;
+    }
+    .pricesDiv {
+        color: white;
+    }
+    .discountsDiv {
+        color: #118C4F;
+        font-weight: bold;
+        /* font-size: 1.5rem; */
+    }
+} 
+
+
 /********** MEDIA QUERIES ************/
 
 @media (min-width: 992px) {
     .infoSection {
         width: 100%;
     }
-    .formFields {
-        /* width: unset; */
-        display: block;
-        margin: auto;
-        margin-top: 0;
+    .editRentalFields {
         padding-top: 17vh;
+        margin-top: 0;
     }
     .backIcon {
         font-size: 4vw;
@@ -142,56 +259,5 @@
         color: #BF0603;
         margin: 1rem 0 0 0;
         font-size: 1.1rem;
-    }
-    .btn-broken {
-        height: 3em;
-        width: 8em;
-        border: none;
-        border-radius: 10em;
-        background: #BF0603;
-        font-size: 17px;
-        color: #ffffff;
-        font-family: inherit;
-        font-weight: 500;
-        display: block;
-        margin: 1rem auto 0 auto;
-        
-    }
-    
-    .btn-broken:hover {
-        animation: shake3856 0.3s linear infinite both;
-        background: #BF0603!important;
-    }
-    
-    @keyframes shake3856 {
-        0% {
-            -webkit-transform: translate(0);
-            transform: translate(0);
-        }
-    
-        20% {
-            -webkit-transform: translate(-1px, 1px);
-            transform: translate(-1px, 1px);
-        }
-        
-        40% {
-            -webkit-transform: translate(-1px, -1px);
-            transform: translate(-1px, -1px);
-        }
-        
-        60% {
-            -webkit-transform: translate(1px, 1px);
-            transform: translate(1px, 1px);
-        }
-        
-        80% {
-            -webkit-transform: translate(1px, -1px);
-            transform: translate(1px, -1px);
-        }
-    
-        100% {
-            -webkit-transform: translate(0);
-            transform: translate(0);
-        }
     }
 }

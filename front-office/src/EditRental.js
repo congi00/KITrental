@@ -312,7 +312,7 @@ function EditRental(){
             <Link to="/privateArea">
                 <FontAwesomeIcon className="backIcon" icon={faArrowLeft} size="2x"/>
             </Link>
-            <div className="formFields container">
+            <div className="editRentalFields container">
                 <Form className="Infos-form">
                     <Form.Text>
                         <div className="titleFormC">
@@ -344,7 +344,7 @@ function EditRental(){
                                     />
                                     {error && <p className='errorMSG'>The range includes unavailable dates!</p>}
                                 </div>
-                                <div>
+                                <div className='form-group-wrapper'>
                                     <h2 className="reportTitle">Report an Issue:</h2>
                                     <Form>
                                         <Form.Group>
