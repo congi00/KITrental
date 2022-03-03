@@ -196,14 +196,14 @@
   }
   .aboutTitles {
     flex: 0 0 100%;
-    padding-top: 0;
+    padding-top: 8vh;
   }
   .aboutIcons{
     display: block;
     margin: auto;
     width: unset;
     max-width: 30vw;
-    max-height: 30vh;
+    max-height: 200px;
     margin-top:5vh;
     top:0;
     left: 0;

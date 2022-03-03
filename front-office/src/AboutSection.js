@@ -17,13 +17,13 @@ function AboutSection(){
         <Link to="/catalog?category=professional">
           <img className="aboutIcons" src={Professional}/>
         </Link>
-          <h3 className="aboutTitles" style={{fontSize:"2rem",paddingTop:"8vh"}}>PROFESSIONAL<br/>EQUIPMENT</h3>
+          <h3 className="aboutTitles" style={{fontSize:"2rem"}}>PROFESSIONAL<br/>EQUIPMENT</h3>
         </div>
         <div className="col-12 col-lg image-text-card">
           <Link to="/catalog?category=household">
             <img className="aboutIcons custom-image" src={Household}/>
           </Link>
-          <h3 className="aboutTitles" style={{fontSize:"2rem",paddingTop:"3vh"}}>HOUSEHOLD<br/>TOOLS</h3>
+          <h3 className="aboutTitles" style={{fontSize:"2rem"}}>HOUSEHOLD<br/>TOOLS</h3>
         </div>
       </div>
 
