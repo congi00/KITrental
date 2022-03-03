@@ -63,7 +63,6 @@ function ProductsSingle(){
     setBTNDisabled(false);
     Dates.forEach(element => {
       if(start >= element && element <= end){
-        setBTNDisabled(true);
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
           type: "GET",
@@ -80,11 +79,11 @@ function ProductsSingle(){
                 }
                 element.indisponibilityDates.forEach((item)=>{
                   if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
-                    ||
+                    &&
                     !(start >= new Date(item.startDate) && new Date(item.endDate) >= end)
-                    ||
+                    &&
                     !(start == new Date(item.startDate))
-                    ||
+                    &&
                     !(end == new Date(item.endDate))
                   ){
                     available = true;
@@ -101,6 +100,8 @@ function ProductsSingle(){
             }
           },
         });
+      }else{
+        setBTNDisabled(true);
       }
     })
     setStartDate(start);
