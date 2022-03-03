@@ -1159,7 +1159,7 @@ function createRecord(col, id, el) {
                             type: "PATCH",
                             contentType: "application/json",
                             dataType: "json",
-                            data: JSON.stringify({note:newNotes,price: additivePrice, }),
+                            data: JSON.stringify({note:newNotes,price: additivePrice, end_date: new Date(), state: "Closed"}),
                             beforeSend: xhr => {
                               xhr.setRequestHeader('auth', authToken)
                             },
@@ -1260,7 +1260,6 @@ function createRecord(col, id, el) {
                             }
                           });
                         }
-                        console.log("ASKKKK")
                       }});
                   });
                 }else{
@@ -1278,7 +1277,7 @@ function createRecord(col, id, el) {
                                     client_address: res.client.address,
                                     client_payment: res.client.payment,
                                 }
-                                console.log("CIAO")
+                                
                                 $.ajax({
                                   url: "API/inventory/many/" + rntl.products_id.toString(),
                                   type: "GET",
@@ -1317,7 +1316,7 @@ function createRecord(col, id, el) {
                                       type: "PATCH",
                                       contentType: "application/json",
                                       dataType: "json",
-                                      data: JSON.stringify({pricesProducts: pricesProducts}),
+                                      data: JSON.stringify({pricesProducts: pricesProducts, end_date: new Date(), state: "Closed"}),
                                       beforeSend: xhr => {
                                         xhr.setRequestHeader('auth', authToken)
                                       },
