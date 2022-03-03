@@ -140,8 +140,9 @@ top: 30vh;}
   }
   .hero-products-wrapper {
     height: 100vh;
-    padding-top: 30vh;
+    padding-top: 25vh;
     position: relative;
+    background-color: #06514c;
   }
   .pageTitle{
     color: #fff;
@@ -251,5 +252,8 @@ top: 30vh;}
   }
   .modal-body .btnFormL {
     color: #06514c;
+  }
+  .inventoryPage{
+    background-color: white;
   }
 }

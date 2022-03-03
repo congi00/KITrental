@@ -75,6 +75,48 @@
     overflow: hidden;
 }
 
+.product-remove-button {
+    background-color: transparent;
+    border-color: #BF0603;
+    color: #BF0603;
+    border: 2px solid #BF0603;
+    margin-left: 1rem;
+}
+.product-button, .product-remove-button, .invoice-button {
+    margin-top: 0.5rem;
+}
+.product-button, .product-button:active, .product-button:focus, .product-button:hover, .product-button:disabled {
+    background: #06514c;
+    box-shadow: #06514c 0 10px 20px -10px;
+}
+.product-remove-button, .product-remove-button:active, .product-remove-button:focus, .product-remove-button:hover, .product-remove-button:disabled {
+    background: #BF0603;
+    box-shadow: #BF0603 0 10px 20px -10px;
+}
+.invoice-button, .invoice-button:active, .invoice-button:focus, .invoice-button:hover, .invoice-button:disabled {
+    background: #352208;
+    box-shadow: #352208 0 10px 20px -10px;
+}
+.product-button, .invoice-button, .product-remove-button {
+    border-radius: 999px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+}
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {
@@ -138,9 +180,10 @@
         min-height: 50vh;
     }
     .btnChangeInfo {
+        height: unset;
         position: unset;
-        height: 5vh;
         width: 7vw;
+        padding: 0.5rem 0 0.5rem 0;
     }
     .card-img-top {
         max-height: 22vh;
@@ -152,50 +195,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 50vh;
+    }
+    .empty-rental a {
+        text-decoration: none;
+        color: white;
     }
     .rental-wrapper .swiper {
         display: none;
-    }
-    .product-remove-button {
-        background-color: transparent;
-        border-color: #BF0603;
-        color: #BF0603;
-        border: 2px solid #BF0603;
-        margin-left: 1rem;
-    }
-    .product-button, .product-remove-button, .invoice-button {
-        margin-top: 0.5rem;
-    }
-    .product-button, .product-button:active, .product-button:focus, .product-button:hover, .product-button:disabled {
-        background: #06514c;
-        box-shadow: #06514c 0 10px 20px -10px;
-    }
-    .product-remove-button, .product-remove-button:active, .product-remove-button:focus, .product-remove-button:hover, .product-remove-button:disabled {
-        background: #BF0603;
-        box-shadow: #BF0603 0 10px 20px -10px;
-    }
-    .invoice-button, .invoice-button:active, .invoice-button:focus, .invoice-button:hover, .invoice-button:disabled {
-        background: #352208;
-        box-shadow: #352208 0 10px 20px -10px;
-    }
-    .product-button, .invoice-button, .product-remove-button {
-        border-radius: 999px;
-        box-sizing: border-box;
-        color: #FFFFFF;
-        cursor: pointer;
-        font-family: Inter,sans-serif;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 24px;
-        opacity: 1;
-        outline: 0 solid transparent;
-        padding: 8px 18px;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-        width: fit-content;
-        word-break: break-word;
-        border: 0;
     }
     .edit-rental-data {
         display: none;

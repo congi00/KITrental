@@ -233,6 +233,9 @@
     position: unset;
     margin: 0;
   }
+  .cartSection h2{
+    color: white;
+  }
   .formCart button {
     height: unset;
     position: unset; 
