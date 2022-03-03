@@ -1308,6 +1308,7 @@ function createRecord(col, id, el) {
                                     });
                                     console.log("prezzo rental"+additivePrice)
                                     const pricesFinalP = await calcPrice(additivePrice, products_prices, multPrices, rntl.datesProducts, rntl.client_id,"getPrices");
+                                    console.log("Prezzo finale" + pricesFinalP.discounted_price)
                                     const finalPrice = pricesFinalP.discounted_price
                                     const pricesProducts = pricesFinalP.pricesProducts
                                          
