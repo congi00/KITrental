@@ -91,14 +91,18 @@
         align-items: center;
         justify-content: space-evenly;
     }
+    .edit-rental-title {
+        margin-left: 0;
+    }
     .imgEditRental {
         display: block;
         max-width: 30%;
         height: auto;
+        max-height: 350px;
     }
-    /* .calendar {
-        margin-top: 1rem;
-    } */
+    .calendarSingleProd {
+        margin-top: 0;
+    }
     .pricesDiv {
         color: white;
         text-align: center;

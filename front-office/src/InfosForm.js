@@ -20,7 +20,7 @@ function InfosForm(){
 
     React.useEffect(() => {
       $.ajax({
-        url: "https://site202126.tw.cs.unibo.it/API/clients/" + param,
+        url: "/API/clients/" + param,
         type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', auth_token)
@@ -44,7 +44,7 @@ function InfosForm(){
         e.preventDefault();
         console.log(changedInfo);
         return $.ajax({
-          url: "https://site202126.tw.cs.unibo.it/API/clients/" + clientInfo._id,
+          url: "/API/clients/" + clientInfo._id,
           type: "PATCH",
           body: JSON.stringify(changedInfo),
           beforeSend: xhr => {

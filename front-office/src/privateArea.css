@@ -94,6 +94,7 @@
         max-height: 8vh;
         width: auto;
         aspect-ratio: 1;
+        object-fit: scale-down;
     }
     .Infos {
         position: unset;

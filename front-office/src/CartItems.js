@@ -18,6 +18,7 @@ function CartItems(){
   const navigate = useNavigate();
   
   React.useEffect(() => {
+    console.log('Apparently calculation of price (when the user opens the)')
     if(sessionStorage.getItem("token"))
       SetLogged(true);
     if(cartItems){
@@ -26,14 +27,17 @@ function CartItems(){
       if(cartItemsF.length != 0){
         cookies.set('myCart', cartItemsF, { path: '/' });
 
-        console.log(auth_token);
+        // Calculation discounted price
+        // Promotions
         axios.get("API/promotions/",{headers: {'auth': auth_token}})    
         .then((res) => {    
-          console.log(res.data);
+          // console.log(res.data);
           var proms = res.data.promotions;
-          console.log(proms)
+          // console.log(proms)
           var changedCart =[]
+          var discountsMSG
           cartItems.forEach(item => {
+            discountsMSG = ''
             var pricePItem = item.price;
             for (const [key, value] of Object.entries(proms)) {
               var prom_start_date = new Date(value.start_date)
@@ -41,10 +45,59 @@ function CartItems(){
               if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
                 var old_rental_price = pricePItem 
                 pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
+                console.log(old_rental_price - ( old_rental_price / 100 * value.percentage ))
+                if (discountsMSG == ''){
+                  discountsMSG += '-' + value.percentage + "% for " + value.name + " promotion"
+                }else{
+                    discountsMSG += ', ' + '-' + value.percentage + "% for " + value.name + " promotion"
+                }
               }
-              console.log("Prima"+item.price)
+
+              // Weekdays discount (inner Mon-Tue-Wed)
+              // products_dates.forEach((d, index) => {
+                var start_day = new Date(item.startD).getDay() // Sunday = 0, Monday = 1, ...
+                // var diffInDays = products_mult_prices[index] / products_prices[index]
+                const diffInMs   = (new Date(item.startD)).getTime() - (new Date(item.endD)).getTime()
+                const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+                var current_day = start_day
+                var discounted = false
+                var inner_weekdays = false
+
+                // Checking for weekdays discounts
+                for(var i=0; i < diffInDays; i++) {
+                    // Start weekdays check
+                    if(current_day == 0) {
+                      inner_weekdays = true;
+                    }
+            
+                    // Inner weekdays Confirmed
+                    if(current_day == 4 && inner_weekdays) {
+                      var sub_amount = item.price + item.price * 0.5 + item.price * 0.25 // For free on Mondays, 50% on Tuesdays, 25% on Wednesdays 
+                      pricePItem -= sub_amount
+                      // if (index == singleProduct)
+                      //     singleProductPrice -= sub_amount
+                      inner_weekdays = false;
+                      discounted = true;
+                      console.log(sub_amount)
+                      // console.log('discounts')
+                        if (discountsMSG == ''){
+                            discountsMSG += '-' + sub_amount + '$'
+                        }else{
+                            discountsMSG += ' , ' + '-' + sub_amount + '$'
+                        }
+                        console.log(discountsMSG)
+                    }
+                    
+                    if (current_day == 6) current_day = 0
+                    else current_day++
+                }
+                if (discounted) discountsMSG += ' for inner Mon-Tue-Wed'
+                
+                // })
+
+              console.log("Prima "+item.price)
               item.price = pricePItem
-              console.log("Dopo"+item.price)
+              console.log("Dopo "+item.price)
               setTotalPrice((prevState, props) => prevState + pricePItem)
             }
             console.log(cartItems)
@@ -54,6 +107,7 @@ function CartItems(){
               setTotalPrice((prevState, props) => prevState + item.price*item.qty)
             ))*/
           });
+          console.log(discountsMSG)
           setcartItems(changedCart)
           console.log(cartItems);
         })
@@ -196,6 +250,7 @@ function CartItems(){
                 </div>
                 <div className="itemPrice">
                   <h2>{item.price*item.qty}$</h2>
+                  <Form.Control type="number" min="0" placeholder={item.qty} onChange={e => onTodoChange(e.target.value,item)} />
                 </div>
               </Card.Body>
             </Card>
