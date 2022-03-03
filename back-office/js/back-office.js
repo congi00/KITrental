@@ -762,6 +762,7 @@ function showInventory(){
             <option value="Blender">Blender</option>
             <option value="Torch">Torch</option>
             <option value="Kneader">Kneader</option>
+            <option value="Smoker">Smoker</option>
             <option value="Barbeque">Barbeque</option>
           </select>
         </div>

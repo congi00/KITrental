@@ -130,10 +130,11 @@ function CartItems(){
               
             });
             $.ajax({
-              url: "https://site202126.tw.cs.unibo.it/API/rental/",
+              url: "http://localhost:8000/API/rental/",
               type: "POST",
               headers: {
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:8000",
                 "Access-Control-Allow-Methods":"DELETE, POST, GET",
                 "Access-Control-Allow-Headers":"Content-Type, Authorization",
               },
