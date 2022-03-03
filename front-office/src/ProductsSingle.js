@@ -72,12 +72,12 @@ function ProductsSingle(){
               console.log(response);
               var idP;
               var available = false;
-              response.products.forEach((element)=>{
-                if(element.indisponibilityDates.length <1){
+              response.products.forEach((datesProdItem)=>{
+                if(datesProdItem.indisponibilityDates.length <1){
                   available = true;
                   idP = element._id;
                 }
-                element.indisponibilityDates.forEach((item)=>{
+                datesProdItem.indisponibilityDates.forEach((item)=>{
                   if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
                     &&
                     !(start >= new Date(item.startDate) && new Date(item.endDate) >= end)
@@ -87,7 +87,7 @@ function ProductsSingle(){
                     !(end == new Date(item.endDate))
                   ){
                     available = true;
-                    idP = element._id;
+                    idP = datesProdItem._id;
                   }
                 })
               });
