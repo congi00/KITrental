@@ -57,7 +57,7 @@ function CardsSlider(){
     }
 
     if(price || sub || availability ){
-      fetch("https://site202126.tw.cs.unibo.it/API/inventory/filter/?price="+ priceS+"&sub="+ subS+"&availability="+ availabilityS+"&category=" +param)
+      fetch("/API/inventory/filter/?price="+ priceS+"&sub="+ subS+"&availability="+ availabilityS+"&category=" +param)
         .then(res => res.json())
         .then(
           (result) => {
@@ -74,7 +74,7 @@ function CardsSlider(){
           }
         )
     }else{
-      fetch("https://site202126.tw.cs.unibo.it/API/inventory/category/"+ param)
+      fetch("/API/inventory/category/"+ param)
       .then(res => res.json())
       .then(
         (result) => {

@@ -127,7 +127,7 @@ function AreaComponent(){
       }
       <div className='desktop-fixed-client-wrapper'>
         <h1 className="personalTitle">Personal Area</h1>
-        <img className="imgPersonalArea" src="/img/Products/blender.jpg"></img>
+        <img className="imgPersonalArea" src="img/profile-placeholder.png"></img>
         <h3 className='Infos'>{client.username}</h3>
         <button className='btnChangeInfo' onClick={() => navigate('/changeInfos?usrID='+client._id)}>Change info</button>
       </div>      
@@ -157,7 +157,7 @@ function AreaComponent(){
                             <ListGroup className="list-group-flush">
                               <ListGroup.Item>State: {item.state}</ListGroup.Item>
                               <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
-                              <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                              <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
                             </ListGroup>
                             <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
                             <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
@@ -187,6 +187,7 @@ function AreaComponent(){
                           <ListGroup.Item>State: {item.state}</ListGroup.Item>
                           <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>End: {item.end_date ? new Date(item.end_date).toLocaleString() : ''}</ListGroup.Item>
+                          <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
                         </ListGroup>
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
                         <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>

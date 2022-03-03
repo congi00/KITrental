@@ -49,13 +49,13 @@ function EditRental(){
 
     // Retrieve Rental document and products, set the states
     React.useEffect(() => {
-    axios.get("https://site202126.tw.cs.unibo.it/API/rental/"+ param, {headers: {auth: auth_token}})
+    axios.get("/API/rental/"+ param, {headers: {auth: auth_token}})
         .then(
         res => {
             var rental = res.data.rental
             setRentalInfo(rental);
             
-            axios.get("https://site202126.tw.cs.unibo.it/API/inventory/many/" + rental.products_id.toString())
+            axios.get("/API/inventory/many/" + rental.products_id.toString())
                 .then(
                     res => {
                         var products = res.data.products
@@ -83,7 +83,7 @@ function EditRental(){
         e.preventDefault();
         var brokenProduct = products[selectedOption]._id
         var issue = document.getElementsByTagName('textarea')[0].value
-        axios.patch("https://site202126.tw.cs.unibo.it/API/rental/" + rentalInfo._id, 
+        axios.patch("/API/rental/" + rentalInfo._id, 
             {broken_product: {prod_id: brokenProduct, issue: issue}}, 
             {headers: {auth: auth_token}})
             .then(
@@ -127,7 +127,7 @@ function EditRental(){
         // toUpdateObject['indisponibilityDates'] = prodIndDatesArr
 
         // Update product document with edited indisponibility date
-        axios.patch("https://site202126.tw.cs.unibo.it/API/inventory/" + products[selectedOption]._id, 
+        axios.patch("/API/inventory/" + products[selectedOption]._id, 
             {indisponibilityDates: prodIndDatesArr}, 
             {headers: {auth: auth_token}})
             .then(
@@ -141,7 +141,7 @@ function EditRental(){
         var newDatesProds = rentalInfo.datesProducts
         newDatesProds[selectedOption] = range
         // Update rental document with edited indisponibility date, discounted price and real price
-        axios.patch("https://site202126.tw.cs.unibo.it/API/rental/" + rentalInfo._id, 
+        axios.patch("/API/rental/" + rentalInfo._id, 
             {datesProducts: newDatesProds, price: calcPrice.discounted, real_price: calcPrice.rntl}, 
             {headers: {auth: auth_token}})
             .then(
@@ -316,7 +316,7 @@ function EditRental(){
                 <Form className="Infos-form">
                     <Form.Text>
                         <div className="titleFormC">
-                            <h1 className="changeinfos-title">Edit a Product's Dates</h1>
+                            <h1 className="edit-rental-title">Edit a Product's Dates</h1>
                         </div>
                     </Form.Text>
                     <div className="firstSectionEditRental">
@@ -330,7 +330,7 @@ function EditRental(){
                             {selectedOption != "Select Product"  &&
                             <>
                                 <img className="imgEditRental productsImg" src={'img/products/'+ products[selectedOption].image}/>
-                                <div className='calendar'>
+                                <div className='calendarSingleProd'>
                                     <DatePicker
                                         wrapperClassName="date-picker"
                                         selected={startDate}
@@ -345,7 +345,7 @@ function EditRental(){
                                     {error && <p className='errorMSG'>The range includes unavailable dates!</p>}
                                 </div>
                                 <div>
-                                    <h2 className="reportTitle">Report an Issue</h2>
+                                    <h2 className="reportTitle">Report an Issue:</h2>
                                     <Form>
                                         <Form.Group>
                                             <FloatingLabel controlId="floatingTextarea2" label="Describe the issue">
