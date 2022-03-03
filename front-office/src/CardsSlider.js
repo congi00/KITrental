@@ -152,15 +152,18 @@ function CardsSlider(){
       <Link to="/cart">
         <FontAwesomeIcon className="cartIconP" icon={faShoppingCart} size="2x" />
       </Link>
-      <div className='container'>
+      <div>
         <div className="hero-products-wrapper">
-          <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
-          <div className="scroll-icon-wrapper">
-            <a href="#products">
-              <div class="scroll"></div>
-            </a>
+          <div className="container">
+            <h2 className="pageTitle">{param} utilities for <br/>new experiences</h2>
+            <div className="scroll-icon-wrapper">
+              <a href="#products">
+                <div class="scroll"></div>
+              </a>
+            </div>
           </div>
         </div>
+        <div className="container">
         <div className="titlesSection"></div>
         {loggedIn && 
           <div className="upper-section-wrapper pt-5">
@@ -263,6 +266,7 @@ function CardsSlider(){
             </div>
           </React.Fragment>
         }
+        </div>
       </div>
     </div>
   );
