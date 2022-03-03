@@ -147,7 +147,8 @@
         font-size: 1rem;
     }
     .pricesDiv p {
-        display: inline;
+        /* display: inline; */
+        margin-bottom: 0.25rem;
     }
     .pricesDiv {
         color: white;
