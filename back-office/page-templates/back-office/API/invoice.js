@@ -7,12 +7,13 @@ const PDFDocument = require('pdfkit');
 function createInvoice(infosPdf, path) {
 	let doc = new PDFDocument({ margin: 50 });
 
-	generateHeader(doc, infosPdf);
+	doc.pipe(fs.createWriteStream(path+".pdf"));
+  generateHeader(doc, infosPdf);
 	//generateCustomerInformation(doc, infosPdf);
 	//generateInvoiceTable(doc, invoice);
 
+	
 	doc.end();
-	doc.pipe(fs.createWriteStream(path+".pdf"));
 }
 
 function generateHeader(doc,infosPdf) {
