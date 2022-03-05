@@ -1149,10 +1149,11 @@ function createRecord(col, id, el) {
 
                         additivePrice += (res.products.price * toCreateObject['penalties_days'][index] * (50/100)) 
                         if(index == toCreateObject['penalties_prods'].length-1){
+                          console.log("PRICEECCEEE")
                           additivePrice+=rntl.price;
                           console.log(rntl.price);
                           console.log("Prezzo con penalità"+additivePrice);
-                          var newNotes = rntl.note += "\nPenalties were added for delayed return."
+                          var newNotes = rntl.note.concat("\nPenalties were added for delayed return.")
 
                           $.ajax({
                             url: "API/rental/" + rntl._id,
@@ -1224,34 +1225,36 @@ function createRecord(col, id, el) {
                                           xhr.setRequestHeader('auth', authToken)
                                         },
                                         success: function (response) {
+                                          console.log(response)
                                           console.log("OK")
+                                          $.ajax({
+                                            url: "API/invoice/pdf/",
+                                            type: "POST",
+                                            contentType: "application/json",
+                                            dataType: "json",
+                                            data: JSON.stringify({
+                                              clientInfo : clientInfo,
+                                              productsInfo : productsInfo,
+                                              rentalRef : response.result._id,
+                                              rentalNotes : response.result.note,
+                                              finalPrice : finalPrice
+                                            }),
+                                            beforeSend: xhr => {
+                                              xhr.setRequestHeader('auth', authToken)
+                                            },
+                                            success: function (response) {
+                                              if (response) {
+                                              } else {
+                                                alert("There was an error.");
+                                              }
+                                            },      
+                                            error: function(err){
+                                              console.log(err);
+                                            }
+                                          });
                                         }
                                       });
-                                      $.ajax({
-                                        url: "API/invoice/pdf/",
-                                        type: "POST",
-                                        contentType: "application/json",
-                                        dataType: "json",
-                                        data: JSON.stringify({
-                                          clientInfo : clientInfo,
-                                          productsInfo : productsInfo,
-                                          rentalRef : rentalPriceR._id,
-                                          rentalNotes : rentalPriceR.note,
-                                          finalPrice : finalPrice
-                                        }),
-                                        beforeSend: xhr => {
-                                          xhr.setRequestHeader('auth', authToken)
-                                        },
-                                        success: function (response) {
-                                          if (response) {
-                                          } else {
-                                            alert("There was an error.");
-                                          }
-                                        },      
-                                        error: function(err){
-                                          console.log(err);
-                                        }
-                                      });
+                                      
                                     }
                                   });
                                 }

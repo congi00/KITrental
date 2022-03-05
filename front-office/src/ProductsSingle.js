@@ -49,10 +49,11 @@ function ProductsSingle(){
 
   const onAdd = (product) =>{
     const cartItems = cookies.get('myCart');
+
     if(cartItems){
-      cookies.set('myCart', [...cartItems, { ...product, qty:1 , startD : startDate, endD: endDate}], { path: '/' });
+      cookies.set('myCart', [...cartItems, { ...product, startDate : startDate, endDate: endDate}], { path: '/' });
     }else{
-      cookies.set('myCart', [{ ...product, qty:1, startD : startDate, endD: endDate}], { path: '/' });
+      cookies.set('myCart', [{ ...product, startDate : startDate, endDate: endDate}], { path: '/' });
     }
       console.log(cookies.get('myCart'));
   }
@@ -65,7 +66,7 @@ function ProductsSingle(){
       console.log("Dates" + element)
       console.log("Start" + start)
       console.log("End" + end)
-      if(start >= element && element <= end){
+      if(start <= element && element <= end){
         setBTNDisabled(true);
         console.log("Inserto contentente")
         $.ajax({
@@ -83,7 +84,7 @@ function ProductsSingle(){
                   idP = element._id;
                 }
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
+                  if((start>=  new Date(item.startDate) &&  end >= new Date(item.endDate))
                     &&
                     !(start >= new Date(item.startDate) && new Date(item.endDate) >= end)
                     &&
