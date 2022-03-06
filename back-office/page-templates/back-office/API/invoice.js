@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-  function createInvoice(docDefinition,infoInvoice, successCallback, errorCallback) {
+  function createInvoice(docDefinition, successCallback, errorCallback) {
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
@@ -17,13 +17,11 @@ const path = require('path');
         normal: path.resolve(__dirname,'fonts/Roboto-Regular.ttf'),
       }
     };
-    //
     const printer = new pdfMakePrinter(fonts);
     const doc = printer.createPdfKitDocument(docDefinition);
-    console.log(infoInvoice.path+infoInvoice.path)
-    const paa = "fonts/invoice2.pdf";
+
     doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,"fonts/invoice2.pdf")).on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices2.pdf')).on("error", (err) => {
         errorCallback(err.message);
       })
     );
@@ -189,22 +187,18 @@ router.post('/pdf/',  (req, res) => {
         client_payment : req.body.clientInfo.client_payment,     
         productsInfo : req.body.productsInfo,   
         rentalNotes:  req.body.rentalNotes,
-        finalPrice : req.body.finalPrice,
-        path : req.body.rentalRef
+        finalPrice : req.body.finalPrice
     }
     
 
-    const docDefinition = { content: "Ciao" };
+    const docDefinition = { content: "Dummy content" };
     createInvoice(
       docDefinition,
-      infosPdf,
       function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
-        //res.send(binary);
       },
       function(error) {
-        //res.send("ERROR:" + error);
       }
     );
     
