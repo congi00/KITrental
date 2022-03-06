@@ -8,7 +8,7 @@ const fs = require('fs');
 
 function createInvoice(infosPdf, path) {
   let theOutput = new PDFDocument
-  const fileName = (__dirname+`/invoices/62249fff886246b732348b00.pdf`)
+  const fileName = (`/invoices/62249fff886246b732348b00.pdf`)
   theOutput.pipe(fs.createWriteStream(fileName))
   generateHeader(theOutput,infosPdf);
   theOutput.end()
