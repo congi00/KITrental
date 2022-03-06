@@ -21,7 +21,7 @@ const path = require('path');
     const doc = printer.createPdfKitDocument(docDefinition);
     console.log(docDefinition.path)
     doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices.pdf')).on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,'fonts/'+infoInvoice.path+".pdf")).on("error", (err) => {
         errorCallback(err.message);
       })
     );
