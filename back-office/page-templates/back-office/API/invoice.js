@@ -10,6 +10,7 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
   function createInvoice(docDefinition, successCallback, errorCallback) {
+    console.log(docDefinition.path)
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
