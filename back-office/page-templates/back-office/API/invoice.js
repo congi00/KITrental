@@ -37,7 +37,7 @@ async function generateHeader(doc,infosPdf,path) {
   .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
   .moveDown(); 
   doc.end();     
-  doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
+  doc.pipe(fs.createWriteStream(path+".pdf",{ encoding: 'utf-8',mode: 0666}));
 }
 
 
