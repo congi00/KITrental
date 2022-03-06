@@ -200,10 +200,10 @@ router.post('/pdf/',  (req, res) => {
       function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
-        //res.send(binary);
+        res.send(binary);
       },
       function(error) {
-        //res.send("ERROR:" + error);
+        res.send("ERROR:" + error);
       }
     );
     
