@@ -196,6 +196,7 @@ router.post('/pdf/', async (req, res) => {
       docDefinition,
       function(binary) {
         res.contentType("application/pdf");
+        res.setHeader('Content-Type', 'application/pdf');
         res.send(binary);
       },
       function(error) {
