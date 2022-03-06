@@ -10,8 +10,16 @@ const fs = require('fs');
 //function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, successCallback, errorCallback) {
   try { 
-    const fontDescriptors = { ... };
-    const printer = new pdfMakePrinter(fontDescriptors);
+    //const fontDescriptors = { ... };fontDescriptors
+    var fonts = {
+      Roboto: {
+        normal: 'fonts/Roboto-Regular.ttf',
+        bold: 'fonts/Roboto-Medium.ttf',
+        italics: 'fonts/Roboto-Italic.ttf',
+        bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+      }
+    };
+    const printer = new pdfMakePrinter(fonts);
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
