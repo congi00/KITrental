@@ -3,19 +3,19 @@ const mongoose = require('mongoose');
 
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
-const getStream = require('get-stream')
 
-async function createInvoice(infosPdf, path) {
+function createInvoice(infosPdf, path) {
 	let doc = new PDFDocument({ margin: 50 });
 
 	generateHeader(doc, infosPdf);
 	//generateCustomerInformation(doc, infosPdf);
 	//generateInvoiceTable(doc, invoice);
 
-	
-	doc.pipe(fs.createWriteStream(path+".pdf"));
-  doc.end();
-  return await getStream.buffer(doc)
+	doc.end();
+  var ws = fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666})
+  ws.on('error', function(e) { console.error(e); });
+  ws.end();
+	doc.pipe(ws);
 }
 
 function generateHeader(doc,infosPdf) {
