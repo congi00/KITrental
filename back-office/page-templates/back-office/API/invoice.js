@@ -5,18 +5,17 @@ const fs = require('fs');
 const PDFDocument = require('pdfkit');
 
 function createInvoice(infosPdf, path) {
-	let doc = new PDFDocument({ margin: 50 });
+	//let doc = new PDFDocument({ margin: 50 });
 
-	generateHeader(doc, infosPdf);
+	//generateHeader(doc, infosPdf);
 	//generateCustomerInformation(doc, infosPdf);
 	//generateInvoiceTable(doc, invoice);
 
-	
+	//doc.end();
   var ws = fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666})
   ws.on('error', function(e) { console.error(e); });
-	//doc.pipe(ws);
   ws.end();
-  //doc.end();
+	//doc.pipe();
 }
 
 function generateHeader(doc,infosPdf) {
