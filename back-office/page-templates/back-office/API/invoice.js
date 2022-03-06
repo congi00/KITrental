@@ -11,7 +11,7 @@ function createInvoice(infosPdf, path) {
 	//generateCustomerInformation(doc, infosPdf);
 	//generateInvoiceTable(doc, invoice);
 
-	doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
+	
 }
 
 async function generateHeader(doc,infosPdf) {
@@ -37,6 +37,7 @@ async function generateHeader(doc,infosPdf) {
   .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
   .moveDown(); 
   doc.end();     
+  doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
 }
 
 
