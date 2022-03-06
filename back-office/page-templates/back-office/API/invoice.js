@@ -10,7 +10,6 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
   function createInvoice(docDefinition, successCallback, errorCallback) {
-    console.log(docDefinition.path)
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
@@ -20,9 +19,9 @@ const path = require('path');
     };
     const printer = new pdfMakePrinter(fonts);
     const doc = printer.createPdfKitDocument(docDefinition);
-
+    console.log(docDefinition.path)
     doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,'fonts/'+docDefinition.path)).on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices.pdf')).on("error", (err) => {
         errorCallback(err.message);
       })
     );
