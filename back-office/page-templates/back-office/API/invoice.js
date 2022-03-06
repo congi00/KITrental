@@ -21,7 +21,7 @@ const path = require('path');
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices.pdf')).on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,'fonts/'+docDefinition.path)).on("error", (err) => {
         errorCallback(err.message);
       })
     );
@@ -187,20 +187,19 @@ router.post('/pdf/',  (req, res) => {
         client_payment : req.body.clientInfo.client_payment,     
         productsInfo : req.body.productsInfo,   
         rentalNotes:  req.body.rentalNotes,
-        finalPrice : req.body.finalPrice
+        finalPrice : req.body.finalPrice,
+        path : req.body.rentalRef
     }
     
 
-    const docDefinition = { content: "Dummy content" };
+    const docDefinition = { content: infosPdf };
     createInvoice(
       docDefinition,
       function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
-        //res.send(binary);
       },
       function(error) {
-        //res.send("ERROR:" + error);
       }
     );
     
