@@ -11,11 +11,12 @@ function createInvoice(infosPdf, path) {
 	//generateCustomerInformation(doc, infosPdf);
 	//generateInvoiceTable(doc, invoice);
 
-	doc.end();
+	
   var ws = fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666})
   ws.on('error', function(e) { console.error(e); });
+	//doc.pipe(ws);
   ws.end();
-	doc.pipe(ws);
+  //doc.end();
 }
 
 function generateHeader(doc,infosPdf) {
