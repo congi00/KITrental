@@ -19,7 +19,7 @@ const path = require('path');
     };
     const printer = new pdfMakePrinter(fonts);
     const doc = printer.createPdfKitDocument(docDefinition);
-    console.log(docDefinition.path)
+    console.log(infoInvoice.path)
     doc.pipe(
       fs.createWriteStream(path.resolve(__dirname,'fonts/'+infoInvoice.path+".pdf")).on("error", (err) => {
         errorCallback(err.message);
