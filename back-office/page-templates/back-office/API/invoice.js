@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-  async function createInvoice(docDefinition, successCallback, errorCallback) {
+  function createInvoice(docDefinition, successCallback, errorCallback) {
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
@@ -178,7 +178,7 @@ router.post('/', async function (req, res) {
 })
 
 
-router.post('/pdf/', async (req, res) => {
+router.post('/pdf/',  (req, res) => {
   console.log(req.body)
     const infosPdf = {
         client_name : req.body.clientInfo.client_name,
