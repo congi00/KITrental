@@ -17,12 +17,13 @@ const path = require('path');
         normal: path.resolve(__dirname,'fonts/Roboto-Regular.ttf'),
       }
     };
+    //
     const printer = new pdfMakePrinter(fonts);
     const doc = printer.createPdfKitDocument(docDefinition);
-    console.log(infoInvoice.path)
-    const paa = "fonts/"+infoInvoice.path+".pdf";
+    console.log(infoInvoice.path+infoInvoice.path)
+    const paa = "fonts/invoice2.pdf";
     doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,paa)).on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,"fonts/invoice2.pdf")).on("error", (err) => {
         errorCallback(err.message);
       })
     );
@@ -200,10 +201,10 @@ router.post('/pdf/',  (req, res) => {
       function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
-        res.send(binary);
+        //res.send(binary);
       },
       function(error) {
-        res.send("ERROR:" + error);
+        //res.send("ERROR:" + error);
       }
     );
     
