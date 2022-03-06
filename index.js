@@ -43,7 +43,7 @@ app.use("/API/promotions",routePromotions);
 app.use("/js",express.static(global.rootDir + "/back-office/js"));
 app.use("/css",express.static(global.rootDir + "/back-office/css"));
 app.use("/img",express.static(global.rootDir + "/back-office/img"));
-app.use("/invoices",express.static(global.rootDir + "/back-office/invoices"));
+app.use("/invoices",express.static(global.rootDir + "/back-office/API/invoices"));
 
 app.use(express.static('public'));
 
