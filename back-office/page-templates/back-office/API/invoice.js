@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-function createInvoice(docDefinition, successCallback, errorCallback) {
+  async function createInvoice(docDefinition, successCallback, errorCallback) {
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
