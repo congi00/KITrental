@@ -1,11 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const fs = require('fs');
+
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
 
 function createInvoice(infosPdf, path) {
-	let doc = new PDFDocument({ margin: 50 });
+	const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
+  
 
 	generateHeader(doc, infosPdf,path);
 	//generateCustomerInformation(doc, infosPdf);
@@ -37,7 +41,7 @@ async function generateHeader(doc,infosPdf,path) {
   .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
   .moveDown(); 
   doc.end();     
-  doc.pipe(fs.createWriteStream(path+".pdf",{ encoding: 'utf-8',mode: 0666}));
+  
 }
 
 
