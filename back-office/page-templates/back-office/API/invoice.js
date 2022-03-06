@@ -2,16 +2,37 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 
-const PDFDocument = require('pdfkit');
+/*const PDFDocument = require('pdfkit');
+const fs = require('fs');*/
+const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 
-
 function createInvoice(infosPdf, path) {
-  let theOutput = new PDFDocument
+  try {
+    const fontDescriptors = { ... };
+    const printer = new pdfMakePrinter(fontDescriptors);
+    const doc = printer.createPdfKitDocument(docDefinition);
+
+    doc.pipe(
+      fs.createWriteStream('docs/filename.pdf').on("error", (err) => {
+        errorCallback(err.message);
+      })
+    );
+
+    doc.on('end', () => {
+      successCallback("PDF successfully created and stored");
+    });
+    
+    doc.end();
+    
+  } catch(err) {
+    throw(err);
+  }
+  /*let theOutput = new PDFDocument
   const fileName = (__dirname+`/invoices/nvoice.pdf`)
   theOutput.pipe(fs.createWriteStream(fileName))
   generateHeader(theOutput,infosPdf);
-  theOutput.end()
+  theOutput.end()*/
   //doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
   
 
