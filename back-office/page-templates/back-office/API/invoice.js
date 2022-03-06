@@ -9,7 +9,7 @@ const fs = require('fs');
 
 //function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, successCallback, errorCallback) {
-  try {
+  try { 
     const printer = new pdfMakePrinter();
     const doc = printer.createPdfKitDocument(docDefinition);
 
