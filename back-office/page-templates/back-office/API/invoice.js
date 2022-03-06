@@ -7,30 +7,12 @@ const fs = require('fs');
 
 
 function createInvoice(infosPdf, path) {
-	const doc = new PDFDocument();
-  doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
-  doc .fillColor('#444444')
-    .fontSize(20)
-		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 110, 57)
-		.fontSize(10)
-		.text('Via verdi 26', 200, 65, { align: 'right' })
-		.text('Bologna, BO, 40124', 200, 80, { align: 'right' })
-		.moveDown();
-    
-    var offset =0;
-  infosPdf.productsInfo.forEach(element => {
-    doc  .text('Product: '+element.product_name, 110, 137+offset, {fontSize:"13vw"})
-        .text('Price: '+element.product_price+"$", 110, 157+offset, {fontSize:"13vw"})
-        .text('Category: '+element.product_category, 110, 177+offset, {fontSize:"13vw"})
-        .text('State: '+element.product_state, 110, 197+offset, {fontSize:"13vw"})
-		.moveDown();
-    offset += 130;
-  });  
-  doc
-  .text("Notes: "+infosPdf.rentalNotes, 210+offset, 317, {fontSize:"13vw"})
-  .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
-  .moveDown(); 
-  doc.end();     
+  let theOutput = new PDFDocument
+  const fileName = `Invoice.pdf`
+  theOutput.pipe(fs.createWriteStream(fileName))
+  generateHeader(theOutput,infosPdf);
+  theOutput.end()
+  //doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
   
 
 	//generateHeader(doc, infosPdf,path);
@@ -40,7 +22,7 @@ function createInvoice(infosPdf, path) {
 	
 }
 
-function generateHeader(doc,infosPdf,path) {
+function generateHeader(doc,infosPdf) {
 	doc .fillColor('#444444')
     .fontSize(20)
 		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 110, 57)
@@ -62,7 +44,6 @@ function generateHeader(doc,infosPdf,path) {
   .text("Notes: "+infosPdf.rentalNotes, 210+offset, 317, {fontSize:"13vw"})
   .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
   .moveDown(); 
-  doc.end();     
   
 }
 
