@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');*/
 const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
+const path = require('path');
 
 //function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, successCallback, errorCallback) {
@@ -13,7 +14,7 @@ function createInvoice(docDefinition, successCallback, errorCallback) {
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
       Roboto: {
-        normal: 'fonts/Roboto-Regular.ttf',
+        normal: path.resolve(__dirname,'fonts/Roboto-Regular.ttf'),
       }
     };
     const printer = new pdfMakePrinter(fonts);
