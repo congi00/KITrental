@@ -7,14 +7,14 @@ const fs = require('fs');*/
 const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 
-function createInvoice(infosPdf, path) {
+//function createInvoice(infosPdf, path) {
+function createInvoice(docDefinition, successCallback, errorCallback) {
   try {
-    const fontDescriptors = { ... };
-    const printer = new pdfMakePrinter(fontDescriptors);
+    const printer = new pdfMakePrinter();
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
-      fs.createWriteStream('docs/filename.pdf').on("error", (err) => {
+      fs.createWriteStream('/filename.pdf').on("error", (err) => {
         errorCallback(err.message);
       })
     );
@@ -183,8 +183,20 @@ router.post('/pdf/', async (req, res) => {
         finalPrice : req.body.finalPrice
     }
     
+
+    const docDefinition = { content: "Dummy content" };
+    createInvoice(
+      docDefinition,
+      function(binary) {
+        res.contentType("application/pdf");
+        res.send(binary);
+      },
+      function(error) {
+        res.send("ERROR:" + error);
+      }
+    );
     
-    createInvoice(infosPdf, "back-office/invoices/"+req.body.rentalRef)
+    //createInvoice(infosPdf, "back-office/invoices/"+req.body.rentalRef)
     /*res.status(200).json({ message: "Successful operation", result : result })
     .exec()
     .then(result => {
