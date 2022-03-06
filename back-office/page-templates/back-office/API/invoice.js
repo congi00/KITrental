@@ -21,7 +21,7 @@ function createInvoice(docDefinition, successCallback, errorCallback) {
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
-      fs.createWriteStream('/invoices.pdf').on("error", (err) => {
+      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices.pdf')).on("error", (err) => {
         errorCallback(err.message);
       })
     );
