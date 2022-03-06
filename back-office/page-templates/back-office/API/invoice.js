@@ -18,7 +18,7 @@ function createInvoice(infosPdf, path) {
 	
 }
 
-async function generateHeader(doc,infosPdf,path) {
+function generateHeader(doc,infosPdf,path) {
 	doc .fillColor('#444444')
     .fontSize(20)
 		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 110, 57)
