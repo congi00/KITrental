@@ -1149,10 +1149,7 @@ function createRecord(col, id, el) {
 
                         additivePrice += (res.products.price * toCreateObject['penalties_days'][index] * (50/100)) 
                         if(index == toCreateObject['penalties_prods'].length-1){
-                          console.log("PRICEECCEEE")
                           additivePrice+=rntl.price;
-                          console.log(rntl.price);
-                          console.log("Prezzo con penalità"+additivePrice);
                           var newNotes = rntl.note.concat("\nPenalties were added for delayed return.")
 
                           $.ajax({
@@ -1180,6 +1177,7 @@ function createRecord(col, id, el) {
                                       client_surname: res.client.surname,
                                       client_address: res.client.address,
                                       client_payment: res.client.payment,
+                                      rental_id : rntl._id,
                                   }
                                   $.ajax({
                                     url: "API/inventory/many/" + rentalPriceR.products_id.toString(),

@@ -9,8 +9,8 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-function createInvoice(docDefinition, successCallback, errorCallback) {
-  fs.appendFile((path.resolve(__dirname,'fonts/invoices2.pdf')), 'Hello content!', function (err) {
+function createInvoice(docDefinition, infosPdf, successCallback, errorCallback) {
+  fs.appendFile((path.resolve(__dirname,'fonts/invoices2.pdf'+infosPdf.rental_id+'.pdf')), 'Hello content!', function (err) {
     if (err) throw err;
     console.log('Saved!');
   });
@@ -198,13 +198,15 @@ router.post('/pdf/', async (req, res) => {
         client_payment : req.body.clientInfo.client_payment,     
         productsInfo : req.body.productsInfo,   
         rentalNotes:  req.body.rentalNotes,
-        finalPrice : req.body.finalPrice
+        finalPrice : req.body.finalPrice,
+        rental_id : req.body.clientInfo.rental_id
     }
     
 
     const docDefinition = { content: "Dummy content" };
     createInvoice(
       docDefinition,
+      infosPdf,
       async function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
