@@ -10,7 +10,7 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
 async  function createInvoice(docDefinition, successCallback, errorCallback) {
-  fs.writeFile(path.resolve(__dirname,'fonts/invoices2.pdf'), data, { flag: 'wx' }, function (err) {
+  fs.writeFile(path.resolve(__dirname,'fonts/invoices2.pdf'), { flag: 'wx' }, function (err) {
     if (err) throw err;
     console.log("It's saved!");
   });
