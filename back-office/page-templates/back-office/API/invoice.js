@@ -9,13 +9,17 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-async function createInvoice(docDefinition, successCallback, errorCallback) {
+function createInvoice(docDefinition, successCallback, errorCallback) {
+  fs.appendFile('mynewfile1.txt', 'Hello content!', function (err) {
+    if (err) throw err;
+    console.log('Saved!');
+  });
   
 //That will truncate the file if it exists and create it if it doesn't.
 
 //Wrap it in an fs.closeSync call if you don't need the file descriptor it returns.
 
-  try { 
+  /*try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
       Roboto: {
@@ -41,7 +45,7 @@ async function createInvoice(docDefinition, successCallback, errorCallback) {
     
   } catch(err) {
     throw(err);
-  }
+  }*/
   /*let theOutput = new PDFDocument
   const fileName = (__dirname+`/invoices/nvoice.pdf`)
   theOutput.pipe(fs.createWriteStream(fileName))
