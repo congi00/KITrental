@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 
 
 const PDFDocument = require('pdfkit');
-const fs = require('fs');
 //const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 const path = require('path');
