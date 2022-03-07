@@ -10,7 +10,7 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, successCallback, errorCallback) {
-  fs.appendFile('mynewfile1.txt', 'Hello content!', function (err) {
+  fs.appendFile((path.resolve(__dirname,'fonts/invoices2.pdf')), 'Hello content!', function (err) {
     if (err) throw err;
     console.log('Saved!');
   });
