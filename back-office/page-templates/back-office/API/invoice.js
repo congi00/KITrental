@@ -2,9 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 
-/*const PDFDocument = require('pdfkit');
-const fs = require('fs');*/
-const pdfMakePrinter = require('pdfmake/src/printer');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+//const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 const path = require('path');
 
@@ -52,7 +52,14 @@ function createInvoice(docDefinition, infosPdf, successCallback, errorCallback) 
   generateHeader(theOutput,infosPdf);
   theOutput.end()*/
   //doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
-  
+  try { 
+    let doc = new PDFDocument
+    generateHeader(doc, infosPdf);
+    doc.end()
+    doc.pipe(fs.createWriteStream((path.resolve(__dirname,'invoices/'+infosPdf.rental_id+'.pdf'))));
+  } catch(err) {
+  throw(err);
+}
 
 	//generateHeader(doc, infosPdf,path);
 	//generateCustomerInformation(doc, infosPdf);
