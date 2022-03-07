@@ -10,15 +10,11 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, successCallback, errorCallback) {
-  var fd = fs.openSync(path.resolve(__dirname,'fonts/invoices2.pdf'), 'w');
-
+  
 //That will truncate the file if it exists and create it if it doesn't.
 
 //Wrap it in an fs.closeSync call if you don't need the file descriptor it returns.
 
-fs.closeSync(fs.openSync(path.resolve(__dirname,'fonts/invoices2.pdf'), 'w'));
-
-  
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
