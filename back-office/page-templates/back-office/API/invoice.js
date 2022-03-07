@@ -9,11 +9,14 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-async  function createInvoice(docDefinition, successCallback, errorCallback) {
-  fs.writeFile(path.resolve(__dirname,'fonts/invoices2.pdf'), { flag: 'wx' }, function (err) {
-    if (err) throw err;
-    console.log("It's saved!");
-  });
+function createInvoice(docDefinition, successCallback, errorCallback) {
+  var fd = fs.openSync(path.resolve(__dirname,'fonts/invoices2.pdf'), 'w');
+
+//That will truncate the file if it exists and create it if it doesn't.
+
+//Wrap it in an fs.closeSync call if you don't need the file descriptor it returns.
+
+fs.closeSync(fs.openSync(path.resolve(__dirname,'fonts/invoices2.pdf'), 'w'));
 
   
   try { 
@@ -186,7 +189,7 @@ router.post('/', async function (req, res) {
 })
 
 
-router.post('/pdf/', async (req, res) => {
+router.post('/pdf/', (req, res) => {
   console.log(req.body)
     const infosPdf = {
         client_name : req.body.clientInfo.client_name,
