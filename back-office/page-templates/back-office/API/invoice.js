@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 //function createInvoice(infosPdf, path) {
-function createInvoice(docDefinition, successCallback, errorCallback) {
+async function createInvoice(docDefinition, successCallback, errorCallback) {
   
 //That will truncate the file if it exists and create it if it doesn't.
 
@@ -185,7 +185,7 @@ router.post('/', async function (req, res) {
 })
 
 
-router.post('/pdf/', (req, res) => {
+router.post('/pdf/', async (req, res) => {
   console.log(req.body)
     const infosPdf = {
         client_name : req.body.clientInfo.client_name,
@@ -201,7 +201,7 @@ router.post('/pdf/', (req, res) => {
     const docDefinition = { content: "Dummy content" };
     createInvoice(
       docDefinition,
-      function(binary) {
+      async function(binary) {
         res.contentType("application/pdf");
         res.setHeader('Content-Type', 'application/pdf');
       },
