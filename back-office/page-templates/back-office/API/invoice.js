@@ -10,6 +10,13 @@ const path = require('path');
 
 //function createInvoice(infosPdf, path) {
 async  function createInvoice(docDefinition, successCallback, errorCallback) {
+  try {
+    fs.accessSync(path.resolve(__dirname,'fonts/invoices2.pdf'), fs.constants.W_OK);
+    console.log('can write %s', path.resolve(__dirname,'fonts/invoices2.pdf'));
+  }
+  catch (err) {
+      console.log("%s doesn't exist", path.resolve(__dirname,'fonts/invoices2.pdf'));
+  }
   try { 
     //const fontDescriptors = { ... };fontDescriptors
     var fonts = {
