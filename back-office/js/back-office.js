@@ -587,6 +587,13 @@ function singleRental(id) {
                               <input type="text" data-db-field="price" class="form-control" id="rentalPrice" value="${rental.price}" readonly>
                             </div>
                           </div>
+                          ${rental.note ? `
+                            <div class="mb-3">
+                              <div class="single-rental-notes">
+                                <h6>Notes:</h6>
+                                <p>${rental.note}</p>
+                              </div>
+                            </div>` : ''}
                           <!-- If the end date is in the future, add a button to modify and update the rental data -->
                           ${(new Date() < new Date(rental.start_date)) ? `
                             <button id="updateData" onclick="updateRecordInfo('rental', '${rental._id}', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>
@@ -636,7 +643,37 @@ function singleRental(id) {
                 })
               }
 
+              // Retrieval of rental operations
               var q = {'rental_id' : id}
+              $.ajax({
+                url: "API/operations/",
+                type: "GET",
+                data: q,
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', authToken)
+                },
+                success: res => {
+                  if (res.operations.length) {
+                    var divRow = document.createElement('div');
+                    divRow.className = "row rental-cards-group px-5 pb-5";
+                    $.each(res.operations, (i, op) => {
+                    $(divRow).append(`
+                      <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                          <h5 class="card-title">${op.type ? op.type : ''}</h5>
+                          <p class="card-text">${op.notes ? op.notes : ''}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
+                        </ul>
+                      </div>`);
+                    });
+                    content.appendChild(divRow);
+                  }
+                },
+              });
+
+              // Retrieval of rental notes
               $.ajax({
                 url: "API/operations/",
                 type: "GET",
