@@ -247,7 +247,7 @@ table {
     margin-left: 3em;
 }
 
-.btn-add-rental {
+.btn-add-record {
     z-index: 1;
     position: fixed;
     color: white;
@@ -260,9 +260,38 @@ table {
     border-color: #06514c;
 }
 
-.btn-add-rental:hover, .btn-add-rental:active, .btn-add-rental:focus {
+.btn-add-record:hover, .btn-add-record:active, .btn-add-record:focus {
   background-color: #06514c;
   border-color: #06514c;
+}
+
+.btn-close-rental {
+  z-index: 1;
+  position: fixed;
+  color: white;
+  right: 1rem;
+  bottom: 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  background-color: #BF0603;
+  border-color: #BF0603;
+  padding: 0.5rem 2rem;
+  font-size: 1.5rem;
+}
+
+.btn-close-rental:hover, .btn-close-rental:active, .btn-close-rental:focus {
+  background-color: #BF0603;
+  border-color: #BF0603;
+}
+
+.btn-close-rental-modal {
+  background-color: #BF0603;
+  border-color: #BF0603;
+}
+
+.btn-close-rental-modal:hover, .btn-close-rental-modal:active, .btn-close-rental-modal:focus {
+  background-color: #BF0603;
+  border-color: #BF0603;
 }
 
 .btn-add-product {
