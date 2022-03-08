@@ -221,101 +221,10 @@ const onTodoChange = (value,product) =>{
             },
           });
         });
+        cookies.remove("myCart");
       },
       error: err => {console.log(err)}
     });  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*e.preventDefault();
-    var datesP = [];
-    var priceC = 0;
-    var productsID = [];
-    axios.get("API/promotions/",{headers: {'auth': auth_token}})    
-          .then((res) => {    
-            
-            console.log(res.data);
-            var proms = res.data.promotions;
-            console.log(proms)
-            var pricesProducts = []
-            var real_price =0;
-            cartItems.forEach(item => {
-
-              var pricePItem = item.price;
-              for (const [key, value] of Object.entries(proms)) {
-                var prom_start_date = new Date(value.start_date)
-                var prom_end_date = new Date(value.end_date)
-                if (new Date(item.startD) >= prom_start_date && new Date(item.endD) <= prom_end_date) {
-                  var old_rental_price = pricePItem 
-                  pricePItem = old_rental_price - ( old_rental_price / 100 * value.percentage )
-                  console.log(pricePItem)
-                }
-              }
-              pricesProducts.push(parseInt(pricePItem));
-              datesP = datesP.concat([{startDate : item.startD, endDate : item.endD}]);
-              productsID.push(item._id);
-              console.log(pricePItem)
-              priceC += pricePItem * getDates(item.startD,item.endD);
-              real_price += item.price* getDates(item.startD,item.endD);
-              console.log(priceC);
-              
-            });
-            $.ajax({
-              url: "/API/rental/",
-              type: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "https://site202126.tw.cs.unibo.it/",
-                "Access-Control-Allow-Methods":"DELETE, POST, GET",
-                "Access-Control-Allow-Headers":"Content-Type, Authorization",
-              },
-              contentType: "application/json",
-              data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
-                products_id: productsID,
-                start_date: new Date(),
-                datesProducts : datesP,
-                price : priceC,
-                state : "Accepted",
-                real_price : real_price,
-                pricesProducts: pricesProducts
-              }),
-              beforeSend: xhr => {
-                xhr.setRequestHeader('auth', auth_token)
-              },
-              success: res => {
-                cartItems.forEach(item => {
-                  $.ajax({
-                    url: "API/inventory/" + item._id,
-                    type: "PATCH",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify({indisponibilityDates : datesP}),
-                    beforeSend: xhr => {
-                      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
-                    },
-                    success: function (response) {
-                      if (response) {
-                        window.location.href="/privateArea";
-                      } else {
-                        alert("There was an error.");
-                      }
-                    },
-                  });
-                });
-              },
-              error: err => {console.log(err)}
-            });
-          })      
-          /*<!-- onChange={e => onTodoChange(e.target.value,item)} -->*/
   }
 
 
