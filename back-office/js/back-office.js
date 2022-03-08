@@ -635,40 +635,39 @@ function singleRental(id) {
                   singleRental(id);
                 })
               }
+
+              var q = {'rental_id' : id}
+              $.ajax({
+                url: "API/operations/",
+                type: "GET",
+                data: q,
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', authToken)
+                },
+                success: res => {
+                  if (res.operations.length) {
+                    var divRow = document.createElement('div');
+                    divRow.className = "row rental-cards-group px-5 pb-5";
+                    $.each(res.operations, (i, op) => {
+                    $(divRow).append(`
+                      <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                          <h5 class="card-title">${op.type ? op.type : ''}</h5>
+                          <p class="card-text">${op.notes ? op.notes : ''}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
+                        </ul>
+                      </div>`);
+                    });
+                    content.appendChild(divRow);
+                  }
+                },
+              });
             }
           });
         }
       })
-      
-
-      var q = {'rental_id' : id}
-      $.ajax({
-        url: "API/operations/",
-        type: "GET",
-        data: q,
-        beforeSend: xhr => {
-          xhr.setRequestHeader('auth', authToken)
-        },
-        success: res => {
-          if (res.operations.length) {
-            var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5 pb-5";
-            $.each(res.operations, (i, op) => {
-            $(divRow).append(`
-              <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                  <h5 class="card-title">${op.type ? op.type : ''}</h5>
-                  <p class="card-text">${op.notes ? op.notes : ''}</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
-                </ul>
-              </div>`);
-            });
-            content.appendChild(divRow);
-          }
-        },
-      });
     },
   });
 }
