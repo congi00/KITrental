@@ -1097,46 +1097,34 @@ function createRecord(col, id, el) {
       delete toCreateObject.end_date;
       delete toCreateObject.product_id;
 
-       // Update AJAX Request
-      //  $.ajax({
-      //   url: "API/inventory/" + updInventoryID,
-      //   type: "PATCH",
-      //   contentType: "application/json",
-      //   dataType: "json",
-      //   data: JSON.stringify(toUpdateObject),
-      //   beforeSend: xhr => {
-      //     xhr.setRequestHeader('auth', authToken)
-      //   },
-      //   success: function (response) {
-      //     if (response) {
+      $.ajax({
+        url: "API/invoice/",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",      
+        data: JSON.stringify({ 
+          rental_id: toCreateObject['rental_id'],
+          end_date: new Date(),
+          filePdf : toCreateObject['rental_id']
+        }),
+        beforeSend: xhr => {
+          xhr.setRequestHeader('auth', authToken)
+        },
+        success: function (response) {
+          if (response) {  
+            console.log(response)
             $.ajax({
-              url: "API/invoice/",
-              type: "POST",
-              contentType: "application/json",
-              dataType: "json",      
-              data: JSON.stringify({ 
-                rental_id: toCreateObject['rental_id'],
-                end_date: new Date(),
-                filePdf : toCreateObject['rental_id']
-              }),
+              url: "API/rental/" + id,
+              type: "GET",
               beforeSend: xhr => {
                 xhr.setRequestHeader('auth', authToken)
               },
-              success: function (response) {
-                if (response) {  
-                  console.log(response)
-                  $.ajax({
-                    url: "API/rental/" + id,
-                    type: "GET",
-                    beforeSend: xhr => {
-                      xhr.setRequestHeader('auth', authToken)
-                    },
-                    success: res => {
-                      const rntl = res.rental;
+              success: res => {
+                const rntl = res.rental;
                 /*Rental add penalties */
-
                 if(toCreateObject['penalties_prods'].length){
                   var additivePrice = 0;
+                  var newNotes = rntl.note;
                   toCreateObject['penalties_prods'].forEach((element,index)=>{
                     console.log(element)
                     $.ajax({
@@ -1146,12 +1134,10 @@ function createRecord(col, id, el) {
                         xhr.setRequestHeader('auth', authToken)
                       },
                       success: res => {
-
                         additivePrice += (res.products.price * toCreateObject['penalties_days'][index] * (50/100)) 
+                        newNotes += "\nPenalties were added for "+toCreateObject['penalties_days'][index]+"days of delayed return ("+res.products.name+").";
                         if(index == toCreateObject['penalties_prods'].length-1){
                           additivePrice+=rntl.price;
-                          var newNotes = rntl.note.concat("\nPenalties were added for delayed return.")
-
                           $.ajax({
                             url: "API/rental/" + rntl._id,
                             type: "PATCH",
@@ -1163,7 +1149,7 @@ function createRecord(col, id, el) {
                             },
                             success: function (response) {
                               const rentalPriceR= response.result;
-                              console.log(response.result.price)
+                              console.log(response.result)
                               $.ajax({
                                 url: "API/clients/" + rentalPriceR.client_id,
                                 type: "GET",
@@ -1204,6 +1190,8 @@ function createRecord(col, id, el) {
                                             product_state: element.state,
                                             product_price: element.price,
                                             product_category: element.category,
+                                            product_start: rentalPriceR.datesProducts[i].startDate,
+                                            product_end: rentalPriceR.datesProducts[i].endDate
                                           }
                                         )
                                       });
@@ -1223,8 +1211,6 @@ function createRecord(col, id, el) {
                                           xhr.setRequestHeader('auth', authToken)
                                         },
                                         success: function (response) {
-                                          console.log(response)
-                                          console.log("OK")
                                           $.ajax({
                                             url: "API/invoice/pdf/",
                                             type: "POST",
@@ -1235,7 +1221,7 @@ function createRecord(col, id, el) {
                                               productsInfo : productsInfo,
                                               rentalRef : response.result._id,
                                               rentalNotes : response.result.note,
-                                              finalPrice : finalPrice
+                                              finalPrice : additivePrice
                                             }),
                                             beforeSend: xhr => {
                                               xhr.setRequestHeader('auth', authToken)
@@ -1251,115 +1237,121 @@ function createRecord(col, id, el) {
                                             }
                                           });
                                         }
-                                      });
-                                      
+                                      });   
                                     }
                                   });
                                 }
                               });
-                              console.log("response")
                             }
                           });
                         }
                       }});
                   });
                 }else{
-                            $.ajax({
-                              url: "API/clients/" + rntl.client_id,
-                              type: "GET",
-                              beforeSend: xhr => {
+                  $.ajax({
+                    url: "API/rental/" + rntl._id,
+                    type: "PATCH",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({end_date: new Date(), state: "Closed"}),
+                    beforeSend: xhr => {
+                      xhr.setRequestHeader('auth', authToken)
+                    },
+                    success: function (response) {
+                      const rentalPriceR= response.result;
+                      console.log(response.result.price)
+                      $.ajax({
+                        url: "API/clients/" + rentalPriceR.client_id,
+                        type: "GET",
+                        beforeSend: xhr => {
+                          xhr.setRequestHeader('auth', authToken)
+                        },
+                        success: res => {
+                          const clnt = res.client;
+                          const clientInfo = {
+                            client_name: res.client.name,
+                            client_surname: res.client.surname,
+                            client_address: res.client.address,
+                            client_payment: res.client.payment,
+                            rental_id : rntl._id,
+                          }
+                          $.ajax({
+                            url: "API/inventory/many/" + rentalPriceR.products_id.toString(),
+                            type: "GET",
+                            beforeSend: xhr => {
+                              xhr.setRequestHeader('auth', authToken)
+                            },
+                            success: async res => {
+                              var products_prices = []
+                              var multPrices = []
+                              var prodsSumPrice = 0
+                              const productsInfo = []
+                              res.products.forEach((element,i)=>{
+                                products_prices.push(element.price)
+                                const diffInMs   = (new Date(rentalPriceR.datesProducts[i].endDate)).getTime() - (new Date(rentalPriceR.datesProducts[i].startDate)).getTime()
+                                const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+                                const multPrice = element.price * diffInDays
+                                prodsSumPrice += multPrice // Sum of products to multiply for rental days
+                                multPrices.push(multPrice)
+                                productsInfo.push({
+                                  product_name: element.name,
+                                  product_image: element.image,
+                                  product_state: element.state,
+                                  product_price: element.price,
+                                  product_category: element.category,
+                                  product_start: rentalPriceR.datesProducts[i].startDate,
+                                  product_end: rentalPriceR.datesProducts[i].endDate
+                                })
+                              });
+                              console.log("prezzo rental"+rentalPriceR.price)
+                              const pricesFinalP = await calcPrice(rentalPriceR.price, products_prices, multPrices, rentalPriceR.datesProducts, rentalPriceR.client_id,"getPrices");
+                              const finalPrice = pricesFinalP.discounted_price
+                              const pricesProducts = pricesFinalP.pricesProducts
+                              console.log(pricesProducts)
+                              console.log(finalPrice)
+                              $.ajax({
+                                url: "API/rental/" + rntl._id,
+                                type: "PATCH",
+                                contentType: "application/json",
+                                dataType: "json",
+                                data: JSON.stringify({pricesProducts: pricesProducts}),
+                                  beforeSend: xhr => {
                                 xhr.setRequestHeader('auth', authToken)
                               },
-                              success: res => {
-                                const clnt = res.client;
-                                const clientInfo = {
-                                    client_name: res.client.name,
-                                    client_surname: res.client.surname,
-                                    client_address: res.client.address,
-                                    client_payment: res.client.payment,
+                                success: function (response) {
+                                  $.ajax({
+                                    url: "API/invoice/pdf/",
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    dataType: "json",
+                                    data: JSON.stringify({
+                                      clientInfo : clientInfo,
+                                      productsInfo : productsInfo,
+                                      rentalRef : response.result._id,
+                                      rentalNotes : response.result.note,
+                                      finalPrice : rentalPriceR.price
+                                    }),
+                                    beforeSend: xhr => {
+                                      xhr.setRequestHeader('auth', authToken)
+                                    },
+                                    success: function (response) {
+                                      if (response) {
+                                      } else {
+                                      alert("There was an error.");
+                                      }
+                                    },      
+                                    error: function(err){
+                                      console.log(err);
+                                    }
+                                  });
                                 }
-                                
-                                $.ajax({
-                                  url: "API/inventory/many/" + rntl.products_id.toString(),
-                                  type: "GET",
-                                  beforeSend: xhr => {
-                                    xhr.setRequestHeader('auth', authToken)
-                                  },
-                                  success: async res => {
-                                    var products_prices = []
-                                    var multPrices = []
-                                    var prodsSumPrice = 0
-                                    const productsInfo = []
-                                    res.products.forEach((element,i)=>{
-                                      products_prices.push(element.price)
-                                      const diffInMs   = (new Date(rntl.datesProducts[i].endDate)).getTime() - (new Date(rntl.datesProducts[i].startDate)).getTime()
-                                      const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
-                                      const multPrice = element.price * diffInDays
-                                      prodsSumPrice += multPrice // Sum of products to multiply for rental days
-                                      multPrices.push(multPrice)
-                                      productsInfo.push(
-                                        {
-                                          product_name: element.name,
-                                          product_image: element.image,
-                                          product_state: element.state,
-                                          product_price: element.price,
-                                          product_category: element.category,
-                                        }
-                                      )
-                                    });
-                                    console.log("prezzo rental"+additivePrice)
-                                    const pricesFinalP = await calcPrice(additivePrice, products_prices, multPrices, rntl.datesProducts, rntl.client_id,"getPrices");
-                                    console.log("Prezzo finale" + pricesFinalP.discounted_price)
-                                    const finalPrice = pricesFinalP.discounted_price
-                                    const pricesProducts = pricesFinalP.pricesProducts
-                                    var notes;     
-                                    $.ajax({
-                                      url: "API/rental/" + rntl._id,
-                                      type: "PATCH",
-                                      contentType: "application/json",
-                                      dataType: "json",
-                                      data: JSON.stringify({pricesProducts: pricesProducts, end_date: new Date(), state: "Closed"}),
-                                      beforeSend: xhr => {
-                                        xhr.setRequestHeader('auth', authToken)
-                                      },
-                                      success: function (response) {
-                                        console.log("OK")
-                                        console.log(response.result);
-                                        notes = response.result.note;
-                                      }
-                                    });
-                                    
-                                    console.log(finalPrice)
-                                    $.ajax({
-                                      url: "API/invoice/pdf/",
-                                      type: "POST",
-                                      contentType: "application/json",
-                                      dataType: "json",
-                                      data: JSON.stringify({
-                                        clientInfo : clientInfo,
-                                        productsInfo : productsInfo,
-                                        rentalRef : rntl._id,
-                                        rentalNotes : notes,
-                                        finalPrice : finalPrice
-                                      }),
-                                      beforeSend: xhr => {
-                                        xhr.setRequestHeader('auth', authToken)
-                                      },
-                                      success: function (response) {
-                                        if (response) {
-                                        } else {
-                                          alert("There was an error.");
-                                        }
-                                      },      
-                                      error: function(err){
-                                        console.log(err);
-                                      }
-                                    });
-                                  }
-                                });
-                              }
-                            });
-                            console.log("response")
+                              });   
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
                 }
                     }
                   });

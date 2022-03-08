@@ -3,54 +3,15 @@ const mongoose = require('mongoose');
 
 
 const PDFDocument = require('pdfkit');
-//const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 const path = require('path');
 
-//function createInvoice(infosPdf, path) {
 function createInvoice(docDefinition, infosPdf, successCallback, errorCallback) {
   fs.appendFile((path.resolve(__dirname,'invoices/'+infosPdf.rental_id+'.pdf')), 'Hello content!', function (err) {
     if (err) throw err;
     console.log('Saved!');
   });
   
-//That will truncate the file if it exists and create it if it doesn't.
-
-//Wrap it in an fs.closeSync call if you don't need the file descriptor it returns.
-
-  /*try { 
-    //const fontDescriptors = { ... };fontDescriptors
-    var fonts = {
-      Roboto: {
-        normal: path.resolve(__dirname,'fonts/Roboto-Regular.ttf'),
-      }
-    };
-    const printer = new pdfMakePrinter(fonts);
-    const doc = printer.createPdfKitDocument(docDefinition);
-
-    doc.pipe(
-      fs.createWriteStream(path.resolve(__dirname,'fonts/invoices2.pdf')).on("error", (err) => {
-        console.log("ERRORE");
-        console.log(err);
-        errorCallback(err.message);
-      })
-    );
-
-    doc.on('end', () => {
-      successCallback("PDF successfully created and stored");
-    });
-    
-    doc.end();
-    
-  } catch(err) {
-    throw(err);
-  }*/
-  /*let theOutput = new PDFDocument
-  const fileName = (__dirname+`/invoices/nvoice.pdf`)
-  theOutput.pipe(fs.createWriteStream(fileName))
-  generateHeader(theOutput,infosPdf);
-  theOutput.end()*/
-  //doc.pipe(fs.createWriteStream(path+".pdf",{flags: 'w', encoding: 'utf-8',mode: 0666}));
   try { 
     let doc = new PDFDocument
     generateHeader(doc, infosPdf);
@@ -70,24 +31,41 @@ function createInvoice(docDefinition, infosPdf, successCallback, errorCallback) 
 function generateHeader(doc,infosPdf) {
 	doc .fillColor('#444444')
     .fontSize(20)
-		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 110, 57)
-		.fontSize(10)
-		.text('Via verdi 26', 200, 65, { align: 'right' })
-		.text('Bologna, BO, 40124', 200, 80, { align: 'right' })
+		.text('Dear '+infosPdf.client_name+" "+infosPdf.client_surname, 90, 57)
+		.image(path.join(__dirname, '../../../img/logos/KITrental-logos_black_invoice.png'), 460, 50, {
+      width: 100, height: 100, align: 'right' 
+    })
+    .fontSize(10)
+    .text('KITrental s.r.l.', 200, 155, { align: 'right' })
+		.text('Via verdi 26', 200, 170, { align: 'right' })
+		.text('Bologna, BO, 40124', 200, 185, { align: 'right' })
 		.moveDown();
     
     var offset =0;
   infosPdf.productsInfo.forEach(element => {
-    doc  .text('Product: '+element.product_name, 110, 137+offset, {fontSize:"13vw"})
-        .text('Price: '+element.product_price+"$", 110, 157+offset, {fontSize:"13vw"})
-        .text('Category: '+element.product_category, 110, 177+offset, {fontSize:"13vw"})
-        .text('State: '+element.product_state, 110, 197+offset, {fontSize:"13vw"})
+    
+
+    
+    doc.image(path.join(__dirname, '../../../img/products/',element.product_image), 110, 147, {
+          width: 200, height: 200
+        })
+        .text('Product: '+element.product_name, 110, 360, {fontSize:"13vw"})
+        .text('Price x day: '+element.product_price+"$", 110, 380, {fontSize:"13vw"})
+        .text('Category: '+element.product_category, 110, 400, {fontSize:"13vw"})
+        .text('State: '+element.product_state, 110, 420, {fontSize:"13vw"})
+        .text('Start date of rental: '+element.product_start, 110, 440, {fontSize:"13vw"})
+        .text('End date of rental: '+element.product_end, 110, 460, {fontSize:"13vw"})
 		.moveDown();
-    offset += 130;
-  });  
-  doc
-  .text("Notes: "+infosPdf.rentalNotes, 210+offset, 317, {fontSize:"13vw"})
-  .text('Total: '+infosPdf.finalPrice+"$", 210, 317+offset, {fontSize:"13vw"})
+    offset += 350;
+    doc.addPage()
+  });
+  
+  doc .moveTo(0, 50)       // this is your starting position of the line, from the left side of the screen 200 and from top 200
+   .lineTo(1200, 50)       // this is the end point the line 
+   .stroke() 
+
+  doc.text("Notes: "+infosPdf.rentalNotes, 80, 100, {fontSize:"13vw", align: 'right'})
+  .text('Total: '+infosPdf.finalPrice+"$", 80, 200, {fontSize:"13vw", align: 'right'})
   .moveDown(); 
   
 }
@@ -220,18 +198,6 @@ router.post('/pdf/', async (req, res) => {
       function(error) {
       }
     );
-    
-    //createInvoice(infosPdf, "back-office/invoices/"+req.body.rentalRef)
-    /*res.status(200).json({ message: "Successful operation", result : result })
-    .exec()
-    .then(result => {
-      if(result){
-        
-      }else res.status(404).json({message: "Invoice not found"})
-    })
-    .catch(err =>
-       res.status(400).json({message: "Error accessing server data", error: err})
-    );*/
 })
 
 module.exports = router;

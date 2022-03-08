@@ -173,7 +173,9 @@ const onTodoChange = (value,product) =>{
     })
 
 
-
+    console.log("HELLO IS DISCOUNTED")
+    console.log(DiscountsMSG)
+    console.log("HELLO IS DISCOUNTED")
     $.ajax({
       url: "/API/rental/",
       type: "POST",
