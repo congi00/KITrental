@@ -977,12 +977,13 @@ function showEmployees() {
         </tr>`)
       var tbdy = document.createElement('tbody');
       $.each(res.employees, (i, employee) => {
-        $(tbdy).append(`
-          <tr class="table-light">
-            <td>${employee.username}</td>
-            <td>${employee.role}</td>
-            <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
-          </tr>`);
+        if(sessionStorage.getItem("usr_id")!=employee._id)
+          $(tbdy).append(`
+            <tr class="table-light">
+              <td>${employee.username}</td>
+              <td>${employee.role}</td>
+              <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            </tr>`);
       })
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
