@@ -36,17 +36,17 @@ function showHome() {
         <div class="container-fluid">\
             <div class="row">\
                 <div id="clients-section" class="col-12 col-lg-4 bg-primary">\
-                    <a onclick="$(\'nav\').show(); showClients(); return false;" class="w-100 h-100">\
+                    <a href="" aria-label="Show Clients" onclick="$(\'nav\').show(); showClients(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Clients</h1>\
                     </a>\
                 </div>\
                 <div id="inventory-section" class="col-12 col-lg-4 bg-secondary">\
-                    <a onclick="$(\'nav\').show(); showInventory(); return false;" class="w-100 h-100">\
+                    <a href="" aria-label="Show Inventory" onclick="$(\'nav\').show(); showInventory(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Inventory</h1>\
                     </a>\
                 </div>\
                 <div id="rental-section" class="col-12 col-lg-4 bg-success">\
-                    <a onclick="$(\'nav\').show(); showRental(); return false;" class="w-100 h-100">\
+                    <a href="" aria-label="Show Rental" onclick="$(\'nav\').show(); showRental(); return false;" class="w-100 h-100">\
                         <h1 class="text-white text-uppercase">Rental</h1>\
                     </a>\
                 </div>\
@@ -63,7 +63,7 @@ function showHome() {
                 <div id="titleCS">\
                   <h2 class="text-white display-3 text-center ">Back Office</h2>\
                 </div>\
-                <button class="btn btn-dark btn-lg" id="noLogIn" onclick="$(\'nav\').show(); showInventory(); return false;">Guest access</button>\
+                <button type="button" class="btn btn-dark btn-lg" id="noLogIn" onclick="$(\'nav\').show(); showInventory(); return false;">Guest access</button>\
               </div>\
               <div class="col-12 col-lg-5">\
                 <form id="formEmployees" action="/API/login">\
@@ -186,7 +186,7 @@ function showClients() {
           <tr class="table-light">
             <td>${client.username}</td>
             <td>${client.address}</td>
-            <td><a onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><a href="" aria-label="Single Client" onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
             <td><i onclick="deleteRecord('clients', '${client._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
           </tr>`);
       })
@@ -383,22 +383,21 @@ function showRental() {
       var past_tbdy = document.createElement('tbody');
       // var curr_date = new Date();
       $.each(res.rental, (i, rental) => {
-        // if (curr_date > new Date(rental.end_date)) {
         if (rental.end_date) { // rental labelled as past if they've got the end date (created on close rental operation)
           $(past_tbdy).append(`
             <tr class="table-light">
               <td>${new Date(rental.start_date).toLocaleString()}</td>
               <td>${new Date(rental.end_date).toLocaleString()}</td>
-              <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-              <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href="" aria-label="Single Rental" onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href="" aria-label="Single Client" onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a href="/invoices/${rental._id}.pdf"><i class="bi bi-receipt" style="color: brown; cursor: pointer;"></i></a></td>
             </tr>`);
         } else {
           $(tbdy).append(`
             <tr class="table-light ${rental.broken_product ? 'rental-alert' : ''}">
               <td data-id="start_date">${new Date(rental.start_date).toLocaleString()}</td>
-              <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-              <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href="" aria-label="Single Rental" onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><a href="" aria-label="Single Client" onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
               <td><i onclick="deleteRecord('rental', '${rental._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
             </tr>`);
         }
@@ -735,7 +734,7 @@ function showInventory(){
             <td>${product.availability}</td>
             <td>${product.state}</td>
             <td>${product.price}</td>
-            <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
+            <td><a href="" aria-label="Single Inventory" onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
             ${loggedin ? '<td><i onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>' : ''}
           </tr>`);
           $(document).on('focus', 'input[data-picker="' + i + '"]',(event) => {
@@ -1040,7 +1039,7 @@ function addPriceSupplement(btn) {
 function createModal(header, body, btnTxt) {
   return `
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary ${btnTxt != 'Close' ? 'btn-add-record' : 'btn-close-rental'}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">${btnTxt != 'Close' ? '<i class="bi bi-plus"></i>' : 'Close Rental'}</button>
+    <button type="button" aria-label="${header}" class="btn btn-primary ${btnTxt != 'Close' ? 'btn-add-record' : 'btn-close-rental'}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">${btnTxt != 'Close' ? '<i class="bi bi-plus"></i>' : 'Close Rental'}</button>
 
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
