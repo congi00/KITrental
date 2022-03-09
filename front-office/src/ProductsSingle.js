@@ -84,15 +84,12 @@ function ProductsSingle(){
                 idP = datesProdItem._id;
                 datesProdItem.indisponibilityDates.forEach((item)=>{
                   if((start <= new Date(item.startDate) && end >= new Date(item.startDate))||
-                  (start <=new Date(item.endDate) && end >= new Date(item.endDate))
-                  ){
-                    console.log("ECCOS")
-                    console.log(start)
-                    console.log(end)
-                    console.log(item.startDate)
-                    console.log(item.endDate)
+                  (start <=new Date(item.endDate) && end >= new Date(item.endDate)) ||
+                  (new Date(item.startDate)<= start && start <= new Date(item.endDate)) ||
+                  (new Date(item.startDate) <= end && end <= new Date(item.endDate))
+                  )
                     available = false;
-                  }
+                  
                 })
                 if(available){
                   setBepi(true);
