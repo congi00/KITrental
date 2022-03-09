@@ -240,7 +240,7 @@ function showClients() {
             <label for="clientNotes" class="form-label">Client's Notes</label>
             <textarea required id="clientNotes" class="form-control" data-db-field="notes" placeholder="Insert notes here..."></textarea>
         </div>`
-      $(content).append(createModal(body))
+      $(content).append(createModal('Add new Client', body, 'Save Client'))
     
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -443,7 +443,7 @@ function showRental() {
             <option value="Closed">Closed</option>
           </select>
         </div>`
-      $(content).append(createModal(body))
+      $(content).append(createModal('Add new Rental', body, 'Save Rental'))
 
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -587,6 +587,13 @@ function singleRental(id) {
                               <input type="text" data-db-field="price" class="form-control" id="rentalPrice" value="${rental.price}" readonly>
                             </div>
                           </div>
+                          ${rental.note ? `
+                            <div class="mb-3">
+                              <div class="single-rental-notes">
+                                <h6>Notes:</h6>
+                                <p>${rental.note}</p>
+                              </div>
+                            </div>` : ''}
                           <!-- If the end date is in the future, add a button to modify and update the rental data -->
                           ${(new Date() < new Date(rental.start_date)) ? `
                             <button id="updateData" onclick="updateRecordInfo('rental', '${rental._id}', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>
@@ -601,22 +608,9 @@ function singleRental(id) {
               if (rental.state !== 'Closed') {
 
                 body = `
-                    <div class="mb-3">
-                      <label for="operationType" class="form-label">Type of Operation</label>
-                      <select required class="form-select" id="operationType" data-db-field="type" onchange="displayEdits(this);">
-                          <!-- <option value="rent_create">Create Rent</option>
-                          <option value="rent_update">Update Rent</option> -->
-                          <option value="rent_confirm">Rent Confirmation</option>
-                          <option value="rent_close">Close Rent Confirmation</option> <!-- THIS SEEMS TO BE THE ONLY NEEDED ONE -->
-                      </select>
-                    </div>
-        
-                    <!-- Possible fields to edit in case of a rental confirmation operation -->
-                    <div class="mb-3">
-                      ${rented_productsHTML_confirm}
-                    </div>
-                    <div class="mb-3" id="rentPenalty" style="display:none;">
-                      <button type="button" onclick='addPenalty(this,"penalty", ${JSON.stringify(rented_productsArr)})' class="btn btn-primary" data-count="0">Add Penalty</button>
+                  <div>
+                    <div class="mb-3" id="rentPenalty">
+                      <button type="button" onclick='addPenalty(this,"penalty", ${JSON.stringify(rented_productsArr)})' class="btn btn-danger" data-count="0">Add Penalty</button>
                     </div>
                     <div class="mb-3">
                         <label for="operationNotes" class="form-label">Notes</label>
@@ -624,7 +618,7 @@ function singleRental(id) {
                         </textarea>
                   </div>`
 
-                $(content).append(createModal(body))
+                $(content).append(createModal('Close this Rental', body, 'Close'))
                 $(document).off("click", "#createRecord")
                 $(document).on("click", "#createRecord", function(){
                   createRecord('operations', id, this)
@@ -635,40 +629,40 @@ function singleRental(id) {
                   singleRental(id);
                 })
               }
+
+              // Retrieval of rental operations
+              var q = {'rental_id' : id}
+              $.ajax({
+                url: "API/operations/",
+                type: "GET",
+                data: q,
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', authToken)
+                },
+                success: res => {
+                  if (res.operations.length) {
+                    var divRow = document.createElement('div');
+                    divRow.className = "row rental-cards-group px-5 pb-5";
+                    $.each(res.operations, (i, op) => {
+                    $(divRow).append(`
+                      <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                          <h5 class="card-title">${op.type ? op.type : ''}</h5>
+                          <p class="card-text">${op.notes ? op.notes : ''}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
+                        </ul>
+                      </div>`);
+                    });
+                    content.appendChild(divRow);
+                  }
+                },
+              });
             }
           });
         }
       })
-      
-
-      var q = {'rental_id' : id}
-      $.ajax({
-        url: "API/operations/",
-        type: "GET",
-        data: q,
-        beforeSend: xhr => {
-          xhr.setRequestHeader('auth', authToken)
-        },
-        success: res => {
-          if (res.operations.length) {
-            var divRow = document.createElement('div');
-            divRow.className = "row rental-cards-group px-5 pb-5";
-            $.each(res.operations, (i, op) => {
-            $(divRow).append(`
-              <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                  <h5 class="card-title">${op.type ? op.type : ''}</h5>
-                  <p class="card-text">${op.notes ? op.notes : ''}</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
-                </ul>
-              </div>`);
-            });
-            content.appendChild(divRow);
-          }
-        },
-      });
     },
   });
 }
@@ -785,7 +779,7 @@ function showInventory(){
           <input type="text" class="form-control" id="productPrice" aria-label="Price in dollars" data-db-field="price">
           </div>
         </div>`
-      if (loggedin) $(content).append(createModal(body))
+      if (loggedin) $(content).append(createModal('Add new Product',body, 'Save Product'))
 
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -908,7 +902,7 @@ function showPromotions() {
         <input type="text" class="form-control" id="salePercentage" aria-label="Sale Percentage" data-db-field="percentage">
         </div>
       </div>`
-      $(content).append(createModal(body))
+      $(content).append(createModal('Add new Promotion', body, 'Save Promotion'))
     
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -969,7 +963,7 @@ function showEmployees() {
               <option value="manager">Manager</option>
             </select>
         </div>`
-      $(content).append(createModal(body))
+      $(content).append(createModal('Add new Employee',body, 'Save Employee'))
     
       // Event listeners
       $(document).off("click", "#createRecord")
@@ -1002,17 +996,17 @@ function addPriceSupplement(btn) {
   }
 }
 
-function createModal(body) {
+function createModal(header, body, btnTxt) {
   return `
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-add-rental" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-plus"></i></button>
+    <button type="button" class="btn btn-primary ${btnTxt != 'Close' ? 'btn-add-record' : 'btn-close-rental'}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">${btnTxt != 'Close' ? '<i class="bi bi-plus"></i>' : 'Close Rental'}</button>
 
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Add a Record</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">${header}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="" autocomplete="off">
@@ -1022,7 +1016,7 @@ function createModal(body) {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="createRecord" data-bs-dismiss="modal" class="btn btn-primary">Save Record</button>
+                        <button type="button" id="createRecord" data-bs-dismiss="modal" class="btn btn-primary ${btnTxt != 'Close' ? '' : 'btn-close-rental-modal'}">${btnTxt}</button>
                     </div>
                 </form>
             </div>
@@ -1079,9 +1073,9 @@ function createRecord(col, id, el) {
     toCreateObject['employee_id'] = sessionStorage.getItem("usr_id");
 
 
-    if (toCreateObject['type'] === 'rent_confirm') {
-      // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
-    } else if (toCreateObject['type'] === 'rent_close') {
+    // if (toCreateObject['type'] === 'rent_confirm') {
+    //   // don't know if it's gonna be used, WE ALREADY HAVE A "Create new rental" feature
+    // } else if (toCreateObject['type'] === 'rent_close') {
       console.log(toCreateObject)
       var updInventoryID = toCreateObject['product_id'];
       /* ANOTHER AJAX REQUEST FOR EDITING PRODUCT AVAILABILITY AND STATE WHEN AN EMPLOYEE CONFIRMS THE RENT CLOSING */
@@ -1364,7 +1358,7 @@ function createRecord(col, id, el) {
                 console.log(err);
               }
             });
-    }
+    // }
   }
   if (col === 'rental') {
     toCreateObject['note'] = ''

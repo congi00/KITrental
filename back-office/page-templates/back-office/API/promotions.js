@@ -7,11 +7,11 @@ const Promotion = require('./Modules/promotion_model');
 var router = express.Router();
 
 // Get all the promotions
-router.get('/',login.verifyPermission(login.permissionRoleLevels["client"]), function (req, res) {
-    Promotion.find()
-  .exec()
-  .then(promotions => res.status(200).json({ promotions }))
-  .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
+router.get('/', function (req, res) {
+  Promotion.find()
+    .exec()
+    .then(promotions => res.status(200).json({ promotions }))
+    .catch(err => res.status(400).json({message: "Error accessing server data", error: err}));
 })
 
 //Add a new promotion

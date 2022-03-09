@@ -147,6 +147,8 @@
         color: #BF0603;
         margin: 1rem 0 0 0;
         font-size: 1rem;
+        flex: 0 0 100%;
+        text-align: center;
     }
     .pricesDiv p {
         /* display: inline; */
@@ -174,6 +176,7 @@
         margin-top: 0;
     }
     .backIcon {
+        position: fixed;
         font-size: 4vw;
         top: 50vh;
         transform: translate(0, -50%);
@@ -225,6 +228,9 @@
     }
     .calendarSingleProd {
         margin-top: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
     .pricesDiv {
         color: white;
