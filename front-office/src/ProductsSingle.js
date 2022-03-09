@@ -78,26 +78,15 @@ function ProductsSingle(){
             if (response) {
               console.log(response);
               var idP;
-              var available = false;
+              var available = true;
               response.products.forEach((datesProdItem)=>{
-                if(datesProdItem.indisponibilityDates.length <1){
-                  available = true;
-                  idP = element._id;
-                }
+                idP = element._id;
                 
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
-                    &&
-                    !(start >= new Date(item.startDate) && start <= new Date(item.endDate))
-                    &&
-                    !(start <= new Date(item.startDate) && end >= new Date(item.startDate))
-                    &&
-                    !(start == new Date(item.startDate))
-                    &&
-                    !(end == new Date(item.endDate))
+                  if((start <= new Date(item.startDate) && end >= new Date(item.endDate))||
+                  (start <=new Date(item.startDate) && end >= new Date(item.startDate))
                   ){
-                    available = true;
-                    idP = datesProdItem._id;
+                    available = false;
                   }
                 })
               });
