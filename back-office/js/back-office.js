@@ -850,6 +850,20 @@ function singleInventory(id) {
                     <option value="${product.availability=='available' ? 'unavailable' : 'available'}">${product.availability=='available' ? 'unavailable' : 'available'}</option>
                   </select><br>
 
+                  <label for="productState" class="form-label">Product's state</label><br>
+                  <select id="productState" name="state" data-db-field="state" onchange="displayEdits(this);" disabled>
+                    <option value="${product.state ? product.state : ''}">${product.state ? product.state : ''}</option>
+                    ${product.state =='new' ? 
+                    '<option value="perfect">perfect</option><option value="good">good</option><option value="broken">broken</option>'
+                    : product.state =='good' ? 
+                    '<option value="new">new</option><option value="perfect">perfect</option><option value="broken">broken</option>'
+                    : product.state =='perfect' ?
+                    '<option value="new">new</option><option value="good">good</option><option value="broken">broken</option>'
+                    :
+                    '<option value="new">new</option><option value="good">good</option><option value="perfect">perfect</option>'
+                  }}
+                  </select><br>
+
                   <div id="startEndDateU" style="display:none;">
                     <label for="rentalStartDate" class="form-label">Unavailability Starting Date</label>
                     <input required type="datetime-local" data-db-field="startD" class="form-control mb-3" id="productStartDate">
