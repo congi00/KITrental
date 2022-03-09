@@ -121,7 +121,9 @@ function CardsSlider(){
   }
 
 
-  function handleShow() {
+  function handleShow(e) {
+    e.preventDefault();
+    e.stopPropagation();
     setShow(true);
   }
 
@@ -169,7 +171,7 @@ function CardsSlider(){
           <div className="upper-section-wrapper pt-5">
             <h2>Filter and/or Search</h2>
             <div className="filter-search-wrapper">
-            <FontAwesomeIcon className="filterIconP dBlock" icon={faSearchPlus} size="2x" onClick={() => handleShow()}/>
+            <a href="" aria-label='Filter Products' onClick={e => handleShow(e)}><FontAwesomeIcon className="filterIconP dBlock" icon={faSearchPlus} size="2x"/></a>
               <Form.Control className="searchBar dBlock"  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
               <Modal show={show} fullscreen={"xxl-down"} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
@@ -262,7 +264,7 @@ function CardsSlider(){
                         {item.description}
                       </Card.Text>
                       <Card.Text className='product-price' style={{fontSize: '1.5rem'}}>
-                        {item.price}
+                        {item.price}$
                       </Card.Text>
                     </Card.Body>
                   </Card>

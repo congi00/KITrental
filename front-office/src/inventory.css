@@ -253,6 +253,9 @@ top: 30vh;}
   .modal-body .btnFormL {
     color: #06514c;
   }
+  .btnFormL:hover {
+    color: white;
+  }
   .inventoryPage{
     background-color: white;
   }
