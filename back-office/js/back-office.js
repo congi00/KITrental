@@ -595,7 +595,7 @@ function singleRental(id) {
                               </div>
                             </div>` : ''}
                           <!-- If the end date is in the future, add a button to modify and update the rental data -->
-                          ${(new Date() < new Date(rental.start_date)) ? `
+                          ${(new Date() < new Date(rental.start_date && rental.state != 'Closed')) ? `
                             <button id="updateData" onclick="updateRecordInfo('rental', '${rental._id}', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>
                             <button id="updateData" onclick="deleteRecord('rental', '${rental._id}', this); showRental();" type="button" class="btn btn-danger" data-collection="rental">Delete Rental</button>
                             ` : ''}
@@ -640,22 +640,35 @@ function singleRental(id) {
                   xhr.setRequestHeader('auth', authToken)
                 },
                 success: res => {
-                  if (res.operations.length) {
+                  var operations = res.operations
+                  if (operations.length) {
                     var divRow = document.createElement('div');
                     divRow.className = "row rental-cards-group px-5 pb-5";
-                    $.each(res.operations, (i, op) => {
-                    $(divRow).append(`
-                      <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                          <h5 class="card-title">${op.type ? op.type : ''}</h5>
-                          <p class="card-text">${op.notes ? op.notes : ''}</p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                          <li class="list-group-item">Employee ${op.employee_id ? op.employee_id : ''}</li>
-                        </ul>
-                      </div>`);
+                    $.each(operations, (i, op) => {
+                      $.ajax({
+                        url: "API/employees/" + op.employee_id,
+                        type: "GET",
+                        beforeSend: xhr => {
+                          xhr.setRequestHeader('auth', authToken)
+                        },
+                        success : res => {
+                          $(divRow).append(`
+                          <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                              <h5 class="card-title">${op.type ? op.type : ''}</h5>
+                              <p class="card-text">${op.notes ? op.notes : ''}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item">Employee ${op.employee_id ? res.employees.username : ''}</li>
+                            </ul>
+                          </div>`);
+                          // Last iteration
+                          if (i == operations.length - 1) {
+                            content.appendChild(divRow);
+                          }
+                        }
+                      });
                     });
-                    content.appendChild(divRow);
                   }
                 },
               });
@@ -1661,7 +1674,7 @@ async function updateRecordInfo(col, id, el) {
         });
       }   
 
-      // Update sigle product dates within rental
+      // Update single product dates within rental
       if ((col === 'rental' || col === 'inventory') && utils['prod_date']) {
         // Product GET
         await $.ajax({
@@ -1684,6 +1697,24 @@ async function updateRecordInfo(col, id, el) {
               console.log(newDatesProds)
               var updatedPrice = await updatePrice(id, newDatesProds)
               console.log(updatedPrice)
+
+              // Creation of rental update operation related to the employee
+              $.ajax({
+                url: "api/inventory/" + data.products_id[utils['prodPos']],
+                type: "GET",
+                success: res => {
+                  var prod = res.products
+                  console.log(data.datesProducts[utils['prodPos']])
+                  console.log(utils['prod_date'])
+                  $.ajax({
+                    url: "api/operations/",
+                    type: "POST",
+                    data: JSON.stringify({type: 'rent_update', employee_id: sessionStorage.getItem("usr_id"), rental_id: data._id, notes: `${prod.name} from ${data.datesProducts[utils['prodPos']].startDate.toLocaleString() + ' - ' + data.datesProducts[utils['prodPos']].endDate.toLocaleString()} to ${utils['prod_date'].startDate.toLocaleString() + ' - ' + utils['prod_date'].endDate.toLocaleString()}`}),
+                    dataType: "json",
+                    contentType: "application/json",
+                  })
+                }
+              })
             } else if (col === 'inventory') {
 
               var prodDatesArr = data.indisponibilityDates
