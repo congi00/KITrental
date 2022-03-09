@@ -132,7 +132,7 @@ const onTodoChange = (product) =>{
   if(exist && cartItems.length == 1)
     cookies.remove("myCart");
   else if(exist){
-    cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist} : x), { path: '/' });
+    cookies.set('myCart', cartItems.filter((x) => x._id !== product._id), { path: '/' });
   }
   console.log(cookies.get('myCart'));
   window.location.reload(false);
