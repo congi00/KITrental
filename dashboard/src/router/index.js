@@ -70,7 +70,15 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         guard(to, from, next);
       }
-    }
+    },
+    {
+      path: '/dashboard/employees',
+      name: 'employees',
+      component: () => import('../views/Employees.vue'),
+      beforeEnter: (to, from, next) => {
+        guard(to, from, next);
+      }
+    },
   ],
 })
 

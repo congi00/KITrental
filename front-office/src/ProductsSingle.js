@@ -10,6 +10,7 @@ import { useMediaQuery } from 'react-responsive'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import $ from 'jquery';
+import moment from 'moment';
 
 function ProductsSingle(){
   const cookies = new Cookies();
@@ -167,6 +168,7 @@ function ProductsSingle(){
               startDate={startDate}
               endDate={endDate}
               excludeDates={Dates}
+              minDate={moment().toDate()}
               selectsRange
               selectsDisabledDaysInRange
               inline
@@ -176,6 +178,7 @@ function ProductsSingle(){
               selected={startDate}
               startDate={startDate}
               endDate={endDate}
+              minDate={moment().toDate()}
               selectsRange
               selectsDisabledDaysInRange
               inline

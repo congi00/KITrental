@@ -8,6 +8,7 @@ import { useNavigate,useSearchParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import DatePicker from "react-datepicker";
+import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 
@@ -337,6 +338,7 @@ function EditRental(){
                                         startDate={startDate}
                                         endDate={endDate}
                                         excludeDates={Dates[selectedOption]}
+                                        minDate={moment().toDate()}
                                         selectsRange
                                         selectsDisabledDaysInRange
                                         inline

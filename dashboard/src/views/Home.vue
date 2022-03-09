@@ -73,7 +73,7 @@
             console.log(errors);    
             this.$refs.errorMSG.style.display ="block";
           })    
-        }      
+      }      
     },
     mounted() {
 

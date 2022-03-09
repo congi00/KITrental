@@ -79,6 +79,16 @@
                 }
             ]
           },
+          {
+            href: '/dashboard/employees',
+            title: 'Employees',
+            icon: {
+              element: 'font-awesome-icon',
+              attributes: {
+                icon: 'hands-holding-dollar'
+              }
+            }
+          },
         ]
       }
     },
