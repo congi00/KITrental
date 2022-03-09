@@ -109,7 +109,7 @@ function showHome() {
         $("#formEmployees h3").addClass("text-danger");
       }else{
         var formdata = {
-            'emplUsername': $("input[type='email']").val(),
+            'emplUsername': $("input[type='text']").val(),
             'emplPassword': $("input[type='password']").val()
         };
         $.ajax({
