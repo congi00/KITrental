@@ -1076,6 +1076,7 @@ function createRecord(col, id, el) {
   if (col === 'operations') {
     toCreateObject['penalties_prods'] = []
     toCreateObject['penalties_days'] = []
+    toCreateObject['type'] = 'rent_close'
   }
   fields.each(function() {
     // Turns an ID string in the BSON Object
