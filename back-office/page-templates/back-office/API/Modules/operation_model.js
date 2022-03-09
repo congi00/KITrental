@@ -8,7 +8,7 @@ const operation = new Schema({
   _id: Schema.Types.ObjectId,
   type:{
     type: String,
-    enum: ["rent_create","rent_confirm","rent_update","rent_close"],
+    enum: ["rent_create","rent_update","rent_close"],
     required: true,
   },
   employee_id:{

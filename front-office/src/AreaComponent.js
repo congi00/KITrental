@@ -72,50 +72,73 @@ function AreaComponent(){
     confirmalert = window.confirm("Are you sure?");
     if (confirmalert == true) {
       $.ajax({
-        url: "API/rental/" + rentalId,
-        type: "DELETE",
+        url: "api/rental/" + rentalId,
+        type: "GET",
         beforeSend: xhr => {
           xhr.setRequestHeader('auth', auth_token)
         },
         success: res => {
-          $(el).closest(".card").css("--bs-table-bg", "red");
-          $(el)
-            .closest(".card")
-            .fadeOut(400, function () {
-              $(this).remove();
-            });
-        },
-        error: err => console.log(err)
-      });
+          var rental = res.rental;
+
+          // Products unavailability dates deletion (if the rental is removed, also the unavailability dates for that rental must be removed)
+          rental.products_id.forEach((prod, i) => {
+            $.ajax({
+              url: "api/inventory/" + prod,
+              type: "GET",
+              success: res => {
+                var prodDatesArr = res.products.indisponibilityDates
+                var dateToRemove = new Date(rental.datesProducts[i].startDate)
+                var removePos = null
+
+                prodDatesArr.some((date, index) => {
+                  var startIndDate = new Date(date.startDate)
+                  startIndDate.setHours(startIndDate.getHours() - 2) // So that the conversion to UTC doesn't add 2 hours and get the next day instead
+                  startIndDate.setHours(0, 0, 0, 0)
+                  dateToRemove.setHours(0, 0, 0, 0)
+
+                  if (startIndDate.getTime() == dateToRemove.getTime()) {
+                    removePos = index
+                    console.log(removePos)
+                    console.log(prodDatesArr[index])
+                    return true;
+                  }
+                })
+    
+                var newIndDates = res.products.indisponibilityDates
+                newIndDates.splice(removePos, 1);
+
+                // Update of product unavailability dates
+                $.ajax({
+                  url: "api/inventory/" + prod,
+                  type: "PATCH",
+                  contentType: "application/json",
+                  dataType: "json",
+                  data: JSON.stringify({indisponibilityDates: newIndDates})
+                })
+              }
+            })
+          })
+
+          // Rental deletion
+          $.ajax({
+            url: "API/rental/" + rentalId,
+            type: "DELETE",
+            beforeSend: xhr => {
+              xhr.setRequestHeader('auth', auth_token)
+            },
+            success: res => {
+              $(el).closest(".card").css("--bs-table-bg", "red");
+              $(el)
+                .closest(".card")
+                .fadeOut(400, function () {
+                  $(this).remove();
+                });
+            },
+            error: err => console.log(err)
+          });
+        }
+      })
     }
-  }
-
-  const updateRental = (rentalId, el) => {
-    var editBody = el.closest('.card').querySelector('.edit-rental-data')
-    var cardBody = el.closest('.card-body')
-    cardBody.style.display = 'none'
-    editBody.style.display = 'block'
-  }
-
-  const sendRentalData = (rentalId, el) => {
-    var editData = el.closest('.edit-rental-data')
-    console.log(editData.querySelector('#rentalStartDate').value)
-    var objtosend = {start_date: editData.querySelector('#rentalStartDate').value, end_date: editData.querySelector('#rentalEndDate').value}
-    console.log(objtosend)
-    $.ajax({
-      url: "API/rental/" + rentalId,
-      type: "PATCH",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({start_date: editData.querySelector('#rentalStartDate').value, end_date: editData.querySelector('#rentalEndDate').value}),
-      beforeSend: xhr => {
-        xhr.setRequestHeader('auth', auth_token)
-      },
-      success: res => {
-        window.location.reload()
-      },
-      error: err => console.log(err)
-    });
   }
 
   return(

@@ -652,10 +652,16 @@ function singleRental(id) {
                           xhr.setRequestHeader('auth', authToken)
                         },
                         success : res => {
+                          var opType = ''
+                          switch (op.type) {
+                            case 'rent_create': opType = "Rental Creation"; break;
+                            case 'rent_update': opType = "Rental Update"; break;
+                            case 'rent_close': opType = "Rental Closing"; break;
+                          }
                           $(divRow).append(`
                           <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                              <h5 class="card-title">${op.type ? op.type : ''}</h5>
+                              <h5 class="card-title">${opType}</h5>
                               <p class="card-text">${op.notes ? op.notes : ''}</p>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -1438,6 +1444,8 @@ function createRecord(col, id, el) {
           toCreateObject['price'] = finalPrice
           toCreateObject['real_price'] = rentalPrice
           toCreateObject["pricesProducts"] = pricesProducts;
+
+          // Rental creation
           $.ajax({
             url: "API/" + col + "/",
             type: "POST",
@@ -1445,6 +1453,20 @@ function createRecord(col, id, el) {
             data: JSON.stringify(toCreateObject),
             success: function (response) {
               if (response) {
+                // Creation of rent_create operation associated with the employee
+                $.ajax({
+                  url: "API/operations/",
+                  type: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify({type: 'rent_create', employee_id: sessionStorage.getItem("usr_id"), rental_id: response.rental._id, notes: ''}),
+                  success: function (response) {
+                    if (response) {
+                      showRental();
+                    } else {
+                      alert("There was an error.");
+                    }
+                  },
+                });
                 showRental();
               } else {
                 alert("There was an error.");
@@ -2285,6 +2307,7 @@ function dateRangePicker(disabledArr, pickerInput, initialVal) {
       for(i=0; i<disabledArr.length; i++){  
           // Get each from/to ranges
           var From = new Date(disabledArr[i].startDate)
+          From.setHours(From.getHours() + 2)
           var To = new Date(disabledArr[i].endDate)
           // Format them as dates : Year, Month (zero-based), Date
           var FromDate = new Date(From.getUTCFullYear(), From.getUTCMonth(), From.getUTCDate());
