@@ -8,6 +8,9 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 import $ from 'jquery'
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+
 
 function CartItems(){
   const cookies = new Cookies();
@@ -122,14 +125,14 @@ const calculatePrice = (total_price, products_prices, products_mult_prices, prod
   return {prod: singleProductPrice};
 }
 
-const onTodoChange = (value,product) =>{
+const onTodoChange = (product) =>{
   const cartItems = cookies.get('myCart');
   const exist = cartItems.find(x => x._id === product._id);
   console.log(exist);
-  if(exist && value == 0 && cartItems.length == 1)
+  if(exist && cartItems.length == 1)
     cookies.remove("myCart");
   else if(exist){
-    cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist, qty: parseFloat(value) } : x), { path: '/' });
+    cookies.set('myCart', cartItems.map(x=> x._id === product._id ? {...exist} : x), { path: '/' });
   }
   console.log(cookies.get('myCart'));
   window.location.reload(false);
@@ -247,6 +250,7 @@ const onTodoChange = (value,product) =>{
                 <div className="itemPrice">
                   <h2>{item.discountedPrice}$</h2>
                 </div>
+                <FontAwesomeIcon className="faTimesCircle" aria-label="delete item from cart" icon={faTimesCircle} size="2x" onClick={() => onTodoChange(item)}/>
               </Card.Body>
             </Card>
             ))}
