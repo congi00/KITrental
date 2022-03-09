@@ -2232,6 +2232,7 @@ function dateRangePicker(disabledArr, pickerInput, initialVal) {
       for(i=0; i<disabledArr.length; i++){  
           // Get each from/to ranges
           var From = new Date(disabledArr[i].startDate)
+          From.setHours(From.getHours() + 2)
           var To = new Date(disabledArr[i].endDate)
           // Format them as dates : Year, Month (zero-based), Date
           var FromDate = new Date(From.getUTCFullYear(), From.getUTCMonth(), From.getUTCDate());
