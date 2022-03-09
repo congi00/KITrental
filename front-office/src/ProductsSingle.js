@@ -61,6 +61,7 @@ function ProductsSingle(){
 
 
   const onSelectDate = (dates) => {
+    setBepi(false);
     const [start, end] = dates; 
     setBTNDisabled(false);
     Dates.forEach(element => {
@@ -69,7 +70,6 @@ function ProductsSingle(){
       console.log("End" + end)
       if(start <= element && element <= end){
         setBTNDisabled(true);
-        console.log("Inserto contentente")
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
           type: "GET",
@@ -81,13 +81,17 @@ function ProductsSingle(){
               var available = false;
               response.products.forEach((datesProdItem)=>{
                 if(datesProdItem.indisponibilityDates.length <1){
+                  console.log("PROD WITH NO INAVAILABILITY")
                   available = true;
                   idP = element._id;
                 }
+                
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if((start>=  new Date(item.startDate) &&  end >= new Date(item.endDate))
+                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
                     &&
-                    !(start >= new Date(item.startDate) && new Date(item.endDate) >= end)
+                    !(start >= new Date(item.startDate) && start <= new Date(item.endDate))
+                    &&
+                    !(start <= new Date(item.startDate) && end >= new Date(item.startDate))
                     &&
                     !(start == new Date(item.startDate))
                     &&
@@ -158,7 +162,7 @@ function ProductsSingle(){
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
             <br/>
-            <h3 className={Bepi ? "suggBlock" : "suggNone"}>This product is unavailable in those date, if you want you can check this 
+            <h3 className={Bepi ? "suggBlock" : "suggNone"}>This product is unavailable in those dates, if you want you can check this 
             <span onClick={() => {window.location.href=linkSugg}}> <i>product</i></span>
             </h3>
             <div className='calendar'>

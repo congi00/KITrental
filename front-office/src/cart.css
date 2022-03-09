@@ -144,6 +144,9 @@
   left: 10vw;
 }
 
+.faTimesCircle :hover{
+  cursor:pointer;
+}
 
 
 
