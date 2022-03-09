@@ -80,6 +80,7 @@ function ProductsSingle(){
               var idP;
               var available = true;
               response.products.forEach((datesProdItem)=>{
+                available = true
                 idP = datesProdItem._id;
                 datesProdItem.indisponibilityDates.forEach((item)=>{
                   if((start <= new Date(item.startDate) && end >= new Date(item.startDate))||
@@ -93,11 +94,11 @@ function ProductsSingle(){
                     available = false;
                   }
                 })
+                if(available){
+                  setBepi(true);
+                  setlinkSugg("/productSingle?prdID="+idP)
+                }
               });
-              if(available){
-                setBepi(true);
-                setlinkSugg("/productSingle?prdID="+idP)
-              }
             } else {
               alert("There was an error.");
             }
