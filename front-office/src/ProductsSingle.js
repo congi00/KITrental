@@ -83,7 +83,9 @@ function ProductsSingle(){
                 idP = element._id;
                 
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if(start <= new Date(item.startDate) && end >= new Date(item.endDate)){
+                  if((start <= new Date(item.startDate) && end >= new Date(item.endDate))||
+                  (start <=new Date(item.startDate) && end >= new Date(item.startDate))
+                  ){
                     available = false;
                   }
                 })
