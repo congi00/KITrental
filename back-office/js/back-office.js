@@ -714,6 +714,8 @@ function showInventory(){
         <tr class="table-light ">
           <th>Name</th>
           <th>Image</th>
+          <th>Description</th>
+          <th>Calendar</th>
           <th>Category</th>
           <th>Sub category</th>
           <th>Availability</th>
@@ -728,6 +730,8 @@ function showInventory(){
           <tr class="table-light prods" >
             <td class="filterProd">${product.name}</td>
             <td><img src="../img/products/${product.image}" width="30vw"></td>
+            <td>${product.description}</td>
+            <td><input style="color:#fff0;width:2vw;background-size:contain;"  type="text" name="daterange" class="date-picker form-control" id="pickerProd${i}" data-picker="${i}" data-db-field="product_dates" readonly/></td>
             <td>${product.category}</td>
             <td>${product.subCategory}</td>
             <td>${product.availability}</td>
@@ -736,7 +740,12 @@ function showInventory(){
             <td><a onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
             ${loggedin ? '<td><i onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>' : ''}
           </tr>`);
+          $(document).on('focus', 'input[data-picker="' + i + '"]',(event) => {
+            dateRangePicker(product.indisponibilityDates, $('input[data-picker="' + i + '"]'), "")
+            $(".daterangepicker.show-calendar .drp-buttons").hide();
+          });
       })
+      
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
       content.appendChild(container).appendChild(tbl);
