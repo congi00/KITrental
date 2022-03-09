@@ -86,15 +86,15 @@ function ProductsSingle(){
                 }
                 
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if(!(start<  new Date(item.startDate) &&  end > new Date(item.endDate))
-                    &&
+                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
+                    /*&&
                     !(start >= new Date(item.startDate) && start <= new Date(item.endDate))
                     &&
                     !(start <= new Date(item.startDate) && end >= new Date(item.startDate))
                     &&
                     !(start == new Date(item.startDate))
                     &&
-                    !(end == new Date(item.endDate))
+                    !(end == new Date(item.endDate))*/
                   ){
                     console.log(item)
                     console.log(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate)))
