@@ -187,7 +187,7 @@ function showClients() {
             <td>${client.username}</td>
             <td>${client.address}</td>
             <td><a href="" aria-label="Single Client" onclick="singleClient('${client._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            <td><i onclick="deleteRecord('clients', '${client._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            <td><a href="" aria-label="Delete Client" onclick="deleteRecord('clients', '${client._id}', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
           </tr>`);
       })
       tbl.appendChild(thd);
@@ -312,17 +312,19 @@ function singleClient(id) {
                   var rented_products_names = rented_products.map(prod => prod.name)
                   rented_products_names.join(", ")
                   $(divRow).append(`
-                  <div class="card" style="width: 18rem; cursor:pointer;" onclick="singleRental('${rental._id}');">
-                    <img src="/img/products/${rented_products[0].image}" class="card-img-top" alt="Product Image">
-                    <div class="card-body">
-                      <h5 class="card-title">${rented_products_names ? rented_products_names : 'Products Names'}</h5>
-                      <p class="card-text">${rented_products[0].description ? rented_products[0].description : 'Product Description'}</p>
+                  <a href="" aria-label="Show Rental Details" onclick="singleRental('${rental._id}'); return false;" style="color:black;text-decoration:none;">
+                    <div class="card" style="width: 18rem; cursor:pointer;" >
+                      <img src="/img/products/${rented_products[0].image}" class="card-img-top" alt="Product Image">
+                      <div class="card-body">
+                        <h5 class="card-title">${rented_products_names ? rented_products_names : 'Products Names'}</h5>
+                        <p class="card-text">${rented_products[0].description ? rented_products[0].description : 'Product Description'}</p>
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
+                        <li class="list-group-item">End: ${rental.end_date ? new Date(rental.end_date).toLocaleString() : ''}</li>
+                      </ul>
                     </div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">Start: ${rental.start_date ? new Date(rental.start_date).toLocaleString() : ''}</li>
-                      <li class="list-group-item">End: ${rental.end_date ? new Date(rental.end_date).toLocaleString() : ''}</li>
-                    </ul>
-                  </div>`);
+                  </a>`);
                 }
               });
             });
@@ -398,7 +400,7 @@ function showRental() {
               <td data-id="start_date">${new Date(rental.start_date).toLocaleString()}</td>
               <td><a href="" aria-label="Single Rental" onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a href="" aria-label="Single Client" onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
-              <td><i onclick="deleteRecord('rental', '${rental._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
+              <td><a href="" aria-label="Delete Rental" onclick="deleteRecord('rental', '${rental._id}', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></a></td>
             </tr>`);
         }
 
@@ -735,7 +737,7 @@ function showInventory(){
             <td>${product.state}</td>
             <td>${product.price}</td>
             <td><a href="" aria-label="Single Inventory" onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
-            ${loggedin ? '<td><i onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>' : ''}
+            ${loggedin ? '<td><a href="" aria-label="Delete Product" onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>' : ''}
           </tr>`);
           $(document).on('focus', 'input[data-picker="' + i + '"]',(event) => {
             dateRangePicker(product.indisponibilityDates, $('input[data-picker="' + i + '"]'), "")
@@ -915,7 +917,7 @@ function showPromotions() {
             <td>${new Date(prom.start_date).toLocaleString()}</td>
             <td>${new Date(prom.end_date).toLocaleString()}</td>
             <td>${prom.percentage}</td>
-            <td><i onclick="deleteRecord('promotions', '${prom._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            <td><a href="" aria-label="Delete Promotion" onclick="deleteRecord('promotions', '${prom._id}', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
           </tr>`);
       })
       tbl.appendChild(thd);
@@ -981,7 +983,7 @@ function showEmployees() {
             <tr class="table-light">
               <td>${employee.username}</td>
               <td>${employee.role}</td>
-              <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+              <td><a href="" aria-label="Delete Employee" onclick="deleteRecord('employees', '${employee._id}', this); return false;"><i  class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
             </tr>`);
       })
       tbl.appendChild(thd);
@@ -1679,7 +1681,7 @@ async function updateRecordInfo(col, id, el) {
   var startDate = $(el).siblings("input[data-db-field='start_date']").val();
 
   // Edit of single product dates inside rental
-  if (!startDate && col != "inventory") {
+  if (!startDate && col != "inventory" && col != "clients") {
     startDate = $('input[data-db-field="start_date"]').val()
     boolUtil = false
   }
