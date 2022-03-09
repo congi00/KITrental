@@ -85,6 +85,11 @@ function ProductsSingle(){
                   if((start <= new Date(item.startDate) && end >= new Date(item.startDate))||
                   (start <=new Date(item.endDate) && end >= new Date(item.endDate))
                   ){
+                    console.log("ECCOS")
+                    console.log(start)
+                    console.log(end)
+                    console.log(item.startDate)
+                    console.log(item.endDate)
                     available = false;
                   }
                 })
