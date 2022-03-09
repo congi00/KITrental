@@ -97,10 +97,10 @@ function NavB(){
                 </Link>
               </Nav.Item>
               <Nav.Item onClick={() => {window.location.href="/catalog?category=professional"}}>
-                  <h3>Professional utilities</h3>
+                  <button type="button" className="buttonLinks">Professional utilities</button>
               </Nav.Item>
               <Nav.Item onClick={() => {window.location.href="/catalog?category=household"}}>
-                  <h3>Household products</h3>
+                  <button type="button" className="buttonLinks">Household products</button>
               </Nav.Item>
               {!token &&
                 <Nav.Item>

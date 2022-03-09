@@ -163,8 +163,10 @@ const onTodoChange = (product) =>{
     var real_price = 0;
     var productsID = []
     var pricesProducts = [];
+    var minStartDate = cartItems[0].startDate
     
     cartItems.forEach((item) =>  {
+      if (new Date(minStartDate) > new Date(item.startDate)) minStartDate = item.startDate
       productsID = productsID.concat([item._id]); // rental creation ids
       datesP = datesP.concat([{startDate : item.startDate, endDate : item.endDate}]); // rental creation dates       
       var newDatesProds = {startDate:item.startDate,endDate: item.endDate}
@@ -192,7 +194,7 @@ const onTodoChange = (product) =>{
       contentType: "application/json",
       data: JSON.stringify({ client_id: JSON.parse(sessionStorage.getItem("token")).id,
         products_id: productsID,
-        start_date: new Date(),
+        start_date: new Date(minStartDate),
         datesProducts : datesP,
         price : totalPrice,
         state : "Accepted",

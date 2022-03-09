@@ -252,16 +252,21 @@ function CardsSlider(){
           <React.Fragment>
             <div className="products-wrapper" id='products'>
               {products.map(item => (
-                <Card style={{ width: '18rem', cursor: 'pointer' }} onClick={() => handleClick(item._id)} 
-                  className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"}>
-                  <Card.Img variant="top" src={"img/products/" + item.image} />
-                  <Card.Body>
-                    <Card.Title>{item.name}</Card.Title>
-                    <Card.Text className='product-desc'>
-                      {item.description}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
+                <Link to={"/productSingle?prdID=" + item._id} style={{ color: 'black', textDecoration: 'none' }}>
+                  <Card style={{ width: '18rem', cursor: 'pointer' }}
+                    className={((titlesName !== undefined) && item.name.toLowerCase().indexOf(titlesName.toLowerCase()) !== -1)? "dBlock" : "dNone"}>
+                    <Card.Img variant="top" src={"img/products/" + item.image} />
+                    <Card.Body>
+                      <Card.Title>{item.name}</Card.Title>
+                      <Card.Text className='product-desc'>
+                        {item.description}
+                      </Card.Text>
+                      <Card.Text className='product-price' style={{fontSize: '1.5rem'}}>
+                        {item.price}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Link>
               ))} 
             </div>
           </React.Fragment>

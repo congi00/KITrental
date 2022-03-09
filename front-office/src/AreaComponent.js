@@ -152,7 +152,7 @@ function AreaComponent(){
         <h1 className="personalTitle">Personal Area</h1>
         <img className="imgPersonalArea" src="img/profile-placeholder.png"></img>
         <h3 className='Infos'>{client.username}</h3>
-        <button className='btnChangeInfo' onClick={() => navigate('/changeInfos?usrID='+client._id)}>Change info</button>
+        <button type="button" className='btnChangeInfo' onClick={() => navigate('/changeInfos?usrID='+client._id)}>Change info</button>
       </div>      
       {/* <h3 className='Infos'>Cognome</h3>
       <h3 className='Infos'>Email</h3> */}

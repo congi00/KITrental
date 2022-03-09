@@ -113,6 +113,11 @@
   left: 70vw;
 }
 
+.buttonLinks {
+  background-color: unset;
+  border: 0;
+}
+
 @media (min-width: 992px) {
   .Nav-container{
     width: 100%;
@@ -162,8 +167,17 @@
     background-color: white;
     box-shadow: 0 10px 3px 0 rgba(0,0,0,.2);
   }
-  .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > h3, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > svg, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > h3 {
+  .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > h3, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > a > svg, .scrolled-navbar > .container-fluid > .navbar-nav > .nav-item > button {
     color: black;
     text-shadow: none;
+  }
+  .buttonLinks {
+    color: white;
+    font-size: 1.75rem;
+    text-shadow: 3px 3px 4px #222;
+    line-height: 1.2;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
   }
 }
