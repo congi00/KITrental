@@ -115,7 +115,7 @@ nav{
   top: 3vh;
 }
 
-#formEmployees input[type="email"],input[type="password"]{
+#formEmployees input[type="text"],input[type="password"]{
   width: 80%;
   position: relative;
   left: 10%;

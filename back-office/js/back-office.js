@@ -72,8 +72,8 @@ function showHome() {
                   </div>\
                   <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>\
                   <div class="form-outline mb-3">\
-                    <label class="form-label" for="emplUsername">Email address</label>\
-                    <input type="email" name="emplUsername" id="emplUsername" class="form-control form-control-md" required>\
+                    <label class="form-label" for="emplUsername">Username</label>\
+                    <input type="text" name="emplUsername" id="emplUsername" class="form-control form-control-md" required>\
                   </div>\
                   <div class="form-outline mb-4">\
                     <label class="form-label" for="emplPw">Password</label>\
@@ -82,7 +82,6 @@ function showHome() {
                   <div class="pt-1 mb-4">\
                     <button class="btn btn-info btn-lg btn-block btn-dark" type="button">Login</button>\
                   </div>\
-                  <p class="small mb-5 pb-lg-2 text-center"><a class="text-muted" href="#!">Forgot password?</a></p>\
                 </form>\
               </div>\
           </div>\
@@ -105,15 +104,12 @@ function showHome() {
       var form = $("#formEmployees");
       var actionUrl = form.attr('action');
 
-      if(!isEmail($("input[type='email']").val())){
-        $("#formEmployees h3").text("Log in - Insert valid email !");
-        $("#formEmployees h3").addClass("text-danger");
-      }else if($("input[type='password']").val() == ""){
+      if($("input[type='password']").val() == ""){
         $("#formEmployees h3").text("Log in - Insert password !");
         $("#formEmployees h3").addClass("text-danger");
       }else{
         var formdata = {
-            'emplUsername': $("input[type='email']").val(),
+            'emplUsername': $("input[type='text']").val(),
             'emplPassword': $("input[type='password']").val()
         };
         $.ajax({
@@ -135,6 +131,8 @@ function showHome() {
             error: function (xhr, ajaxOptions, thrownError) {
               console.log(xhr);
               console.log(thrownError);
+              $("#formEmployees h3").text("Log in - Wrong data inserted !");
+              $("#formEmployees h3").addClass("text-danger");
             }
         });
       }
@@ -713,6 +711,8 @@ function showInventory(){
         <tr class="table-light ">
           <th>Name</th>
           <th>Image</th>
+          <th>Description</th>
+          <th>Calendar</th>
           <th>Category</th>
           <th>Sub category</th>
           <th>Availability</th>
@@ -727,6 +727,8 @@ function showInventory(){
           <tr class="table-light prods" >
             <td class="filterProd">${product.name}</td>
             <td><img src="../img/products/${product.image}" width="30vw"></td>
+            <td>${product.description}</td>
+            <td><input style="color:#fff0;width:2vw;background-size:contain;"  type="text" name="daterange" class="date-picker form-control" id="pickerProd${i}" data-picker="${i}" data-db-field="product_dates" readonly/></td>
             <td>${product.category}</td>
             <td>${product.subCategory}</td>
             <td>${product.availability}</td>
@@ -735,7 +737,12 @@ function showInventory(){
             <td><a href="" aria-label="Single Inventory" onclick="singleInventory('${product._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
             ${loggedin ? '<td><i onclick="deleteRecord(\'inventory\', \'' + product._id + '\', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>' : ''}
           </tr>`);
+          $(document).on('focus', 'input[data-picker="' + i + '"]',(event) => {
+            dateRangePicker(product.indisponibilityDates, $('input[data-picker="' + i + '"]'), "")
+            $(".daterangepicker.show-calendar .drp-buttons").hide();
+          });
       })
+      
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
       content.appendChild(container).appendChild(tbl);
@@ -754,7 +761,7 @@ function showInventory(){
           <select class="form-select" id="productAval" aria-label="Select Availability" data-db-field="availability">
             <option selected>Open this select menu</option>
             <option value="available">Available</option>
-            <option value="unavaiable">Unavailable</option>
+            <option value="unavailable">Unavailable</option>
           </select>
         </div>
         <div class="mb-3">
@@ -840,6 +847,20 @@ function singleInventory(id) {
                   <select id="productAvailability" name="availability" data-db-field="availability" onchange="displayEdits(this);" disabled>
                     <option value="${product.availability ? product.availability : ''}">${product.availability ? product.availability : ''}</option>
                     <option value="${product.availability=='available' ? 'unavailable' : 'available'}">${product.availability=='available' ? 'unavailable' : 'available'}</option>
+                  </select><br>
+
+                  <label for="productState" class="form-label">Product's state</label><br>
+                  <select id="productState" name="state" data-db-field="state" onchange="displayEdits(this);" disabled>
+                    <option value="${product.state ? product.state : ''}">${product.state ? product.state : ''}</option>
+                    ${product.state =='new' ? 
+                    '<option value="perfect">perfect</option><option value="good">good</option><option value="broken">broken</option>'
+                    : product.state =='good' ? 
+                    '<option value="new">new</option><option value="perfect">perfect</option><option value="broken">broken</option>'
+                    : product.state =='perfect' ?
+                    '<option value="new">new</option><option value="good">good</option><option value="broken">broken</option>'
+                    :
+                    '<option value="new">new</option><option value="good">good</option><option value="perfect">perfect</option>'
+                  }}
                   </select><br>
 
                   <div id="startEndDateU" style="display:none;">
@@ -955,12 +976,13 @@ function showEmployees() {
         </tr>`)
       var tbdy = document.createElement('tbody');
       $.each(res.employees, (i, employee) => {
-        $(tbdy).append(`
-          <tr class="table-light">
-            <td>${employee.username}</td>
-            <td>${employee.role}</td>
-            <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
-          </tr>`);
+        if(sessionStorage.getItem("usr_id")!=employee._id)
+          $(tbdy).append(`
+            <tr class="table-light">
+              <td>${employee.username}</td>
+              <td>${employee.role}</td>
+              <td><i onclick="deleteRecord('employees', '${employee._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></td>
+            </tr>`);
       })
       tbl.appendChild(thd);
       tbl.appendChild(tbdy);
