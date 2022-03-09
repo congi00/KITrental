@@ -85,7 +85,7 @@
             icon: {
               element: 'font-awesome-icon',
               attributes: {
-                icon: 'hands-holding-dollar'
+                icon: 'briefcase'
               }
             }
           },

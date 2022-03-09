@@ -6,10 +6,10 @@ import VueAxios from 'vue-axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faBlender, faUsers, faFileInvoiceDollar, faBoxesStacked, faHouseLaptop } from '@fortawesome/free-solid-svg-icons'
+import {faBlender, faUsers, faFileInvoiceDollar, faBoxesStacked, faHouseLaptop, faBriefcase } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-library.add(faBlender, faUsers, faFileInvoiceDollar, faBoxesStacked, faHouseLaptop)
+library.add(faBlender, faUsers, faFileInvoiceDollar, faBoxesStacked, faHouseLaptop, faBriefcase)
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
