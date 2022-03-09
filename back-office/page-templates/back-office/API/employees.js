@@ -44,7 +44,7 @@ router.post('/',login.verifyPermission(login.permissionRoleLevels["manager"]), a
 })
 
 // Get single employee
-router.get('/:id', function (req, res) {
+router.get('/:id', login.verifyPermission(login.permissionRoleLevels["employee"]), function (req, res) {
   Employees.findOne({ _id: req.params.id})
   .exec()
   .then(employees => {

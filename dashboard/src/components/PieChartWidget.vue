@@ -59,7 +59,7 @@ export default defineComponent({
         },
         title: {
           display: true,
-          text: 'Doughnut Chart',
+          text: 'Pie Chart',
         },
       },
     });

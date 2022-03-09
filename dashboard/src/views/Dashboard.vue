@@ -8,10 +8,10 @@ export default {
 
 <template>
   <div class="container titles-wrapper">
-    <h1>Welcome in your dashboard panel Mr. Manager!</h1>
-    <h2 style="margin-bottom:2rem">From here you're be able to generate and inspect graphs on several statistics</h2>
-    <h2 style="margin-bottom:1rem">like income and number of rentals, <u>divided by months</u>. </h2>
-    <h2 style="margin-bottom:3rem">Please, select an option among the ones in the sidebar. </h2>
+    <h1 style="margin-bottom:3rem">Welcome in your dashboard panel Mr. Manager!</h1>
+    <h2>From here you'll be able to generate and inspect graphs on several statistics</h2>
+    <h2 style="margin-bottom:2rem">like income and number of rentals, <u>divided by months</u>. </h2>
+    <h2>Please, select an option among the ones in the sidebar. </h2>
   </div>
 </template>
 
