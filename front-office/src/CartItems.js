@@ -163,6 +163,7 @@ const onTodoChange = (product) =>{
     var real_price = 0;
     var productsID = []
     var pricesProducts = [];
+    
     cartItems.forEach((item) =>  {
       productsID = productsID.concat([item._id]); // rental creation ids
       datesP = datesP.concat([{startDate : item.startDate, endDate : item.endDate}]); // rental creation dates       
@@ -210,7 +211,7 @@ const onTodoChange = (product) =>{
             type: "PATCH",
             contentType: "application/json",
             dataType: "json",
-            data: JSON.stringify({indisponibilityDates : datesP}),
+            data: JSON.stringify({indisponibilityDates : datesP.concat(item.indisponibilityDates)}),
             beforeSend: xhr => {
               xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
             },

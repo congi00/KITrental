@@ -2028,6 +2028,81 @@ async function deleteRecord(col, id, el) {
     var confirmalert = true
     if (col !== 'invoice') confirmalert = confirm("Are you sure?");
     if (confirmalert == true) {
+      if(col=='rental'){
+        await $.ajax({
+          url: "API/rental/"+ id,
+          type: "GET",
+          beforeSend: xhr => {
+            xhr.setRequestHeader('auth', authToken)
+          },
+          success: function (response) {
+            if (response) {
+              response.rental.products_id.forEach((element,index) => {
+                $.ajax({
+                  url: "API/inventory/" + element,
+                  type: "GET",
+                  beforeSend: xhr => {
+                    xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                  },
+                  success: res => {
+                    console.log(res)
+                    console.log(res.indisponibilityDates)
+                    if (res) {
+                      $.ajax({
+                        url: "API/inventory/" + res.products._id,
+                        type: "PATCH",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({indisponibilityDates: res.products.indisponibilityDates.filter((x) => x.startDate !== response.rental.datesProducts[index].startDate)}),
+                        beforeSend: xhr => {
+                          xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+                        },
+                        success: res => {
+                          if (res) {
+                            console.log('call done?')
+                          } else {
+                            alert("There was an error.");
+                          }
+                        }
+                      })                      
+                    } else {
+                      alert("There was an error.");
+                    }
+                  }
+                })
+                
+              })
+              console.log(response);
+              /*$.ajax({
+                url: "API/inventory/" + id,
+                type: "DELETE",
+                beforeSend: xhr => {
+                  xhr.setRequestHeader('auth', authToken)
+                },
+                success: function (response) {
+                  if (response) {
+                    // Remove row from HTML Table
+                    $(el).closest("tr").css("--bs-table-bg", "red");
+                    $(el)
+                      .closest("tr")
+                      .fadeOut(400, function () {
+                        $(this).remove();
+                      });
+                  }else{
+                    alert("Invalid ID.");
+                  }
+                },
+              });*/
+            }
+          },
+        });
+      }
+
+
+
+
+
+
       // AJAX Request
       $.ajax({
         url: "API/" + col + "/" + id,
