@@ -762,7 +762,7 @@ function showInventory(){
           <select class="form-select" id="productAval" aria-label="Select Availability" data-db-field="availability">
             <option selected>Open this select menu</option>
             <option value="available">Available</option>
-            <option value="unavaiable">Unavailable</option>
+            <option value="unavailable">Unavailable</option>
           </select>
         </div>
         <div class="mb-3">
