@@ -72,8 +72,8 @@ function showHome() {
                   </div>\
                   <h3 class="fw-normal mb-2 pb-3 mt-4 pt-4 text-center" style="letter-spacing: 1px;">Log in</h3>\
                   <div class="form-outline mb-3">\
-                    <label class="form-label" for="emplUsername">Email address</label>\
-                    <input type="email" name="emplUsername" id="emplUsername" class="form-control form-control-md" required>\
+                    <label class="form-label" for="emplUsername">Username</label>\
+                    <input type="text" name="emplUsername" id="emplUsername" class="form-control form-control-md" required>\
                   </div>\
                   <div class="form-outline mb-4">\
                     <label class="form-label" for="emplPw">Password</label>\
@@ -82,7 +82,6 @@ function showHome() {
                   <div class="pt-1 mb-4">\
                     <button class="btn btn-info btn-lg btn-block btn-dark" type="button">Login</button>\
                   </div>\
-                  <p class="small mb-5 pb-lg-2 text-center"><a class="text-muted" href="#!">Forgot password?</a></p>\
                 </form>\
               </div>\
           </div>\
@@ -105,10 +104,7 @@ function showHome() {
       var form = $("#formEmployees");
       var actionUrl = form.attr('action');
 
-      if(!isEmail($("input[type='email']").val())){
-        $("#formEmployees h3").text("Log in - Insert valid email !");
-        $("#formEmployees h3").addClass("text-danger");
-      }else if($("input[type='password']").val() == ""){
+      if($("input[type='password']").val() == ""){
         $("#formEmployees h3").text("Log in - Insert password !");
         $("#formEmployees h3").addClass("text-danger");
       }else{
@@ -135,6 +131,8 @@ function showHome() {
             error: function (xhr, ajaxOptions, thrownError) {
               console.log(xhr);
               console.log(thrownError);
+              $("#formEmployees h3").text("Log in - Wrong data inserted !");
+              $("#formEmployees h3").addClass("text-danger");
             }
         });
       }
