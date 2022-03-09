@@ -439,7 +439,6 @@ function showRental() {
             <option value="Accepted">Accepted</option>
             <option value="Active">Active</option>
             <option value="Confirmed">Confirmed</option>
-            <option value="Closed">Closed</option>
           </select>
         </div>`
       $(content).append(createModal('Add new Rental', body, 'Save Rental'))
