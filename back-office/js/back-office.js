@@ -594,7 +594,7 @@ function singleRental(id) {
                               </div>
                             </div>` : ''}
                           <!-- If the end date is in the future, add a button to modify and update the rental data -->
-                          ${(new Date() < new Date(rental.start_date && rental.state != 'Closed')) ? `
+                          ${(new Date() < new Date(rental.start_date) && rental.state != 'Closed') ? `
                             <button id="updateData" onclick="updateRecordInfo('rental', '${rental._id}', this)" type="button" class="btn btn-primary" data-collection="rental">Update Data</button>
                             <button id="updateData" onclick="deleteRecord('rental', '${rental._id}', this); showRental();" type="button" class="btn btn-danger" data-collection="rental">Delete Rental</button>
                             ` : ''}
