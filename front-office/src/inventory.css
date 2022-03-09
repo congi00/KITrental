@@ -227,8 +227,9 @@ top: 30vh;}
     color: white;
   }
   .products-wrapper .card-img-top {
-    max-height: unset;
+    max-height: 40vh;
     object-fit: cover;
+    min-height: 40vh;
   }
   .filter-search-wrapper {
     display: flex;
