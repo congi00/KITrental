@@ -61,6 +61,7 @@ function ProductsSingle(){
 
 
   const onSelectDate = (dates) => {
+    setBepi(false);
     const [start, end] = dates; 
     setBTNDisabled(false);
     Dates.forEach(element => {
@@ -158,7 +159,7 @@ function ProductsSingle(){
             <h3 className="productDescription">{products.description}</h3>
             <h3 className="productDescription">State: {products.state}</h3>
             <br/>
-            <h3 className={Bepi ? "suggBlock" : "suggNone"}>This product is unavailable in those date, if you want you can check this 
+            <h3 className={Bepi ? "suggBlock" : "suggNone"}>This product is unavailable in those dates, if you want you can check this 
             <span onClick={() => {window.location.href=linkSugg}}> <i>product</i></span>
             </h3>
             <div className='calendar'>

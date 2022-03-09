@@ -259,7 +259,7 @@ const onTodoChange = (product) =>{
               <h2 className="totalItemsPrice">{totalPrice}$</h2>
               <h2 className="">{DiscountsMSG}</h2>
             </div>
-            <Button variant="danger"  onClick={handleClick}>
+            <Button variant="danger"  onClick={handleClick} disabled={!logged}>
               Submit
             </Button>
         </Form>
