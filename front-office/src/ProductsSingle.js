@@ -70,7 +70,6 @@ function ProductsSingle(){
       console.log("End" + end)
       if(start <= element && element <= end){
         setBTNDisabled(true);
-        console.log("Inserto contentente")
         $.ajax({
           url: "API/inventory/subcategory/"+ products.subCategory,
           type: "GET",
@@ -82,13 +81,17 @@ function ProductsSingle(){
               var available = false;
               response.products.forEach((datesProdItem)=>{
                 if(datesProdItem.indisponibilityDates.length <1){
+                  console.log("PROD WITH NO INAVAILABILITY")
                   available = true;
                   idP = element._id;
                 }
+                
                 datesProdItem.indisponibilityDates.forEach((item)=>{
-                  if((start>=  new Date(item.startDate) &&  end >= new Date(item.endDate))
+                  if(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate))
                     &&
-                    !(start >= new Date(item.startDate) && new Date(item.endDate) >= end)
+                    !(start >= new Date(item.startDate) && start <= new Date(item.endDate))
+                    &&
+                    !(start <= new Date(item.startDate) && end >= new Date(item.startDate))
                     &&
                     !(start == new Date(item.startDate))
                     &&
