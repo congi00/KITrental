@@ -96,6 +96,7 @@ function ProductsSingle(){
                     &&
                     !(end == new Date(item.endDate))
                   ){
+                    console.log(item)
                     console.log(!(start<=  new Date(item.startDate) &&  end >= new Date(item.endDate)))
                     console.log(!(start >= new Date(item.startDate) && start <= new Date(item.endDate)))
                     available = true;
