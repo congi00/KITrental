@@ -81,7 +81,6 @@ function ProductsSingle(){
               var available = false;
               response.products.forEach((datesProdItem)=>{
                 if(datesProdItem.indisponibilityDates.length <1){
-                  console.log("PROD WITH NO INAVAILABILITY")
                   available = true;
                   idP = element._id;
                 }
