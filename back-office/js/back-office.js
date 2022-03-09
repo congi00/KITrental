@@ -380,6 +380,7 @@ function showRental() {
           <th>Archive</th>
           <th>Client</th>
           <th>Invoice</th>
+          <th>Delete</th>
         </tr>`)
       var tbdy = document.createElement('tbody');
       var past_tbdy = document.createElement('tbody');
@@ -394,6 +395,7 @@ function showRental() {
               <td><a onclick="singleRental('${rental._id}'); return false;"><i class="bi bi-box-arrow-up-right" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a onclick="singleClient('${rental.client_id}'); return false;"><i class="bi bi-person-square" style="color: brown; cursor: pointer;"></i></a></td>
               <td><a href="/invoices/${rental._id}.pdf"><i class="bi bi-receipt" style="color: brown; cursor: pointer;"></i></a></td>
+              <td><i onclick="deleteRecord('rental', '${rental._id}', this);" class="bi bi-x-circle" style="color: red; cursor: pointer;" data-collection="rental" data-id="${rental._id}"></i></td>
             </tr>`);
         } else {
           $(tbdy).append(`
@@ -1981,12 +1983,12 @@ async function deleteRecord(col, id, el) {
       },
     });
 
-    var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
-    console.log(startDate)
-    if (new Date(startDate) <= new Date()) {
-      toDelete = false;
-      errMsg = "You can't delete active rental.";
-    }
+    // var startDate = $($(el).closest("tr")).find("td[data-id='start_date']").html();
+    // console.log(startDate)
+    // if (new Date(startDate) <= new Date()) {
+    //   toDelete = false;
+    //   errMsg = "You can't delete active rental.";
+    // }
   }
 
   if (col === 'clients') {
