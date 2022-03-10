@@ -142,7 +142,10 @@
   .landSubTitle{
     margin: 0;
     width: fit-content;
-    font-size: 6rem;
+    font-size: 5rem;
+    @media (min-width: 1200px) {
+      font-size: 6rem;
+    }
     background: none;
     color: #fff;
     text-shadow: 5px 5px 4px #111 ;

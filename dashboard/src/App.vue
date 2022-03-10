@@ -123,4 +123,25 @@
   background: #031f1c;
   color: white;
 }
+.update-button, .update-button:active, .update-button:focus, .update-button:hover {
+  background: #06514c;
+  box-shadow: #06514c 0 10px 20px -10px;
+  border-radius: 999px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: fit-content;
+  word-break: break-word;
+  border: 0;
+}
 </style>

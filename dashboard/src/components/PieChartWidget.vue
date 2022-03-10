@@ -9,7 +9,8 @@
       </div>
       <div class="col col-chart">
         <div class="chart-form">
-          <h2 class="form-title">Insert Data Below:</h2>
+          <h2 v-if="this.col !== 'inventory'" class="form-title">Insert Data Below:</h2>
+          <h2 v-if="this.col === 'inventory'" class="form-title" style="margin-bottom: 0">Inspect Products Conditions:</h2>
           <Form ref="formRef" v-model="form" :col="col" :chartType="chartType" />
           <button class="update-button" type="button" @click="updateData">Update Data</button>
           <h3  class="errorMsg" ref="errorMSG">Fields values missing!</h3>

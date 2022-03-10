@@ -26,16 +26,22 @@ export default {
 </script>
 
 <template>
-  <div class="dashboard-wrapper">
-    <LineChartWidget col="clients" />
-    <BarChartWidget col="clients" />
-    <PieChartWidget col="clients" />
-    <DoughnutChartWidget col="clients" />
+  <div>
+    <h1 class="section-name">Graphs and Stats about Clients</h1>
+    <div class="dashboard-wrapper">
+      <LineChartWidget col="clients" />
+      <BarChartWidget col="clients" />
+      <PieChartWidget col="clients" />
+      <DoughnutChartWidget col="clients" />
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .home-dashboard {
+  .section-name {
+    margin: .5rem 0 1rem 0;
+  }
   .dashboard-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -65,6 +71,7 @@ export default {
     align-self: flex-start;
     max-width: 40vw;
     padding: 1.5rem;
+    border-radius: 0 30px 30px 30px;
     .chart-form {
       display: block;
       margin-top: 1rem;

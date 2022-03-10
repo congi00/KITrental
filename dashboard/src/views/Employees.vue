@@ -1,5 +1,6 @@
 <template>
-    <div class="dashboard-wrapper">
+    <div class="dashboard-wrapper-employees">
+        <h1 class="section-name">Employees' Info</h1>
         <div class="container table-wrapper pt-5"> 
           <table class="table table-light table-hover tableDash">
             <thead>
@@ -22,9 +23,17 @@
 
 <style lang="scss">
 .home-dashboard {
-  .dashboard-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .dashboard-wrapper-employees {
+    display: flex;
+    flex-wrap: wrap;
+    .section-name {
+      margin: .5rem 0 1rem 0;
+      flex: 0 0 100%;
+      text-align: center;
+    }
+    .table-wrapper {
+      flex: 0 0 100%;
+    }
     h1 {
       font-size: 2.5vw;
       margin-bottom: 2rem;
@@ -40,9 +49,10 @@
 }
 
 .tableDash{
-  position:relative;
-  left: 25vw;
-  text-align: center;
+    position: relative;
+    text-align: center;
+    width: 50%;
+    margin: auto;
 }
 </style>
 <script>
