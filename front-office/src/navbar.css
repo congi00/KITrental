@@ -24,25 +24,29 @@
 
 
   .userIcon{
-    margin-top: 4vh;
+    margin-top: 8vh;
     margin-left: 45vw;
     color: #222;
+    position: relative;
+    z-index: 2;
   }
 
   .cartIcon{
     color: #222;
     margin-left: 65vw;
-    margin-top: -2vh;
+    margin-top: -1vh;
   }
 
   .hamburgerIcon{
     display: inline-block;
     color: #222;
     margin-right: 80vw;
+    position: relative;
+    z-index: 2;
   }
 
   .nav-item{
-    margin-top:-3vh !important;
+    margin-top:-5vh !important;
   }
 
 
@@ -58,6 +62,10 @@
     background-color: #45CEE0;
     height: 200px;
     width: 200px;
+  }
+  .buttonLinks{
+    font-weight: 600;
+    font-size: 6vw;
   }
 }
 
@@ -105,10 +113,15 @@
 .displayBlock{
   width: 120vh;
   height: 100vh;
-  padding-left: 150vw;
-  padding-top: 35vh;
+  padding-left: 95vw;
+  padding-top: 40vh;
   padding-bottom: 10vh;
   right:  -20vw;
+}
+
+.menuToggle .nav-item{
+  width: 80vw;
+  height: 12vh;
 }
 
 .timesIcon{
