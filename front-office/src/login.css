@@ -118,9 +118,71 @@
   font-size: 13vw;
 }
 
+.wrapperTItle{
+  bottom:134vh;
+  background-color:#081715;
+  width:5vw;
+}
+
 /*.login-form{
   overflow-y: hidden;
 }*/
+
+
+
+@media (min-width: 320px) {
+  .titleFormL{
+    bottom: 4vh;
+  }
+  .btnFormL {
+    margin-top: 2vh;
+  }
+  .errVisibleLogin {
+    top: 50vh;
+  }
+  
+}
+
+@media (min-width: 375px) {
+  .titleFormL{
+    bottom: 7vh;
+  }
+  .btnFormL {
+    margin-top: 2vh;
+  }
+  .errVisibleLogin {
+    top: 50vh;
+  }
+  .divRotL {
+    bottom: 50vh;
+    left: 30vw;
+  }
+  .wrapperTItle{
+    bottom:142vh;
+    background-color:#081715;
+    width:5vw;
+  }
+  .firstSectionL{
+    top:0;
+  }
+  .btnFormL {
+    margin-top: 1vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .titleFormL {
+    bottom: 0;
+    color: #222;
+    left: 20vw;
+    position: relative;
+    transform: unset;
+  }
+  .divRotL{
+    display: none;
+  }
+}
+
 
 
 @media (min-width: 992px) {

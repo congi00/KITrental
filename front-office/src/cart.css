@@ -149,7 +149,11 @@
 }
 
 
-
+@media (max-width: 600px) {
+  .cartSection h1 {
+    margin-top: 15vh;
+  }
+}
 
 
 
