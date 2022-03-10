@@ -1,28 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Supermercado+One&display=swap');
 
+
+
+.Nav-container{
+  width: 100vw;
+  height: 13vh;
+  background: #fff;
+  box-shadow: 0px 5px 5px;
+  position: fixed;
+  z-index: 2;
+}
+
+.logoNav{
+  width: 45vw;
+  position: fixed;
+  left:27.5vw;
+  top:-2vh;
+}
+
+.MenuIcon{
+  width: 30vw;
+  height: 30vh;
+}
+
+.userIcon{
+  margin-top: 8vh;
+  margin-left: 45vw;
+  color: #222;
+  position: relative;
+  z-index: 2;
+}
+
+.cartIcon{
+  color: #222;
+  margin-left: 65vw;
+  margin-top: -1vh;
+}
+
+.hamburgerIcon{
+  display: inline-block;
+  color: #222;
+  margin-right: 80vw;
+  position: relative;
+  z-index: 2;
+}
+
+.transform {
+  -webkit-transition: all 2s ease;
+  -moz-transition: all 2s ease;
+  -o-transition: all 2s ease;
+  -ms-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.transform-active {
+  background-color: #45CEE0;
+  height: 200px;
+  width: 200px;
+}
+
 @media (max-width: 600px) {
-  .Nav-container{
-    width: 100vw;
-    height: 13vh;
-    background: #fff;
-    box-shadow: 0px 5px 5px;
-    position: fixed;
-    z-index: 2;
-  }
-
-  .logoNav{
-    width: 45vw;
-    position: fixed;
-    left:27.5vw;
-    top:-2vh;
-  }
-
-  .MenuIcon{
-    width: 30vw;
-    height: 30vh;
-  }
-
-
   .userIcon{
     margin-top: 8vh;
     margin-left: 45vw;
@@ -50,19 +87,7 @@
   }
 
 
-  .transform {
-    -webkit-transition: all 2s ease;
-    -moz-transition: all 2s ease;
-    -o-transition: all 2s ease;
-    -ms-transition: all 2s ease;
-    transition: all 2s ease;
-  }
 
-  .transform-active {
-    background-color: #45CEE0;
-    height: 200px;
-    width: 200px;
-  }
   .buttonLinks{
     font-weight: 600;
     font-size: 6vw;

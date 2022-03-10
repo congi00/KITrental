@@ -113,6 +113,14 @@
 
 /******************** MEDIA QUERIES **************************/
 
+
+@media (max-width: 600px) {
+  .swiper{
+    overflow: visible;
+  }
+}
+
+
 @media (min-width: 992px) {
   .arrowIcon {
     font-size: 4vw;
