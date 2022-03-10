@@ -170,22 +170,31 @@ function AreaComponent(){
                   {rental.map(item => (item.state !== 'Closed' &&
                     ! isDesktop &&
                         <SwiperSlide>
-                        <Card style={{ width: '12rem', height: "50vh" }} >
-                          <Card.Img variant="top" src={"img/products/" + (products?.[item.product_id] ? products[item.product_id].img : '')} />
-                          <Card.Body>
-                            <Card.Title>{products?.[item.product_id] ? products[item.product_id].name : ''}</Card.Title>
-                            <Card.Text>
-                              {item.note}
-                            </Card.Text>
-                            <ListGroup className="list-group-flush">
-                              <ListGroup.Item>State: {item.state}</ListGroup.Item>
-                              <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
-                              <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
-                            </ListGroup>
-                            <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
-                            <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
-                          </Card.Body>
-                        </Card>
+                       <Card>
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
+                      <Card.Body>
+                      <Card.Title>
+                        {item.products_id.map((prod, i, prods) => {
+                          if (prods.length - 1 === i) {
+                            return products?.[prod] ? products[prod].name : ''
+                          } else {
+                            return products?.[prod] ? products[prod].name + ', ' : ''
+                          }
+                        })}
+                        </Card.Title>
+                        <Card.Text>
+                          {item.note}
+                        </Card.Text>
+                        <ListGroup className="list-group-flush">
+                          <ListGroup.Item>State: {item.state}</ListGroup.Item>
+                          <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
+                          <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
+                        </ListGroup>
+                        <Button disabled={!(new Date() < new Date(item.start_date))} variant="primary" className='product-button' onClick={() => navigate('/editRental?rentalID='+item._id)}>Edit</Button>
+                        <Button disabled={!(new Date() < new Date(item.start_date))} variant="danger" className='product-remove-button' onClick={(e) => deleteRental(item._id, e.target)}>Delete</Button>
+
+                      </Card.Body>
+                    </Card>
                         </SwiperSlide>
                   ))}
                   </Swiper>
@@ -237,25 +246,25 @@ function AreaComponent(){
                       slidesPerView={"auto"}
                       className="swiperAreaPast"
                       >
-                  {rental.map(item => (item.state !== 'Closed' &&
+                  {rental.map(item => (item.state === 'Closed' &&
                     ! isDesktop &&
                         <SwiperSlide>
-                          <Card style={{ width: '12rem', height: "50vh" }} >
-                            <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
-                            <Card.Body>
-                              <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
-                              <Card.Text>
-                              {item.note}
-                              </Card.Text>
-                              <ListGroup className="list-group-flush">
-                                <ListGroup.Item>State: {item.state}</ListGroup.Item>
-                                <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
-                                <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
-                                <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
-                              </ListGroup>
-                              <Button variant="primary" className='invoice-button' onClick={() => window.open('https://site202126.tw.cs.unibo.it/invoices/' + item._id + '.pdf', '_blank')}>Invoice</Button>
-                            </Card.Body>
-                          </Card>
+                          <Card>
+                      <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
+                      <Card.Body>
+                        <Card.Title>{products?.[item.products_id[0]] ? products[item.products_id[0]].name : ''}</Card.Title>
+                        <Card.Text>
+                        {item.note}
+                        </Card.Text>
+                        <ListGroup className="list-group-flush">
+                          <ListGroup.Item>State: {item.state}</ListGroup.Item>
+                          <ListGroup.Item>Start: {new Date(item.start_date).toLocaleString()}</ListGroup.Item>
+                          <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
+                          <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
+                        </ListGroup>
+                        <Button variant="primary" className='invoice-button' onClick={() => window.open('https://site202126.tw.cs.unibo.it/invoices/' + item._id + '.pdf', '_blank')}>Invoice</Button>
+                      </Card.Body>
+                    </Card>
                         </SwiperSlide>
                   ))}
                   </Swiper>

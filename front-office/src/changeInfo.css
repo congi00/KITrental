@@ -26,6 +26,12 @@
     /* bottom: 28vh; */
 }
 
+@media (max-width: 992px) {
+    .firstSectionC{
+        flex: 0 0 100%;
+    } 
+}
+
 .btnFormC{
     background-color: #161616;
     border-color: #161616;
