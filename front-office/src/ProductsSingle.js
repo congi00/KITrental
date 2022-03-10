@@ -59,11 +59,13 @@ function ProductsSingle(){
       console.log(cookies.get('myCart'));
   }
 
+  const loggedIn = sessionStorage.getItem('token');
 
   const onSelectDate = (dates) => {
     setBepi(false);
     const [start, end] = dates; 
     setBTNDisabled(false);
+    if(loggedIn)
     Dates.forEach(element => {
       console.log("Dates" + element)
       console.log("Start" + start)
@@ -129,7 +131,7 @@ function ProductsSingle(){
   }
 
 
-  const loggedIn = sessionStorage.getItem('token');
+
 
 
   const onRent = (products) =>{
