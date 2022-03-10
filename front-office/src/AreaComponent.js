@@ -170,7 +170,7 @@ function AreaComponent(){
                   {rental.map(item => (item.state !== 'Closed' &&
                     ! isDesktop &&
                         <SwiperSlide>
-                       <Card style={{ width: '18rem' }} >
+                       <Card>
                       <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
                       <Card.Body>
                       <Card.Title>
@@ -200,7 +200,7 @@ function AreaComponent(){
                   </Swiper>
                   {rental.map(item => (item.state !== 'Closed' &&
                     isDesktop &&
-                    <Card style={{ width: '18rem' }} >
+                    <Card>
                       <Card.Img variant="top" src={"img/products/" + (products?.[item.products_id[0]] ? products[item.products_id[0]].img : '')} />
                       <Card.Body>
                       <Card.Title>
