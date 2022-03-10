@@ -260,7 +260,7 @@ const onTodoChange = (product) =>{
             <div className="total-price-wrapper">
               <h2 className="totalItems">Total:</h2>
               <h2 className="totalItemsPrice">{totalPrice}$</h2>
-              <h2 className="">{DiscountsMSG}</h2>
+              <h2 className="discountMSGCart">{DiscountsMSG}</h2>
             </div>
             <Button variant="danger"  onClick={handleClick} disabled={!logged}>
               Submit

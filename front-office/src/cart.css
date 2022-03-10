@@ -240,6 +240,10 @@
     position: unset;
     margin: 0;
   }
+  .discountMSGCart {
+    color: #118C4F;
+    font-weight: bold;
+  }
   .cartSection h2{
     color: #222;
   }

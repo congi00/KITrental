@@ -93,11 +93,10 @@ router.delete('/:id', login.verifyPermission(login.permissionRoleLevels["employe
 router.patch('/:id', async function (req, res) {
   let updateData = req.body
   if(updateData.password) updateData.password = await bcrypt.hash(updateData.password, 14)
- 
+
   await Client.findOneAndUpdate(
     {_id: req.params.id},
-    {$set : updateData},
-    {overwrite: true}
+    updateData
   )
   .exec()
   .then(result => {

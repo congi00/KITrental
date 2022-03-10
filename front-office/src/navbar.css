@@ -214,11 +214,33 @@
   }
   .buttonLinks {
     color: white;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     text-shadow: 3px 3px 4px #222;
     line-height: 1.2;
     font-weight: 500;
     margin-bottom: 0.5rem;
     margin-top: 0;
+  }
+  .cartIcon {
+    margin: 0;
+  }
+  .menuToggle .nav-item{
+    width: unset;
+    height: unset;
+  }
+  .userIcon {
+    margin: 0;
+  }
+}
+
+@media (max-width: 1400px) {
+  .nav-item h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .buttonLinks {
+    font-size: 1.75rem;
   }
 }

@@ -46,7 +46,9 @@ function InfosForm(){
         return $.ajax({
           url: "/API/clients/" + clientInfo._id,
           type: "PATCH",
-          body: JSON.stringify(changedInfo),
+          contentType: "application/json",
+          dataType: "json",
+          data: JSON.stringify(changedInfo),
           beforeSend: xhr => {
             xhr.setRequestHeader('auth', auth_token)
           },
