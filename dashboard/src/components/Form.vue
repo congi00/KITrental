@@ -36,19 +36,6 @@
                 this.$refs.recordsList.setAttribute('id', randID)
                 this.$refs.recordsList.previousElementSibling.setAttribute('list', randID)
             }
-            var inputs = document.getElementsByClassName('dp__pointer')
-            console.log(inputs)
-            if (inputs.length == 4) {
-                inputs.forEach((input, i) => {
-                input.addEventListener("keypress", e => {
-                    console.log('pressed')
-                    if (e.key === 'Enter') {
-                        this.handleFocus();
-                    }
-                })    
-            })
-            }
-            
         },
         data() {
             return {
@@ -84,9 +71,8 @@
                         console.log(errors);
                     })    
             },
-            handleFocus() {
-                console.log('show picker')
-                this.$refs.dataPicker.openMenu()
+            selectChange(e) {
+                this.$refs.recordsList.innerHTML = ""
             }
         }
     })
@@ -118,7 +104,7 @@
             <option value="Deals">Deals</option>
         </select>
         <!-- <input class="form-control" type="number" v-model="form.date" placeholder="Months" /> -->
-        <Datepicker v-if="this.chartType !== 'Torta' || this.col !== 'inventory'" v-model="form.date" range :enableTimePicker="false" :openMenuOnFocus="false" ref="dataPicker" @keyup.enter="handleFocus" />
+        <Datepicker v-if="this.chartType !== 'Torta' || this.col !== 'inventory'" v-model="form.date" range :enableTimePicker="false" />
     </form>
 </template>
 

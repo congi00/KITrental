@@ -26,12 +26,15 @@ export default {
 </script>
 
 <template>
+<div>
+  <h1 class="section-name">Graphs and Stats about Products</h1>
   <div class="dashboard-wrapper">
     <LineChartWidget col="inventory" />
     <BarChartWidget col="inventory" />
     <PieChartWidget col="inventory" />
     <DoughnutChartWidget col="inventory" />
   </div>
+</div>
 </template>
 
 <style lang="scss">
@@ -40,6 +43,9 @@ export default {
   padding: 2rem;
   background: #031f1c;
   color: white;
+  .section-name {
+    margin: .5rem 0 1rem 0;
+  }
   .dashboard-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -74,9 +80,9 @@ export default {
       position: relative;
       height: 100%;
     }
+    border-radius: 0 30px 30px 30px;
     .chart-form {
       display: block;
-      margin: auto;
       margin-top: 1rem;
       width: 80%;
       .update-button {
