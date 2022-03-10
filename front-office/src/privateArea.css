@@ -117,6 +117,10 @@
     border: 0;
 }
 
+.swiper-wrapper {
+    column-gap: 30px;
+}
+
 /******************** MEDIA QUERIES **************************/
 
 @media (min-width: 992px) {
