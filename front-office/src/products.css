@@ -115,8 +115,29 @@
 
 
 @media (max-width: 600px) {
-  .swiper{
-    overflow: visible;
+  .productSinglePage{
+    height: 165vh;
+  }
+  .calendar {
+    position: unset !important;
+    margin-left: 19vw;
+    margin-top: 5vh;
+  }
+  .btnCart, .btnCart:disabled {
+    background-color: #222;
+    border-color: #fff;
+    color: #fff;
+    position: unset !important;
+    width: 40vw;
+    margin-left: 10vw;
+    margin-top: 5vh;
+  }
+  .productDesc h3 {
+    overflow: scroll;
+  }
+  .btnBuy, .btnBuy:disabled {
+    left: 7vw;
+    top: 2.5vh;
   }
 }
 

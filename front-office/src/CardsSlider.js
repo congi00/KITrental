@@ -169,7 +169,7 @@ function CardsSlider(){
         <div className="titlesSection"></div>
         {loggedIn && 
           <div className="upper-section-wrapper pt-5">
-            <h2>Filter and/or Search</h2>
+            <h2 id="titleFilter">Filter and/or Search</h2>
             <div className="filter-search-wrapper">
             <a href="" aria-label='Filter Products' onClick={e => handleShow(e)}><FontAwesomeIcon className="filterIconP dBlock" icon={faSearchPlus} size="2x"/></a>
               <Form.Control className="searchBar dBlock"  type="text" placeholder="Search" onChange={(e) =>{searchProduct(e.target.value)}} />
