@@ -126,6 +126,44 @@ top: 30vh;}
 
 /******************** MEDIA QUERIES **************************/
 
+
+
+
+@media (max-width: 600px) {
+  .swiper{
+    overflow-y: visible !important;
+  }
+
+  .searchBar{
+    margin-top: -25vh;
+    position: unset !important;
+    margin-left:11vw;
+  }
+
+  #titleFilter{
+    color: #fff;
+    margin-top: -15vh;
+    margin-bottom: 25vh;
+    margin-left:11vw;
+  }
+
+  .filterIconP {
+    top: -19vh;
+  }
+
+  .inventoryPage {
+    min-height: 150vh;
+  }
+  .mySwiper .swiper-slide {
+    height: 50vh!important;
+    margin-left: 5vw;
+  }
+
+  .titles{
+    height: 7vh;
+  }
+}
+
 @media (min-width: 992px) {
   .CardsSliderPage {
     top: 0;

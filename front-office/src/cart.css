@@ -153,6 +153,15 @@
   .cartSection h1 {
     margin-top: 15vh;
   }
+  .CartPage{
+    min-height: 120vh;
+  }
+  .deleteItems{
+    position: relative;
+    margin-left: 80vw;
+    bottom: 14vh;
+    font-size: 4vw;
+  }
 }
 
 

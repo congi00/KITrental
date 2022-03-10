@@ -253,7 +253,7 @@ const onTodoChange = (product) =>{
                 <div className="itemPrice">
                   <h2>{item.discountedPrice}$</h2>
                 </div>
-                <FontAwesomeIcon className="faTimesCircle" aria-label="delete item from cart" icon={faTimesCircle} size="2x" onClick={() => onTodoChange(item)}/>
+                <FontAwesomeIcon className="faTimesCircle deleteItems" aria-label="delete item from cart" icon={faTimesCircle} size="2x" onClick={() => onTodoChange(item)}/>
               </Card.Body>
             </Card>
             ))}
