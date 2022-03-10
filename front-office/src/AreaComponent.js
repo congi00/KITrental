@@ -246,7 +246,7 @@ function AreaComponent(){
                       slidesPerView={"auto"}
                       className="swiperAreaPast"
                       >
-                  {rental.map(item => (item.state !== 'Closed' &&
+                  {rental.map(item => (item.state === 'Closed' &&
                     ! isDesktop &&
                         <SwiperSlide>
                           <Card>
