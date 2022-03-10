@@ -885,72 +885,76 @@ function singleInventory(id) {
 
 // Retrieve and display all the promotions
 function showPromotions() {
-  $.ajax({
-    url: "API/promotions/",
-    type: "GET",
-    beforeSend: xhr => {
-      xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
-    },
-    success: res => {
-      var content = document.getElementById("content");
-      content.innerHTML = "";
-      var container = document.createElement('div');
-      container.className = "container table-wrapper pt-5";
-      var tbl = document.createElement('table');
-      tbl.className = "table table-light table-hover";
-      var thd = document.createElement('thead');
-      $(thd).append(`
-        <tr class="table-light">
-          <th>Name</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Percentage</th>
-          <th>Delete</th>
-        </tr>`)
-      var tbdy = document.createElement('tbody');
-      console.log(res.promotions)
-      $.each(res.promotions, (i, prom) => {
-        $(tbdy).append(`
+  // Promotions haven't got auth protection
+  var loggedIn = sessionStorage.getItem("usr_id")
+  if (loggedIn) {
+    $.ajax({
+      url: "API/promotions/",
+      type: "GET",
+      beforeSend: xhr => {
+        xhr.setRequestHeader('auth', sessionStorage.getItem('auth'))
+      },
+      success: res => {
+        var content = document.getElementById("content");
+        content.innerHTML = "";
+        var container = document.createElement('div');
+        container.className = "container table-wrapper pt-5";
+        var tbl = document.createElement('table');
+        tbl.className = "table table-light table-hover";
+        var thd = document.createElement('thead');
+        $(thd).append(`
           <tr class="table-light">
-            <td>${prom.name}</td>
-            <td>${new Date(prom.start_date).toLocaleString()}</td>
-            <td>${new Date(prom.end_date).toLocaleString()}</td>
-            <td>${prom.percentage}</td>
-            <td><a href="" aria-label="Delete Promotion" onclick="deleteRecord('promotions', '${prom._id}', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
-          </tr>`);
-      })
-      tbl.appendChild(thd);
-      tbl.appendChild(tbdy);
-      content.appendChild(container).appendChild(tbl);
-
-      var body = `
-      <div class="mb-3">
-        <label for="promotionName" class="form-label">Name</label>
-        <input required class="form-control" id="promotionName" placeholder="Christmas" data-db-field="name">
-      </div>
-      <div class="mb-3">
-          <label for="promotionStartDate" class="form-label">Promotion Start Date</label>
-          <input required type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="promotionStartDate">
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Percentage</th>
+            <th>Delete</th>
+          </tr>`)
+        var tbdy = document.createElement('tbody');
+        console.log(res.promotions)
+        $.each(res.promotions, (i, prom) => {
+          $(tbdy).append(`
+            <tr class="table-light">
+              <td>${prom.name}</td>
+              <td>${new Date(prom.start_date).toLocaleString()}</td>
+              <td>${new Date(prom.end_date).toLocaleString()}</td>
+              <td>${prom.percentage}</td>
+              <td><a href="" aria-label="Delete Promotion" onclick="deleteRecord('promotions', '${prom._id}', this); return false;"><i class="bi bi-x-circle" style="color: red; cursor: pointer;"></i></a></td>
+            </tr>`);
+        })
+        tbl.appendChild(thd);
+        tbl.appendChild(tbdy);
+        content.appendChild(container).appendChild(tbl);
   
-          <label for="promotionEndDate" class="form-label">Promotion End Date</label>
-          <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="promotionEndDate">
-      </div>
-      <div class="mb-3">
-        <label for="salePercentage" class="form-label">Sale Percentage</label>
-        <div class="input-group">
-        <span class="input-group-text">%</span>
-        <input type="text" class="form-control" id="salePercentage" aria-label="Sale Percentage" data-db-field="percentage">
+        var body = `
+        <div class="mb-3">
+          <label for="promotionName" class="form-label">Name</label>
+          <input required class="form-control" id="promotionName" placeholder="Christmas" data-db-field="name">
         </div>
-      </div>`
-      $(content).append(createModal('Add new Promotion', body, 'Save Promotion'))
+        <div class="mb-3">
+            <label for="promotionStartDate" class="form-label">Promotion Start Date</label>
+            <input required type="datetime-local" data-db-field="start_date" class="form-control mb-3" id="promotionStartDate">
     
-      // Event listeners
-      $(document).off("click", "#createRecord")
-      $(document).on("click", "#createRecord", function(){
-        createRecord('promotions', '', this)
-      });
-    },
-  });
+            <label for="promotionEndDate" class="form-label">Promotion End Date</label>
+            <input required type="datetime-local" data-db-field="end_date" class="form-control mb-3" id="promotionEndDate">
+        </div>
+        <div class="mb-3">
+          <label for="salePercentage" class="form-label">Sale Percentage</label>
+          <div class="input-group">
+          <span class="input-group-text">%</span>
+          <input type="text" class="form-control" id="salePercentage" aria-label="Sale Percentage" data-db-field="percentage">
+          </div>
+        </div>`
+        $(content).append(createModal('Add new Promotion', body, 'Save Promotion'))
+      
+        // Event listeners
+        $(document).off("click", "#createRecord")
+        $(document).on("click", "#createRecord", function(){
+          createRecord('promotions', '', this)
+        });
+      },
+    });
+  }
 }
 
 // Retrieve and display all the employees (manager-only)
