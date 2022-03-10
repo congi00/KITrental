@@ -34,7 +34,7 @@
 .cartIcon{
   color: #222;
   margin-left: 65vw;
-  margin-top: -1vh;
+  margin-top: 0.5vh;
 }
 
 .hamburgerIcon{
@@ -71,7 +71,6 @@
   .cartIcon{
     color: #222;
     margin-left: 65vw;
-    margin-top: -1vh;
   }
 
   .hamburgerIcon{
@@ -80,12 +79,12 @@
     margin-right: 80vw;
     position: relative;
     z-index: 2;
+    margin-top:2vh;
   }
 
   .nav-item{
     margin-top:-5vh !important;
   }
-
 
 
   .buttonLinks{
@@ -141,7 +140,7 @@
   padding-left: 95vw;
   padding-top: 40vh;
   padding-bottom: 10vh;
-  right:  -20vw;
+  left:-80vw
 }
 
 .menuToggle .nav-item{

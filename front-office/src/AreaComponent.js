@@ -253,7 +253,7 @@ function AreaComponent(){
                                 <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                                 <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
                               </ListGroup>
-                              <Button variant="primary" className='invoice-button' onClick={() => navigate('/invoices/' + item._id + '.pdf')}>Invoice</Button>
+                              <Button variant="primary" className='invoice-button' onClick={() => window.open('https://site202126.tw.cs.unibo.it/invoices/' + item._id + '.pdf', '_blank')}>Invoice</Button>
                             </Card.Body>
                           </Card>
                         </SwiperSlide>
@@ -275,7 +275,7 @@ function AreaComponent(){
                           <ListGroup.Item>End: {new Date(item.end_date).toLocaleString()}</ListGroup.Item>
                           <ListGroup.Item>Price: {item.price}$</ListGroup.Item>
                         </ListGroup>
-                        <Button variant="primary" className='invoice-button' onClick={() => navigate('/invoices/' + item._id + '.pdf')}>Invoice</Button>
+                        <Button variant="primary" className='invoice-button' onClick={() => window.open('https://site202126.tw.cs.unibo.it/invoices/' + item._id + '.pdf', '_blank')}>Invoice</Button>
                       </Card.Body>
                     </Card>
                   ))}
